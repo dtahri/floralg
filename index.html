@@ -142,18 +142,18 @@
     <div class="content">
         <section class="search-section">
             <h2>Recherche des Genres</h2>
-            <p>Commencez à taper pour voir les résultats.</p>
+            <p>Commencez Ã  taper pour voir les rÃ©sultats.</p>
             
             <div class="search-container">
                 <input type="text" id="searchInput" placeholder="Rechercher un genre..." autocomplete="off">
                 <div id="searchResults"></div>
-                <p class="search-hint">Tapez au moins 2 caractères pour lancer la recherche</p>
+                <p class="search-hint">Tapez au moins 2 caractÃ¨res pour lancer la recherche</p>
             </div>
         </section>
     </div>
 
     <script>
-        // Données d'exemple de genres végétaux (20 entrées - à étendre à 800 selon les besoins)
+        // DonnÃ©es d'exemple de genres vÃ©gÃ©taux (20 entrÃ©es - Ã  Ã©tendre Ã  800 selon les besoins)
         const plantGenera = [
             {name: "Ferula", link: "ressources/Ferula.html"},
             {name: "Aloe", link: "genus/aloe.html"},
@@ -184,7 +184,7 @@
         function performSearch() {
             const searchTerm = searchInput.value.trim().toLowerCase();
             
-            // Effacer les résultats précédents
+            // Effacer les rÃ©sultats prÃ©cÃ©dents
             searchResults.innerHTML = '';
             
             // Ne pas chercher si le terme est trop court
@@ -198,7 +198,7 @@
                 genus.name.toLowerCase().includes(searchTerm)
             );
             
-            // Afficher les résultats
+            // Afficher les rÃ©sultats
             if (results.length > 0) {
                 results.forEach(genus => {
                     const resultItem = document.createElement('div');
@@ -210,16 +210,16 @@
             } else {
                 const noResults = document.createElement('div');
                 noResults.className = 'no-results';
-                noResults.textContent = 'Aucun genre correspondant trouvé';
+                noResults.textContent = 'Aucun genre correspondant trouvÃ©';
                 searchResults.appendChild(noResults);
                 searchResults.style.display = 'block';
             }
         }
 
-        // Ecouteurs d'événements
+        // Ecouteurs d'Ã©vÃ©nements
         searchInput.addEventListener('input', performSearch);
         
-        // Masquer les résultats quand on clique à l'extérieur
+        // Masquer les rÃ©sultats quand on clique Ã  l'extÃ©rieur
         document.addEventListener('click', (e) => {
             if (!searchInput.contains(e.target) && !searchResults.contains(e.target)) {
                 searchResults.style.display = 'none';
