@@ -472,6 +472,7 @@
         .species-filter.expanded .species-filter-content {
             max-height: 400px;
             padding: 10px;
+            overflow-y: auto;
         }
         
         .species-filter.expanded .species-filter-header i {
@@ -804,11 +805,10 @@
             <p>Corolles jaunâtres, glanduleuses. Feuilles inférieures et moyennes à lobes ovales, incisés-dentés. Plante cespiteuse, légèrement odorante, à grosse tige striée, anguleuse et rameuse. Feuilles blanches-tomenteuses en dessous et glabres ou légèrement soyeuses en dessus. Capitules en grappes constituant une panicule pyramidale.</p>
             <span class="view-illustration" onclick="openModal('distribution', ['distribution1.jpg', 'distribution2.jpg'])">Illustrations</span>
         </div>
-
-
+        
         <!-- Distribution Map Section -->
         <div class="map-container">
-            <h2 class="map-title">Distribution des Espèces de <i>Ferula</i></h2>
+            <h2 class="map-title">Distribution des espèces d'<i>Artemisia</i></h2>
             <div id="distributionMap">
                 <div class="species-filter">
                     <div class="species-filter-header" onclick="toggleFilterPanel()">
@@ -837,8 +837,9 @@
         
         // Map variables
         let map;
-        let markers = [];
-        let labels = [];
+        let speciesGroups = {}; // To store all markers for each species
+        let speciesLabels = {}; // To store all labels for each species
+        let speciesColors = {}; // To store color for each species
         
         function openModal(imageName, images = []) {
             const modal = document.getElementById('imageModal');
@@ -870,11 +871,18 @@
         }
         
         function toggleSpeciesVisibility(speciesId, isChecked) {
-            markers[speciesId].setStyle({
-                opacity: isChecked ? 1 : 0,
-                fillOpacity: isChecked ? 0.8 : 0
+            // Toggle all markers for this species
+            speciesGroups[speciesId].forEach(marker => {
+                marker.setStyle({
+                    opacity: isChecked ? 1 : 0,
+                    fillOpacity: isChecked ? 0.8 : 0
+                });
             });
-            labels[speciesId].setOpacity(isChecked ? 1 : 0);
+            
+            // Toggle all labels for this species
+            speciesLabels[speciesId].forEach(label => {
+                label.setOpacity(isChecked ? 1 : 0);
+            });
         }
         
         function toggleFilterPanel() {
@@ -927,28 +935,66 @@
                 '#16A085', '#C0392B', '#2980B9', '#F1C40F', '#7F8C8D'
             ];
             
-            // Sample data points for Ferula species distribution with IUCN status
+            // Sample data points for Ferula species distribution
+            // Each species can have multiple points
             const speciesData = [
-                { id: 'communis', name: "F. communis", lat: 36.8, lng: 10.2, status: "lc" },
-                { id: 'tingitana', name: "F. tingitana", lat: 36.7, lng: 3.1, status: "nt" },
-                { id: 'longipes', name: "F. longipes", lat: 34.0, lng: 9.5, status: "lc" },
-                { id: 'marmarica', name: "F. marmarica", lat: 32.6, lng: -5.1, status: "vu" },
-                { id: 'orientalis', name: "F. orientalis", lat: 39.9, lng: 32.8, status: "lc" },
-                { id: 'gummosa', name: "F. gummosa", lat: 35.7, lng: 51.4, status: "en" },
-                { id: 'assa-foetida', name: "F. assa-foetida", lat: 31.8, lng: 54.4, status: "lc" },
-                { id: 'persica', name: "F. persica", lat: 40.1, lng: 47.5, status: "dd" },
-                { id: 'foetidissima', name: "F. foetidissima", lat: 41.3, lng: 69.3, status: "lc" },
-                { id: 'kuhistanica', name: "F. kuhistanica", lat: 42.9, lng: 71.4, status: "cr" },
-                { id: 'varia', name: "F. varia", lat: 38.5, lng: 68.8, status: "nt" },
-                { id: 'jaeschkeana', name: "F. jaeschkeana", lat: 34.5, lng: 69.1, status: "vu" },
-                { id: 'narthex', name: "F. narthex", lat: 33.7, lng: 73.1, status: "en" },
-                { id: 'indica', name: "F. indica", lat: 31.5, lng: 74.3, status: "lc" },
-                { id: 'bungeana', name: "F. bungeana", lat: 39.9, lng: 116.4, status: "lc" },
-                { id: 'hermonis', name: "F. hermonis", lat: 36.2, lng: 37.2, status: "vu" },
-                { id: 'syriaca', name: "F. syriaca", lat: 33.9, lng: 35.5, status: "en" },
-                { id: 'sinaica', name: "F. sinaica", lat: 31.9, lng: 35.2, status: "cr" },
-                { id: 'samariae', name: "F. samariae", lat: 28.5, lng: 34.5, status: "ex" },
-                { id: 'arrigonii', name: "F. arrigonii", lat: 37.6, lng: 14.3, status: "ew" }
+                { id: 'herba-alba', name: "A. herba-alba", points: [
+                    { lat: 35.9, lng: 4.6 },                    
+		    { lat: 31.2, lng: -3.2 },
+                    { lat: 36.4, lng: 4.4 },
+                    { lat: 34.2, lng: 1.3 },
+                    { lat: 35.0, lng: 6.0 },
+                    { lat: 34.3, lng: 2.0 },
+                    { lat: 35.1, lng: 8.3 },
+                    { lat: 36.0, lng: 8.1 }
+                ]},
+                { id: 'absinthium', name: "A. absinthium", points: [
+                    { lat: 36.6, lng: 4.1 },                    
+		    { lat: 36.9, lng: 6.9 },
+                    { lat: 36.7, lng: 3.1 }
+                ]},
+                { id: 'arborescens', name: "A. arborescens", points: [
+                    { lat: 36.3, lng: 3.3 }                   
+                ]},
+                { id: 'judaica', name: "A. judaica", points: [
+                    { lat: 24.6, lng: 9.5 },                    
+		    { lat: 25.8, lng: 8.1 },
+                    { lat: 22.5, lng: 5.5 },
+                    { lat: 23.7, lng: 5.4 },
+                    { lat: 24.0, lng: 5.6 },
+                    { lat: 29.9, lng: 4.0 }
+                ]},
+                { id: 'atlantica', name: "A. atlantica", points: [
+                    { lat: 34.3, lng: 1.9 },                    
+		    { lat: 35.6, lng: 6.2 },
+                    { lat: 34.7, lng: 3.1 },
+                    { lat: 33.6, lng: 1.2 }
+                ]},
+                { id: 'alba', name: "A. alba", points: [
+                    { lat: 35.6, lng: -0.6 },                    
+		    { lat: 34.9, lng: 5.6 }
+                ]},
+                { id: 'kabylica', name: "A. kabylica", points: [
+                    { lat: 36.6, lng: 4.3 }                   
+                ]},
+                { id: 'campestris', name: "A. campestris", points: [
+                    { lat: 35.8, lng: 7.4 },                    
+		    { lat: 22.8, lng: 5.5 },
+                    { lat: 34.5, lng: 3.5 },
+                    { lat: 23.2, lng: 5.7 },
+                    { lat: 35.2, lng: 6.3 },
+                    { lat: 24.8, lng: 9.1 }
+                ]},
+                { id: 'algeriensis', name: "A. algeriensis", points: [
+                    { lat: 34.6, lng: 3.3 }                   
+                ]},
+                { id: 'verlotiorum', name: "A. verlotiorum", points: [
+                    { lat: 35.5, lng: -0.75 },                    
+		    { lat: 35.01, lng: -1.53 }
+                ]},
+                { id: 'vulgaris', name: "A. vulgaris", points: [
+                    { lat: 36.57, lng: 2.95 }                   
+                ]}
             ];
             
             // Create filter controls
@@ -956,35 +1002,41 @@
             
             speciesData.forEach((species, index) => {
                 const color = colors[index % colors.length];
+                speciesColors[species.id] = color; // Store color for this species
                 
-                // Add marker
-                const marker = L.circleMarker([species.lat, species.lng], {
-                    radius: 10,
-                    fillColor: color,
-                    color: '#fff',
-                    weight: 1.5,
-                    opacity: 1,
-                    fillOpacity: 0.8
-                }).addTo(map);
+                // Initialize arrays for this species
+                speciesGroups[species.id] = [];
+                speciesLabels[species.id] = [];
                 
-                // Add label
-                const label = L.marker([species.lat, species.lng], {
-                    icon: L.divIcon({
-                        className: 'map-label',
-                        html: `<div style="display: flex; align-items: center;">
-                                  <span style="margin-right: 5px;">${species.name}</span>
-                                  <span class="taxon-status status-${species.status}" style="font-size: 0.7em; padding: 2px 6px;">${species.status.toUpperCase()}</span>
-                               </div>`,
-                        iconSize: null
-                    }),
-                    interactive: false
-                }).addTo(map);
+                // Add all points for this species
+                species.points.forEach(point => {
+                    // Add marker
+                    const marker = L.circleMarker([point.lat, point.lng], {
+                        radius: 10,
+                        fillColor: color,
+                        color: '#fff',
+                        weight: 1.5,
+                        opacity: 1,
+                        fillOpacity: 0.8
+                    }).addTo(map);
+                    
+                    // Add label (only show for one point per species to avoid clutter)
+                    if (species.points.indexOf(point) === 0) {
+                        const label = L.marker([point.lat, point.lng], {
+                            icon: L.divIcon({
+                                className: 'map-label',
+                                html: species.name,
+                                iconSize: null
+                            }),
+                            interactive: false
+                        }).addTo(map);
+                        speciesLabels[species.id].push(label);
+                    }
+                    
+                    speciesGroups[species.id].push(marker);
+                });
                 
-                // Store references
-                markers[species.id] = marker;
-                labels[species.id] = label;
-                
-                // Add filter checkbox
+                // Add filter checkbox (only one per species)
                 const filterItem = document.createElement('div');
                 filterItem.className = 'species-filter-item';
                 filterItem.innerHTML = `
