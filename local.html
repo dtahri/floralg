@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Carte des Zones Ecologiques d'Algérie</title>
+    <title>Carte des Zones Ecologiques d'AlgÃ©rie</title>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -583,7 +583,7 @@
     
     <div class="loading-indicator" id="loadingIndicator">
         <i class="fas fa-spinner"></i>
-        <span>Chargement des données cartographiques...</span>
+        <span>Chargement des donnÃ©es cartographiques...</span>
     </div>
     
     <div class="control-panel">
@@ -591,7 +591,7 @@
         <div style="display: flex; align-items: center; gap: 5px;">
             <button class="control-btn active domain-btn" id="toggleDomains">
                 <i class="fas fa-layer-group"></i>
-                <span>Rég. Biogéo.</span>
+                <span>RÃ©g. BiogÃ©o.</span>
             </button>
             <button class="info-btn" id="domainsInfoBtn">
                 <i class="fas fa-info-circle"></i>
@@ -601,7 +601,7 @@
         <div style="display: flex; align-items: center; gap: 5px;">
             <button class="control-btn active" id="toggleDerstein">
                 <i class="fas fa-layer-group"></i>
-                <span>Ecorégions</span>
+                <span>EcorÃ©gions</span>
             </button>
             <button class="info-btn" id="dersteinInfoBtn">
                 <i class="fas fa-info-circle"></i>
@@ -630,7 +630,7 @@
             <i class="fas fa-times" id="closeQsInfo"></i>
         </div>
         <div class="info-popup-content">
-            <p>Quézel, P. & Santa, S. 1962. Nouvelle Flore de l’Algérie et des régions désertiques méridionales, Editions du Centre National de la Recherche Scientifique. ed. Paris.</p>
+            <p>QuÃ©zel, P. & Santa, S. 1962. Nouvelle Flore de lÂ’AlgÃ©rie et des rÃ©gions dÃ©sertiques mÃ©ridionales, Editions du Centre National de la Recherche Scientifique. ed. Paris.</p>
         </div>
     </div>
     
@@ -646,7 +646,7 @@
     
     <div class="info-popup" id="domainsInfoPopup">
         <div class="info-popup-title">
-            <span>Régions biogéographiques</span>
+            <span>RÃ©gions biogÃ©ographiques</span>
             <i class="fas fa-times" id="closeDomainsInfo"></i>
         </div>
         <div class="info-popup-content">
@@ -691,14 +691,14 @@
             </div>
             <div class="form-actions">
                 <button class="btn btn-primary" id="addMoreBtn">
-                    <i class="fas fa-plus"></i> Ajouter à la liste
+                    <i class="fas fa-plus"></i> Ajouter Ã  la liste
                 </button>
                 <button class="btn btn-success" id="locateBtn">
                     <i class="fas fa-map-marker-alt"></i> Localiser
                 </button>
             </div>
             <div class="point-list" id="pointList">
-                <div class="empty-list">Aucun point ajouté pour le moment</div>
+                <div class="empty-list">Aucun point ajoutÃ© pour le moment</div>
             </div>
             <div class="form-actions">
                 <button class="btn btn-danger" id="clearAllBtn">
@@ -712,23 +712,23 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
     <script>
         // Initialisation de la carte
-        const map = L.map('map').setView([28.0339, 1.6596], 5); // Centré sur l'Algérie
+        const map = L.map('map').setView([28.0339, 1.6596], 5); // CentrÃ© sur l'AlgÃ©rie
         
         // Ajout de la carte de base
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
             attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributeurs'
         }).addTo(map);
         
-        // Ajout du contrôle d'échelle
+        // Ajout du contrÃ´le d'Ã©chelle
         L.control.scale({position: 'bottomleft', imperial: false}).addTo(map);
         
-        // Création des groupes de couches
+        // CrÃ©ation des groupes de couches
         const qsLayer = L.layerGroup().addTo(map);
         const dersteinLayer = L.layerGroup().addTo(map);
         const domainsLayer = L.layerGroup().addTo(map);
         const pointsLayer = L.layerGroup().addTo(map);
         
-        // Définition des couleurs pour chaque type de zone
+        // DÃ©finition des couleurs pour chaque type de zone
         const zoneColors = {
             qs: [
                 '#FF5733', '#33FF57', '#3357FF', '#F3FF33', '#FF33F3',
@@ -747,7 +747,7 @@
             ]
         };
         
-        // Définition des fichiers GeoJSON pour chaque couche
+        // DÃ©finition des fichiers GeoJSON pour chaque couche
         const geojsonFiles = {
             qs: [
                 { id: 'A1', file: './qets/A1.json', name: 'Sous-secteur A1' },
@@ -817,7 +817,7 @@
             loader.style.display = show ? 'flex' : 'none';
         }
         
-        // Charger les données GeoJSON
+        // Charger les donnÃ©es GeoJSON
         async function loadGeoJSON() {
             showLoading(true);
             
@@ -837,14 +837,14 @@
                 await loadZoneType('domains', domainsLayer);
                 
             } catch (error) {
-                console.error("Erreur de chargement des données cartographiques:", error);
-                alert("Echec du chargement de certaines données cartographiques. Veuillez vérifier la console pour plus de détails.");
+                console.error("Erreur de chargement des donnÃ©es cartographiques:", error);
+                alert("Echec du chargement de certaines donnÃ©es cartographiques. Veuillez vÃ©rifier la console pour plus de dÃ©tails.");
             } finally {
                 showLoading(false);
             }
         }
         
-        // Charger un type de zone spécifique
+        // Charger un type de zone spÃ©cifique
         async function loadZoneType(zoneType, layerGroup) {
             const zoneFiles = geojsonFiles[zoneType];
             const colors = zoneColors[zoneType];
@@ -879,7 +879,7 @@
                         }
                     }).addTo(layerGroup);
                     
-                    // Stocker la référence de la couche pour le changement de couleur
+                    // Stocker la rÃ©fÃ©rence de la couche pour le changement de couleur
                     polygonLayers[zoneType][zone.id] = {
                         layer: geoJsonLayer,
                         color: color
@@ -902,7 +902,7 @@
             }
         }
         
-        // Afficher le sélecteur de couleur pour les polygones
+        // Afficher le sÃ©lecteur de couleur pour les polygones
         function showPolygonColorPicker(zoneType, zoneId) {
             const colorPicker = document.getElementById('polygonColorPicker');
             const colorGrid = document.getElementById('colorPickerGrid');
@@ -922,18 +922,18 @@
                 colorGrid.appendChild(colorOption);
             });
             
-            // Positionner et afficher le sélecteur de couleur
+            // Positionner et afficher le sÃ©lecteur de couleur
             colorPicker.style.display = 'block';
             colorPicker.style.top = '80px';
             colorPicker.style.right = '15px';
             
-            // Fermer le sélecteur de couleur lors du clic sur le bouton de fermeture
+            // Fermer le sÃ©lecteur de couleur lors du clic sur le bouton de fermeture
             document.getElementById('closeColorPicker').onclick = function() {
                 colorPicker.style.display = 'none';
             };
         }
         
-        // Eléments DOM
+        // ElÃ©ments DOM
         const toggleQSBtn = document.getElementById('toggleQS');
         const toggleDersteinBtn = document.getElementById('toggleDerstein');
         const toggleDomainsBtn = document.getElementById('toggleDomains');
@@ -950,7 +950,7 @@
         const pointList = document.getElementById('pointList');
         const pointForm = document.getElementById('pointForm');
         
-        // Eléments des boutons d'information
+        // ElÃ©ments des boutons d'information
         const qsInfoBtn = document.getElementById('qsInfoBtn');
         const dersteinInfoBtn = document.getElementById('dersteinInfoBtn');
         const domainsInfoBtn = document.getElementById('domainsInfoBtn');
@@ -1007,7 +1007,7 @@
         
         closePointForm.addEventListener('click', hidePointForm);
         
-        // Ajouter un point à la liste
+        // Ajouter un point Ã  la liste
         addMoreBtn.addEventListener('click', function() {
             const id = pointIdInput.value.trim();
             const lat = parseFloat(pointLatInput.value.trim());
@@ -1029,16 +1029,16 @@
                 return;
             }
             
-            // Vérifier si l'ID existe déjà
+            // VÃ©rifier si l'ID existe dÃ©jÃ 
             if (pointsList.some(point => point.id === id)) {
-                alert(`Un point avec l'ID "${id}" existe déjà`);
+                alert(`Un point avec l'ID "${id}" existe dÃ©jÃ `);
                 return;
             }
             
             pointsList.push({ id, lat, lng, color });
             updatePointsList();
             
-            // Effacer les entrées (sauf la couleur)
+            // Effacer les entrÃ©es (sauf la couleur)
             pointIdInput.value = '';
             pointLatInput.value = '';
             pointLngInput.value = '';
@@ -1050,14 +1050,14 @@
         // Localiser tous les points
         locateBtn.addEventListener('click', function() {
             if (pointsList.length === 0) {
-                alert('Aucun point à localiser. Veuillez d\'abord ajouter des points.');
+                alert('Aucun point Ã  localiser. Veuillez d\'abord ajouter des points.');
                 return;
             }
             
             // Effacer les points existants
             pointsLayer.clearLayers();
             
-            // Ajouter de nouveaux points à la carte
+            // Ajouter de nouveaux points Ã  la carte
             pointsList.forEach(point => {
                 const marker = L.marker([point.lat, point.lng], {
                     icon: L.divIcon({
@@ -1096,7 +1096,7 @@
                 map.fitBounds(group.getBounds().pad(0.2));
             }
             
-            // Fermer le formulaire après localisation
+            // Fermer le formulaire aprÃ¨s localisation
             pointFormContainer.style.display = 'none';
         });
         
@@ -1104,19 +1104,19 @@
         clearAllBtn.addEventListener('click', function() {
             if (pointsList.length === 0) return;
             
-            if (confirm('Etes-vous sûr de vouloir effacer tous les points ?')) {
+            if (confirm('Etes-vous sÃ»r de vouloir effacer tous les points ?')) {
                 pointsList.length = 0;
                 pointsLayer.clearLayers();
                 updatePointsList();
             }
         });
         
-        // Mettre à jour l'affichage de la liste des points
+        // Mettre Ã  jour l'affichage de la liste des points
         function updatePointsList() {
             pointList.innerHTML = '';
             
             if (pointsList.length === 0) {
-                pointList.innerHTML = '<div class="empty-list">Aucun point ajouté pour le moment</div>';
+                pointList.innerHTML = '<div class="empty-list">Aucun point ajoutÃ© pour le moment</div>';
                 return;
             }
             
@@ -1135,7 +1135,7 @@
                 pointList.appendChild(pointItem);
             });
             
-            // Ajouter des écouteurs d'événements aux boutons de suppression
+            // Ajouter des Ã©couteurs d'Ã©vÃ©nements aux boutons de suppression
             document.querySelectorAll('.remove-btn').forEach(btn => {
                 btn.addEventListener('click', function() {
                     const index = parseInt(this.getAttribute('data-index'));
@@ -1153,7 +1153,7 @@
             }
         }
         
-        // Mettre à jour tous les points sur la carte
+        // Mettre Ã  jour tous les points sur la carte
         function updatePointsOnMap() {
             pointsLayer.clearLayers();
             pointsList.forEach(point => {
@@ -1201,7 +1201,7 @@
             domainsInfoPopup.style.display = 'none';
         });
         
-        // Fermer les popups d'information lors d'un clic à l'extérieur
+        // Fermer les popups d'information lors d'un clic Ã  l'extÃ©rieur
         document.addEventListener('click', function(e) {
             if (!qsInfoPopup.contains(e.target) && e.target !== qsInfoBtn) {
                 qsInfoPopup.style.display = 'none';
@@ -1214,18 +1214,18 @@
             }
         });
         
-        // Initialiser la carte et les écouteurs d'événements
+        // Initialiser la carte et les Ã©couteurs d'Ã©vÃ©nements
         window.onload = function() {
             loadGeoJSON();
             
-            // Fermer la fenêtre modale lors d'un clic à l'extérieur
+            // Fermer la fenÃªtre modale lors d'un clic Ã  l'extÃ©rieur
             window.onclick = function(event) {
                 if (event.target === pointFormContainer) {
                     pointFormContainer.style.display = 'none';
                 }
             };
             
-            // Gérer la touche Entrée dans le formulaire
+            // GÃ©rer la touche EntrÃ©e dans le formulaire
             pointForm.addEventListener('keypress', function(e) {
                 if (e.key === 'Enter') {
                     addMoreBtn.click();
@@ -1234,11 +1234,11 @@
             
             // Clic droit sur les polygones pour changer la couleur
             map.on('contextmenu', function(e) {
-                // Vérifier si nous avons cliqué sur un polygone
+                // VÃ©rifier si nous avons cliquÃ© sur un polygone
                 const features = map.featureToLayer(e.latlng);
                 if (features && features.length > 0) {
                     const feature = features[0];
-                    // Trouver à quelle couche et zone cela appartient
+                    // Trouver Ã  quelle couche et zone cela appartient
                     for (const zoneType in polygonLayers) {
                         for (const zoneId in polygonLayers[zoneType]) {
                             if (polygonLayers[zoneType][zoneId].layer.hasLayer(feature)) {
