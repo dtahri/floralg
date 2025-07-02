@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FlorALG</title>
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Open Sans', sans-serif;
+            background-color: #f5f7fa;
+        }
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 60px;
+            background: linear-gradient(135deg, #2c3e50, #4ca1af);
+            color: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 15px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+            z-index: 1000;
+        }
+        .header-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            cursor: pointer;
+        }
+        .header-title:hover {
+            text-decoration: underline;
+        }
+        .nav-menu {
+            display: flex;
+            gap: 20px;
+        }
+        .nav-menu a {
+            color: white;
+            text-decoration: none;
+            font-weight: 600;
+            padding: 8px 12px;
+            border-radius: 4px;
+            transition: background-color 0.3s;
+        }
+        .nav-menu a:hover {
+            background-color: rgba(255,255,255,0.2);
+        }
+        .content {
+            margin-top: 80px;
+            padding: 20px;
+            max-width: 1200px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .search-section {
+            background-color: white;
+            border-radius: 8px;
+            padding: 25px;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .search-section h2 {
+            color: #2c3e50;
+            margin-top: 0;
+            border-bottom: 1px solid #ecf0f1;
+            padding-bottom: 10px;
+        }
+        .search-container {
+            position: relative;
+            margin: 20px 0;
+        }
+        #searchInput {
+            width: 100%;
+            padding: 12px 20px;
+            border: 2px solid #ddd;
+            border-radius: 25px;
+            font-size: 16px;
+            transition: all 0.3s;
+        }
+        #searchInput:focus {
+            outline: none;
+            border-color: #4ca1af;
+            box-shadow: 0 0 8px rgba(76, 161, 175, 0.3);
+        }
+        #searchResults {
+            position: absolute;
+            width: 100%;
+            max-height: 300px;
+            overflow-y: auto;
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            margin-top: 5px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            z-index: 100;
+            display: none;
+        }
+        .result-item {
+            padding: 10px 15px;
+            border-bottom: 1px solid #eee;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        .result-item:hover {
+            background-color: #f5f7fa;
+        }
+        .result-item a {
+            color: #2c3e50;
+            text-decoration: none;
+            display: block;
+        }
+        .no-results {
+            padding: 15px;
+            color: #e74c3c;
+            text-align: center;
+        }
+        .search-hint {
+            font-size: 14px;
+            color: #7f8c8d;
+            margin-top: 5px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="header-title">FlorALG</div>
+        <div class="nav-menu">
+            <a href="local.html">Localiser</a>
+            <a href="dist.html">Distribution Q&S</a>
+        </div>
+    </div>
+    
+    <div class="content">
+        <section class="search-section">
+            <h2>Recherche des Genres</h2>
+            <p>Commencez à taper pour voir les résultats.</p>
+            
+            <div class="search-container">
+                <input type="text" id="searchInput" placeholder="Rechercher un genre..." autocomplete="off">
+                <div id="searchResults"></div>
+                <p class="search-hint">Tapez au moins 2 caractères pour lancer la recherche</p>
+            </div>
+        </section>
+    </div>
+
+    <script>
+        // Données d'exemple de genres végétaux (20 entrées - à étendre à 800 selon les besoins)
+        const plantGenera = [
+            {name: "Ferula", link: "ressources/Ferula.html"},
+            {name: "Aloe", link: "genus/aloe.html"},
+            {name: "Artemisia", link: "genus/artemisia.html"},
+            {name: "Bambusa", link: "genus/bambusa.html"},
+            {name: "Citrus", link: "genus/citrus.html"},
+            {name: "Dracaena", link: "genus/dracaena.html"},
+            {name: "Eucalyptus", link: "genus/eucalyptus.html"},
+            {name: "Ficus", link: "genus/ficus.html"},
+            {name: "Geranium", link: "genus/geranium.html"},
+            {name: "Hibiscus", link: "genus/hibiscus.html"},
+            {name: "Jasminum", link: "genus/jasminum.html"},
+            {name: "Lavandula", link: "genus/lavandula.html"},
+            {name: "Mentha", link: "genus/mentha.html"},
+            {name: "Nerium", link: "genus/nerium.html"},
+            {name: "Olea", link: "genus/olea.html"},
+            {name: "Pinus", link: "genus/pinus.html"},
+            {name: "Quercus", link: "genus/quercus.html"},
+            {name: "Rosa", link: "genus/rosa.html"},
+            {name: "Salvia", link: "genus/salvia.html"},
+            {name: "Thymus", link: "genus/thymus.html"}
+        ];
+
+        const searchInput = document.getElementById('searchInput');
+        const searchResults = document.getElementById('searchResults');
+
+        // Fonction pour effectuer la recherche
+        function performSearch() {
+            const searchTerm = searchInput.value.trim().toLowerCase();
+            
+            // Effacer les résultats précédents
+            searchResults.innerHTML = '';
+            
+            // Ne pas chercher si le terme est trop court
+            if (searchTerm.length < 2) {
+                searchResults.style.display = 'none';
+                return;
+            }
+            
+            // Filtrer les genres correspondants
+            const results = plantGenera.filter(genus => 
+                genus.name.toLowerCase().includes(searchTerm)
+            );
+            
+            // Afficher les résultats
+            if (results.length > 0) {
+                results.forEach(genus => {
+                    const resultItem = document.createElement('div');
+                    resultItem.className = 'result-item';
+                    resultItem.innerHTML = `<a href="${genus.link}">${genus.name}</a>`;
+                    searchResults.appendChild(resultItem);
+                });
+                searchResults.style.display = 'block';
+            } else {
+                const noResults = document.createElement('div');
+                noResults.className = 'no-results';
+                noResults.textContent = 'Aucun genre correspondant trouvé';
+                searchResults.appendChild(noResults);
+                searchResults.style.display = 'block';
+            }
+        }
+
+        // Ecouteurs d'événements
+        searchInput.addEventListener('input', performSearch);
+        
+        // Masquer les résultats quand on clique à l'extérieur
+        document.addEventListener('click', (e) => {
+            if (!searchInput.contains(e.target) && !searchResults.contains(e.target)) {
+                searchResults.style.display = 'none';
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,839 @@
+scientific-name,family-name,abundance
+Cystopteris filix-fragilis,Polypodiacées,C
+Dryopteris filix-mas,Polypodiacées,RR
+Asplenium ruta-muraria,Polypodiacées,RR
+Adiantum capillus-veneris,Polypodiacées,AC
+Taxus baccata,Taxacées,AR
+Juniperus communis,Cupressacées,R
+Juniperus phoenica,Cupressacées,C
+Juniperus thurifera var. africana,Cupressacées,AR
+Cedrus libanotica ssp. atlantica,Pinacées,AC
+Pinus halepensis,Pinacées,CC
+Ephedra altissima,Ephedracées,C
+Typha angustifolia ssp. australis,Typhacées,CC
+Potamogeton densus,Potamogetonacées,AC
+Ruppia maritima ssp. rostellata,Ruppiacées,AC
+Ruppia maritima ssp. drepanensis,Ruppiacées,AC
+Zannichellia palustris ssp. genuina,Zannichelliacées,AC
+Chrysopogon aucheri,Graminées,RR
+Hyparrhenia hirta,Graminées,CC
+Digitaria sanguinalis,Graminées,CC
+Echinochloa crus-galli,Graminées,C
+Echinochloa colona,Graminées,C
+Setaria verticillata ssp. verticillata,Graminées,C
+Cenchrus ciliaris,Graminées,AR
+Phalaris brachystachys,Graminées,C
+Phalaris minor,Graminées,C
+Aristida caerulescens,Graminées,CC
+Aristida ciiiata,Graminées,AC
+Aristida sahelica,Graminées,AC
+Aristida plumosa ssp. eu-plumosa,Graminées,CC
+Aristida plumosa ssp. lanuginosa,Graminées,AR
+Stipa retorta,Graminées,C
+Stipa pennata ssp. mediterranea,Graminées,R
+Stipa barbata,Graminées,C
+Oryzopsis miliacea,Graminées,C
+Oryzopsis caerulescens,Graminées,C
+Oryzopsis paradoxa var. eriolemma,Graminées,C
+Milium vernale ssp. montianum,Graminées,C
+Alopecurus pratensis ssp. brachystachys,Graminées,R
+Agrostis stolonifera ssp. scabriglumis,Graminées,AC
+Apera interrupta,Graminées,RR
+Oropetium africanum,Graminées,R
+Cynodon dactylon,Graminées,C
+Phragmites communis,Graminées,C
+Trisetaria panicea,Graminées,R
+Avena macrostachya,Graminées,AR
+Avena bromoides ssp. australis,Graminées,R
+Avena alba,Graminées,CC
+Avena sterilis ssp. macrocarpa,Graminées,CC
+Avena sterilis ssp. ludoviciana,Graminées,CC
+Koeleria splendens ssp. caudata,Graminées,AR
+Koeleria phleoides,Graminées,CCC
+Ammochloa palaestina,Graminées,AR
+Melica cupani,Graminées,AC
+Cutandia divaricata,Graminées,C
+Cutandia dichotoma var. dichotoma,Graminées,C
+Cutandia dichotoma var. memphitica,Graminées,C
+Vulpiella stipoides,Graminées,C
+Cynosurus baiansae,Graminées,AC
+Cynosurus elegans ssp. aurasiacus,Graminées,C
+Cynosurus elegans ssp. obliquatus,Graminées,C
+Dactylis glomerata,Graminées,C
+AEluropus iittoraiis,Graminées,C
+Wangenheimia lima,Graminées,AC
+Poa flaccidula,Graminées,R
+Poa annua ssp. typica,Graminées,C
+Puccinellia distans ssp. eu-distans,Graminées,C
+Festuca atlantica var. eu-atlantica,Graminées,AC
+Festuca algeriensis,Graminées,R
+Festuca ovina ssp. frigida,Graminées,R
+Festuca ovina ssp. laevis,Graminées,R
+Festuca ovina ssp. indigesta,Graminées,RR
+Festuca ovina ssp. sulcata,Graminées,AR
+Catapodium tuberculosum,Graminées,AC
+Nardurus cynosuroides,Graminées,AC
+Nardurus maritimus,Graminées,AR
+Bromus erectus,Graminées,AC
+Bromus sterilis,Graminées,AC
+Bromus rubens ssp. eu-rubens,Graminées,AC
+Brachypodium distachyum,Graminées,CC
+Brachypodium phoenicoides,Graminées,C
+Lolium perenne,Graminées,C
+Lolium rigidum,Graminées,C
+Lolium multiflorum ssp. gaudini,Graminées,CC
+Agropyron orientale ssp. eu-orientale,Graminées,AC
+Agropyron pallormitanum var. hispanicum,Graminées,R
+Dasypyrum hordeaceum,Graminées,AC
+Hordeum nodosum,Graminées,R
+Hordeum maritimum ssp. gussoneanum var. incertum,Graminées,C
+Hordeum murinum ssp. leporinum,Graminées,CC
+Cyperus laevigatus ssp. distachyos,Cyperacées,AC
+Cyperus rotundus ssp. eu-rotundus,Cyperacées,C
+Scirpus holoschoenus,Cyperacées,CC
+Scirpus maritimus,Cyperacées,CC
+Schoenus nigricans,Cyperacées,AC
+Carex divisa,Cyperacées,C
+Carex hirta,Cyperacées,RR
+Carex hordcistichos,Cyperacées,R
+Phoenix dactylifera,Palmées,C
+Juncus maritimus,Juncacées,CC
+Juncus valvatus,Juncacées,R
+Juncus bufonius ssp. eu-bufonius,Juncacées,AC
+Asphodelus microcarpus,Liliacées,CC
+Asphodelus fistulosus,Liliacées,AR
+Asphodelus tenuifolius,Liliacées,C
+Asphodeline lutea,Liliacées,C
+Anthericum liliago ssp. algeriense,Liliacées,AC
+Tulipa sylvestris ssp. australis,Liliacées,CC
+Gagea reticulata ssp. eu-reticulata var. africa,Liliacées,AR
+Gagea granatelli ssp. eu-granatelli,Liliacées,C
+Gagea foliosa ssp. eu-foliosa,Liliacées,AC
+Scilla peruviana,Liliacées,C
+Urginea noctiftora ssp. heliophylla,Liliacées,AC
+Urginea fugax,Liliacées,C
+Dipcadi serotinum ssp. lividum,Liliacées,C
+Ornithogalum umbellatum ssp. orthophyllum,Liliacées,C
+Ornithogalum pyramidale ssp. narbonense,Liliacées,AC
+Muscari comosum,Liliacées,AC
+Ruscus aculeatus,Liliacées,C
+Asparagus stipularis var. horridus,Liliacées,AC
+Smilax aspera var. altissima,Liliacées,CC
+Allium cupani,Liliacées,C
+Allium paniculatum var. typicum,Liliacées,C
+Allium sphaerocephalum,Liliacées,AC
+Allium pardoi,Liliacées,R
+Allium ampeloprasum ssp. eu-empeloprasum,Liliacées,AC
+Gladiolus byzantinus,Iridacées,C
+Iris sisyrinchium,Iridacées,C
+Iris xiphium,Iridacées,C
+Romulea vaillantii,Iridacées,RR
+Romulea bulbocodiuni ssp. eu-bulbocodium,Iridacées,C
+Ophrys scolopax,Orchidacées,C
+Ophrys lutea,Orchidacées,C
+Orchis purpurea,Orchidacées,R
+Orchis laxiflora,Orchidacées,
+Serapias anthropophorum,Orchidacées,C
+Epipactis helleborine var. platyphylla,Orchidacées,R
+Cephalanthera damasonium,Orchidacées,RR
+Populus euphratica var. mauritanîca,Salicacées,RR
+Populus nigra,Salicacées,R
+Populus alba,Salicacées,CC
+Salix purpurea,Salicacées,AC
+Salix pedicellata,Salicacées,CC
+Rumex tingitanus,Polygonacées,AC
+Rumex bucephalophorus ssp. gallicus,Polygonacées,C
+Rumex vesicarius,Polygonacées,RR
+Rumex conglomeratus,Polygonacées,CC
+Forskohlea tenacissima,Urticacées,RR
+Parietaria lusitanica,Urticacées,R
+Viscum album,Loranthacées,RR
+Arceuthobium oxycedri,Loranthacées,AR
+Atriplex halimus,Chenopodiacées,C
+Oreobliton thesioides,Chenopodiacées,C
+Chenopodium foliosum,Chenopodiacées,AC
+Chenopodium murale,Chenopodiacées,C
+Arthrocnemum indicumm,Chenopodiacées,C
+Salicornia arabica var. typica,Chenopodiacées,CC
+Anabasis oropediorum,Chenopodiacées,AC
+Polycnemum fontanesii,Chenopodiacées,R
+Suaeda fruticosa,Chenopodiacées,C
+Salsola longifolia,Chenopodiacées,AC
+Salsola vermiculata,Chenopodiacées,C
+Portulaca oleracea ssp. silvestris,Portulacacées,C
+Corrigiola littoralis ssp. littoralis,Caryophyllacées,AC
+Corrigiola littoralis ssp. telephiifolia,Caryophyllacées,AC
+Pteranthus dichotomus,Caryophyllacées,AC
+Herniaria incana,Caryophyllacées,AR
+Herniaria glabra,Caryophyllacées,AC
+Herniaria hirsuta var. cinerea,Caryophyllacées,AC
+Herniaria fontanesii,Caryophyllacées,AC
+Herniaria hemistemon,Caryophyllacées,R
+Paronychia arabica ssp. cossoniana,Caryophyllacées,C
+Paronychia argentea,Caryophyllacées,C
+Paronychia capitata ssp. chlorothyrsa,Caryophyllacées,C
+Loefflingia hispanica ssp. eu-hispanica,Caryophyllacées,AC
+Telephium imperati,Caryophyllacées,AC
+Polycarpon polycarpoides ssp. bivonae,Caryophyllacées,CC
+Spergularia marginata ssp. sauvagei,Caryophyllacées,AC
+Spergularia salina ssp. typica,Caryophyllacées,C
+Spergularia diandra,Caryophyllacées,CC
+Spergularia bocconei(a),Caryophyllacées,CC
+Buffonia tenuifolia,Alsinoidées,AC
+Buffonia chevallieri,Alsinoidées,RR
+Buffonia duvaljouvii,Alsinoidées,RR
+Minuartia geniculata,Alsinoidées,C
+Minuartia mutabilis,Alsinoidées,AR
+Minuartia tenuifolia,Alsinoidées,C
+Minuartia campestris,Alsinoidées,AC
+Minuartia montana,Alsinoidées,AC
+Sagina apetala,Alsinoidées,C
+Holosteum umbellatum,Alsinoidées,C
+Cerastium gibraltaricum,Alsinoidées,AR
+Cerastium dichotomum,Alsinoidées,AC
+Cerastium pentandrum ssp. tetrandrum,Alsinoidées,AC
+Cerastium glomeratum,Alsinoidées,C
+Cerastium brachypetalum ssp. luridum,Alsinoidées,R
+Arenaria aggregata ssp. mauritanica,Alsinoidées,R
+Silene cucubalus ssp. angustifolia,Silenoidées,C
+Silene atlantica,Silenoidées,AC
+Silene apetala,Silenoidées,AR
+Silene secundiflora,Silenoidées,R
+Silene setacea ssp. eu-setacea,Silenoidées,C
+Silene oropediorum,Silenoidées,AR
+Silene claryi,Silenoidées,RR
+Silene muscipula ssp. deserticola,Silenoidées,AC
+Saponaria giutinosa,Silenoidées,R
+Dianthus crinitus,Silenoidées,AR
+Dianthus caryophyllus ssp. virgineus,Silenoidées,CC
+Clematis flammula,Renonculacées,R
+Delphinium pubescens,Renonculacées,AC
+Delphinium balansae,Renonculacées,R
+Adonis dentata,Renonculacées,C
+Ceratocephalus falcatus ssp. falcatus,Renonculacées,R
+Ceratocephalus falcatus ssp. incurvus,Renonculacées,AC
+Ranunculus aquatilis,Renonculacées,C
+Ranunculus gramineus,Renonculacées,AC
+Ranunculus sardous ssp. trilobus,Renonculacées,C
+Ranunculus arvensis,Renonculacées,C
+Ranunculus rectirostris,Renonculacées,R
+Ranunculus paludosus,Renonculacées,C
+Papaver hybridum,Papaveracées,C
+Papaver argemone,Papaveracées,R
+Papaver rhoeas,Papaveracées,C
+Papaver dubium ssp. eu-dubium,Papaveracées,C
+Hypecoum pendulum,Papaveracées,C
+Hypecoum geslini,Papaveracées,AC
+Hypecoum procumbens ssp. procumbens,Papaveracées,C
+Roemeria hybrida,Papaveracées,AC
+Glaucium corniculatum,Papaveracées,C
+Rupicapnos numidicus,Fumariacées,AC
+Platycapnos spicatus,Fumariacées,R
+Fumaria capreolata,Fumariacées,C
+Fumaria parviflora,Fumariacées,C
+Fumaria officinalis,Fumariacées,C
+Cleome arabica ssp. arabica,Capparidacées,CC
+Capparis spinosa,Capparidacées,AC
+Farsetia aegyptiaca,Crucifères,C
+Farsetia hamiltoni,Crucifères,AC
+Clypeola cyclodontea,Crucifères,AC
+Crambe kralikii,Crucifères,R
+Muricaria prostrata,Crucifères,C
+Boreava aptera,Crucifères,R
+Didesmus bipinnatus,Crucifères,AC
+BiscutelIa auriculata ssp. auriculata,Crucifères,AC
+BiscutelIa didyma,Crucifères,CC
+Iberis odorata,Crucifères,AC
+Zilla spinosa ssp. macroptera,Crucifères,C
+Alyssum cochleatum,Crucifères,AR
+Alyssum montanum,Crucifères,AC
+Alyssum alpestre ssp. serpyllifolium,Crucifères,AR
+Alyssum scutigerum,Crucifères,R
+Alyssum granatense,Crucifères,C
+Alyssum linifolium,Crucifères,AR
+Lobularia maritima,Crucifères,C
+Capsella bursa-pastoris ssp. bursa,Crucifères,C
+Capsella bursa-pastoris ssp. rubella,Crucifères,C
+Hutchinsia procumbens,Crucifères,AC
+Hutchinsia petraea,Crucifères,AR
+Enarthrocarpus clavatus,Crucifères,AC
+Raffenaldia primuloides,Crucifères,R
+Eruca vesicaria ssp. vesicaria,Crucifères,C
+Eruca vesicaria ssp. pinnatifida,Crucifères,C
+Eruca loncholoma,Crucifères,AR
+Hirschfeldia incana ssp. adpressa,Crucifères,AC
+Diplotaxis harra,Crucifères,C
+Diplotaxis virgata ssp. cossoniana,Crucifères,R
+Diplotaxis muralis,Crucifères,C
+Sinapis pubescens ssp. pubescens,Crucifères,C
+Brassica dimorpha,Crucifères,R
+Conringia orientalis,Crucifères,C
+Moricandia arvensis ssp. arvensis,Crucifères,CC
+Moricandia arvensis ssp. suffruticosa,Crucifères,C
+Pseuderucaria teretifolia,Crucifères,AR
+Morettia canescens,Crucifères,C
+Alliaria officinalis,Crucifères,AC
+Arabis parvula,Crucifères,AC
+Rorippa nasturtium-aquaticum,Crucifères,C
+Rorippa aspera ssp. munbyana,Crucifères,R
+Erysimum incanum,Crucifères,AC
+Erysimum bocconei,Crucifères,R
+Sisymbrium runcinatum,Crucifères,AC
+Sisymbrium erassifolium,Crucifères,AC
+Sisymbrium coronopifolium,Crucifères,C
+Sisymbrium irio,Crucifères,C
+Sisymbrium reboudianum,Crucifères,AC
+Matthiola maroccana,Crucifères,AR
+Matthiola longipetala ssp. livida,Crucifères,C
+Matthiola longipetala ssp. kralikii,Crucifères,AC
+Matthiola parviflora,Crucifères,C
+Malcolmia aegyptiaca,Crucifères,C
+Malcolmia africana,Crucifères,AR
+Maresia nana,Crucifères,AR
+Reseda alba ssp. eu-alba,Resedacées,AC
+Reseda decursiva,Resedacées,AC
+Reseda villosa,Resedacées,C
+Reseda stricta var. reuteriana,Resedacées,AR
+Reseda duriaeana,Resedacées,AC
+Reseda phyteuma ssp. eu phyteuma,Resedacées,R
+Cotyledon umbilicus-veneris ssp. horizontalis,Crassulacées,RR
+Sedum sediforme,Crassulacées,C
+Sedum acre,Crassulacées,AR
+Sedum album ssp. album,Crassulacées,C
+Sedum dasyphyllum ssp. eu-dasyphyllum,Crassulacées,C
+Potentilla pensylvanica ssp. hispanica,Rosacées,RR
+Prunus prostrata,Rosacées,C
+Prunus amygdalus,Rosacées,C
+Crataegus oxyacantha ssp. monogyna,Rosacées,C
+Crataegus oxyacantha ssp. maura,Rosacées,C
+Crataegus laciniata,Rosacées,AR
+Genista pseudo-pilosa,Legumineuses,R
+Genista cinerea ssp. cinerea,Legumineuses,AR
+Retama sphaerocarpa,Legumineuses,C
+Retama retam,Legumineuses,C
+Ononis pusilla,Legumineuses,AC
+Ononis natrix ssp. polydada,Legumineuses,AC
+Ononis sicula,Legumineuses,C
+Argyrolobium saharae,Legumineuses,R
+Argyrolobium uniflorum,Legumineuses,AC
+Lotophyllus argenteus ssp. linnaeanus,Legumineuses,C
+Lotus pusillus,Legumineuses,AR
+Medicago secundiflora,Legumineuses,CC
+Medicago sativa,Legumineuses,CC
+Medicago italica ssp. helix,Legumineuses,C
+Medicago litoralis,Legumineuses,AC
+Medicago minima,Legumineuses,AC
+Medicago laciniata,Legumineuses,AC
+Psoralea bituminosa,Legumineuses,C
+Melilotus neapolitana,Legumineuses,R
+Melilotus sulcata ssp. brachystachys,Legumineuses,C
+Trifolium phleoides ssp. gemellum,Legumineuses,R
+Trifolium ochroleucum,Legumineuses,R
+Trigonella gladiata,Legumineuses,AC
+Colutea arborescens,Legumineuses,AC
+Tephrosia leptostachya,Legumineuses,AR
+Coronilla scorpioides,Legumineuses,C
+Lens culinaris ssp. nigricans,Legumineuses,R
+Vicia lathyroides,Legumineuses,AR
+Vicia sativa ssp. amphicarpa,Legumineuses,AR
+Vicia glauca,Legumineuses,R
+Vicia monantha ssp. calcarata,Legumineuses,C
+Vicia monantha ssp. cinerea,Legumineuses,AC
+Vicia onobrychioides,Legumineuses,AC
+Vicia disperma,Legumineuses,CC
+Lathyrus ochrus,Legumineuses,CC
+Lathyrus nissolia,Legumineuses,R
+Lathyrus numidicus,Legumineuses,RR
+Lathyrus articulatus ssp. typicus,Legumineuses,CC
+Lathyrus saxatilis,Legumineuses,R
+Hippocrepis bicontorta,Legumineuses,AC
+Hippocrepis multisiliquosa ssp. confusa,Legumineuses,C
+Hippocrepis multisiliquosa ssp. ciliata,Legumineuses,C
+Hedysarum perralderianum,Legumineuses,R
+Hedysarum carnosum,Legumineuses,R
+Ebenus pinnata,Legumineuses,C
+Astragalus sesameus,Legumineuses,C
+Astragalus geniculatus,Legumineuses,AC
+Astragalus cruciatus,Legumineuses,C
+Astragalus tribuloides,Legumineuses,R
+Astragalus peregrinus ssp. warionis,Legumineuses,AC
+Astragalus hamosus,Legumineuses,AC
+Astragalus armatus ssp. tragacanthoides,Legumineuses,AC
+Astragalus armatus ssp. numidicus,Legumineuses,R
+Astragalus gombo,Legumineuses,AC
+Astragalus caprinus ssp. lanigerus,Legumineuses,AC
+Astragalus incanus ssp. nummularioides,Legumineuses,AC
+Astragalus monspessulanus,Legumineuses,AC
+Astragalus tenuifoliosus,Legumineuses,AC
+Geranium lucidum,Geraniacées,CC
+Geranium robertianum ssp. eu-robertianum,Geraniacées,R
+Geranium robertianum ssp. purpureum,Geraniacées,CC
+Geranium atlanticum,Geraniacées,C
+Geranium rotundifolium,Geraniacées,C
+Geranium pusillum,Geraniacées,RR
+Geranium molle,Geraniacées,CC
+Erodium montanum,Geraniacées,R
+Erodium cheilanthifolium ssp. antariense,Geraniacées,RR
+Erodium cheilanthifolium ssp. eu-cheilanthilolium,Geraniacées,R
+Erodium hirtum,Geraniacées,R
+Erodium glaucophyllum,Geraniacées,CC
+Erodium guttatum,Geraniacées,C
+Erodium moschatum,Geraniacées,CC
+Erodium cicutarium,Geraniacées,C
+Erodium malachoides ssp. eu-malachoides,Geraniacées,CC
+Erodium triangulare ssp. bovei,Geraniacées,C
+Oxalis corniculata,Oxalidacées,AC
+Linum strictum,Linacées,AC
+Linum gallicum,Linacées,C
+Linum corymbiferum ssp. asperifolium,Linacées,R
+Linum corymbiferum ssp. corymbiferum,Linacées,CC
+Linum suffruticosum ssp. eu-suffruticos,Linacées,AC
+Linum usitatissimllm ssp. angustifolium,Linacées,CC
+Tribulus terrester,Zygophyllacées,CC
+Peganum harmala,Zygophyllacées,CC
+Haplophyllum linifolium,Rutacées,R
+Ruta chalepensis ssp. angustifolia,Rutacées,C
+Ruta chalepensis ssp. latifolia,Rutacées,C
+Polygala rupestris,Polygalacées,AC
+Polygala monspeliaca,Polygalacées,CC
+Polygala nicreensis,Polygalacées,C
+Ricinus communis,Euphorbiacées,AC
+Euphorbia chamaesyce,Euphorbiacées,AC
+Euphorbia peplus,Euphorbiacées,CC
+Euphorbia guyoniana,Euphorbiacées,CC
+Euphorbia pubescens,Euphorbiacées,CC
+Euphorbia atlantica,Euphorbiacées,AC
+Euphorbia helioscopia ssp. eu-helioscopia,Euphorbiacées,C
+Euphorbia nicreensis,Euphorbiacées,AC
+Euphorbia terracina,Euphorbiacées,C
+Euphorbia bupleuroides ssp. luteola,Euphorbiacées,AC
+Euphorbia dracunculoides ssp. glebulosa,Euphorbiacées,AC
+Euphorbia exigua,Euphorbiacées,CC
+Euphorbia sulcata,Euphorbiacées,AR
+MercuriaIis annua,Euphorbiacées,CC
+Pistacia lentiscus,Anacardiacées,CC
+Rhus tripartitum,Anacardiacées,AC
+Acer monspessulanum ssp. eu-monspessulanum,Aceracées,C
+Rhamnus alaternus ssp. eu-alaternus,Rhamnacées,CC
+Rhamnus alaternus ssp. myrtifolia,Rhamnacées,AC
+Rhamnus cathartica,Rhamnacées,RR
+Rhamnus alpina,Rhamnacées,AR
+Ziziphus lotus,Rhamnacées,CC
+Hibiscus trionum,Malvacées,R
+Malope malachoides ssp. laevigata,Malvacées,AR
+Malva sylvestris,Malvacées,CC
+Malva parviflora,Malvacées,CC
+Malva rotundifolia,Malvacées,R
+Lavatera cretica,Malvacées,CC
+Daphne oleoides var. atlantica,Thymelaeacées,R
+Thymelaea virescens,Thymelaeacées,R
+Thymelaea hirsuta,Thymelaeacées,CC
+Thymelaea virgata,Thymelaeacées,AR
+Thymelaea microphylla,Thymelaeacées,CC
+Thymelaea tartonraira,Thymelaeacées,R
+Lythrum junceum,Lythracées,CC
+Lythrum hyssopifolia,Lythracées,CC
+Myriophyllum verticillatum,Halorrhagacées,CC
+Myriophyllum spicatum,Halorrhagacées,AC
+Cynomorium coccineum,Cynomoriacées,AC
+Hedera helix ssp. canariensis,Araliacées,CC
+Eryngium ilicifoiium,Ombellifères,CC
+Eryngium triquetrum,Ombellifères,CC
+Eryngium dichotomun,Ombellifères,CC
+Eryngium tricuspidatum ssp. eu-triscuspidatum,Ombellifères,CC
+Bupleurum lancifolium,Ombellifères,CC
+Bupleurum tenuissimum,Ombellifères,CC
+Bupleurum semicompositum,Ombellifères,AC
+Bupleurum spinosum,Ombellifères,AC
+Bupleurum rigidum,Ombellifères,AR
+Bupleurum montanum,Ombellifères,AR
+Thapsia villosa,Ombellifères,AC
+Thapsia garganica,Ombellifères,CC
+Elaeoselinum thapsioides,Ombellifères,CC
+Scandix pecten-veneris,Ombellifères,CC
+Scandix stellatum,Ombellifères,R
+Scandix australis ssp. curvirostris,Ombellifères,RR
+Scandix australis ssp. occidentalis,Ombellifères,CC
+Pimpinella tragium,Ombellifères,AC
+Bippomarathrum libanotis ssp. bocconei,Ombellifères,R
+Daucus setifolius,Ombellifères,AC
+Daucus sahariensis,Ombellifères,C
+Daucus muricatus,Ombellifères,CC
+Orlaya platycarpos,Ombellifères,AR
+Turgenia latifolia,Ombellifères,C
+CaucaIis daucoides,Ombellifères,R
+CaucaIis coerulescens,Ombellifères,R
+CaucaIis leptophylla,Ombellifères,CC
+CaucaIis bifrons,Ombellifères,AC
+Torilis arvensis ssp. divaricata,Ombellifères,R
+Torilis arvensis ssp. neglecta,Ombellifères,CC
+Pituranthos scoparius,Ombellifères,C
+Pituranthos chloranthus ssp. cossonianus,Ombellifères,C
+Malabaila suaveolens var. numidica,Ombellifères,RR
+Anethum graveolens,Ombellifères,R
+Ferula cossollialla,Ombellifères,RR
+Ferula communis,Ombellifères,CC
+Ferula vesceritensis,Ombellifères,R
+Heracleum sphondylium ssp. lecoquii var. aurasiacum,Ombellifères,RR
+Peucedanum munbyi,Ombellifères,C
+Ammoides verticillata,Ombellifères,CC
+Foeniculum vulgare ssp. piperitum,Ombellifères,CC
+Foeniculum vulgare ssp. capillaceum,Ombellifères,C
+Ridolfia segetum,Ombellifères,CC
+Oenanthe giobulosa,Ombellifères,CC
+Oenanthe virgata,Ombellifères,CC
+Helosciadium nodiflorum,Ombellifères,CC
+Balansaea glaberrima,Ombellifères,CC
+Anthriscus silvestris,Ombellifères,R
+Anthriscus vulgaris,Ombellifères,AC
+Apium graveolens,Ombellifères,C
+Sison amomum,Ombellifères,RR
+Brachyapium dichotomum,Ombellifères,C
+Kundmannia sicula,Ombellifères,CC
+Carum montanum,Ombellifères,R
+Carum foetidum,Ombellifères,R
+SeseIi nanum,Ombellifères,RR
+SeseIi varium,Ombellifères,R
+Ammi majus,Ombellifères,CC
+Smyrnium olusatrum,Ombellifères,CC
+Bunium incrassatum,Ombellifères,CC
+Bunium fontanesii,Ombellifères,R
+Bunium alpinum,Ombellifères,CC
+Hypericum tomentosum ssp. eu-tomentosum,Hypericacées,CC
+Hypericum tomentosum ssp. pubescens,Hypericacées,AC
+Hypericum montanum,Hypericacées,R
+Frankenia pulverulenta ssp. eu-pulverulenta,Frankeniacées,AC
+Frankenia thymifolia,Frankeniacées,C
+Frankenia corymbosa,Frankeniacées,AC
+Tamarix parviflora,Tamaricacées,R
+Tamarix brachystylis,Tamaricacées,R
+Tamarix africana,Tamaricacées,CC
+Tamarix boveana,Tamaricacées,AC
+Reaumuria vermiculata,Tamaricacées,R
+Viola denhardtii,Violacées,C
+Viola munbyana,Violacées,AC
+Viola tricolor ssp. minima,Violacées,AR
+Cistus monspeliensis,Cistacées,CCC
+HeIianthemum hirtum ssp. ruficomum,Cistacées,CCC
+HeIianthemum cinereum ssp. cinereum,Cistacées,RR
+Fumana thymifolia,Cistacées,C
+Fumana laevipes,Cistacées,C
+Fumana arabica,Cistacées,R
+Fumana ericoides var. scoparia,Cistacées,R
+Androsace maxima,Primulacées,AR
+Coris monspeliensis,Primulacées,C
+Asterolinum linum-stellatum,Primulacées,CC
+Anagallis arvensis ssp. phoenicea,Primulacées,CC
+Anagallis arvensis ssp. parviflora,Primulacées,AC
+Samolus valerandi,Primulacées,CC
+Armeria plantaginea ssp. leucantha,Plumbaginacées,AC
+Plumbago europea,Plumbaginacées,AC
+Limonium thouini,Plumbaginacées,CC
+Limonium sinuatum ssp. bonduelli,Plumbaginacées,CC
+Limonium pruinosum,Plumbaginacées,C
+Limonium tunetanum,Plumbaginacées,R
+Fraxinus angustifolia,Oleacées,C
+Fraxinus xanthoxyloides,Oleacées,R
+Olea europea var. oleaster,Oleacées,CC
+Phillyrea angustifolia ssp. eu-angustifolia,Oleacées,R
+Blatkstonia perfoliata ssp. grandiflora,Gentianacées,CC
+Centaurium spicatum,Gentianacées,C
+Centaurium pulchellum ssp. tenuiflorum,Gentianacées,C
+Centaurium pulchellum ssp. eu-pulchellum,Gentianacées,C
+Centaurium umbellatum ssp. spartum,Gentianacées,RR
+Cuscuta epithymum ssp. approximata,Convolvulacées,AC
+Cuscuta epithymum ssp. eu-epithymum,Convolvulacées,CC
+Cuscuta epithymum ssp. planiflora,Convolvulacées,CC
+Convolvulus lineatus,Convolvulacées,AC
+Convolvulus althaeoides ssp. elegantissimus,Convolvulacées,CC
+Convolvulus althaeoides ssp. typicus,Convolvulacées,CC
+Convolvulus arvensis,Convolvulacées,CC
+Echium horridum,Boraginacées,AR
+Echiochilon fruticosum,Boraginacées,AC
+RocheIia disperma,Boraginacées,CC
+Asperugo procumbens,Boraginacées,AC
+Lappula redowskii var. patula,Boraginacées,AC
+Cynoglossum cheirifolium,Boraginacées,C
+Cynoglossum clandestinum,Boraginacées,CC
+Cynoglossum dioscoridis,Boraginacées,AC
+Sclerocaryopsis spinocarpos,Boraginacées,C
+Heliotropium supinum,Boraginacées,AC
+Myosotis pusilla,Boraginacées,R
+Myosotis alpestris ssp. silvatica,Boraginacées,AC
+Myosotis micrantha,Boraginacées,R
+Myosotis collina,Boraginacées,CC
+Nonnea vesicaria,Boraginacées,CC
+Nonnea micrantha,Boraginacées,CC
+Alkanna tinctoria,Boraginacées,AC
+Elizaldia violacea,Boraginacées,AC
+Lithospermum apulum,Boraginacées,CC
+Lithospermum arvense,Boraginacées,CC
+Anchusa azurea,Boraginacées,CC
+Verbena officinalis,Verbenacées,CC
+Verbena supina,Verbenacées,AR
+Mentha rotundifolia,Labiées,CC
+Mentha longifolia,Labiées,RR
+Ajuga chamaepitys,Labiées,AR
+Teucrium campanulatum,Labiées,R
+Teucrium chamaedrys,Labiées,AC
+Teucrium flavum,Labiées,CC
+Teucrium ramosissimum var. getulum,Labiées,RR
+Teucrium compactum,Labiées,RR
+Teucrium polium ssp. luteum,Labiées,RR
+Teucrium polium ssp. aurasianum,Labiées,AC
+Teucrium polium ssp. capitatum,Labiées,CC
+Teucrium polium ssp. polium,Labiées,CC
+Zizyphora hispanica,Labiées,AC
+Rosmarinus officinalis,Labiées,CC
+Salvia balansae,Labiées,R
+Salvia aucheri,Labiées,AR
+Salvia phlomoides ssp. blancoana,Labiées,AC
+Salvia verbenaca ssp. clandestina,Labiées,C
+Salvia verbenaca ssp. eu-verbenaca,Labiées,CC
+Salvia aegyptiaca,Labiées,C
+Lavandula multifida,Labiées,AC
+Sideritis montana var. ebradeata,Labiées,CC
+Marrubium vulgare,Labiées,CC
+Marrubium alysson,Labiées,CC
+Prasium majus,Labiées,CC
+Prunella vulgaris,Labiées,AR
+CIeonia iusitanica,Labiées,AC
+Thymus commutatus,Labiées,RR
+Thymus pallidus,Labiées,RR
+Thymus hirtus,Labiées,C
+Thymus algeriensis,Labiées,CC
+Thymus ciliatus ssp. eu-ciliatus,Labiées,CC
+Satureja briquetii,Labiées,R
+Satureja graeca,Labiées,CC
+Satureja rotundifolia,Labiées,CC
+Satureja granatensis,Labiées,CC
+Lamium longiflorum var. numidicum,Labiées,AR
+Lamium amplexicaule,Labiées,CC
+Phlomis crinita ssp. mauritanica,Labiées,CC
+Phlomis herbaventi ssp.: pungens,Labiées,R
+Stachys ocymastrum,Labiées,C
+Stachys officinalis var. algeriensis,Labiées,AC
+Stachys guyoniana,Labiées,R
+Ballota nigra,Labiées,CC
+Ballota hirsuta,Labiées,AC
+Nepeta multibracteata,Labiées,AC
+Nicotiana glauca,Solanacées,AC
+Lycium arabicum,Solanacées,AC
+Lycium europeum,Solanacées,CC
+Solanum nigrum ssp. eu-nigrum,Solanacées,CC
+Atropa belladonna,Solanacées,R
+Datura stramonium ssp. eu-stramonium,Solanacées,AC
+Datura stramonium ssp. tatula,Solanacées,AC
+Hyoscyamus niger,Solanacées,AR
+Veronica beccabunga,Scrofulariacées,AC
+Veronica anagallis-aquatica ssp. anagalloides,Scrofulariacées,R
+Veronica anagallis-aquatica ssp. aquatica,Scrofulariacées,CCC
+Veronica rosea,Scrofulariacées,R
+Veronica cymbalaria,Scrofulariacées,CCC
+Veronica pollita,Scrofulariacées,CC
+Veronica agrestis,Scrofulariacées,AC
+Veronica arvensis,Scrofulariacées,CCC
+Veronica praecox,Scrofulariacées,R
+Verbascum blattaria,Scrofulariacées,R
+Verbascum atlanticum,Scrofulariacées,R
+Verbascum dentifolium,Scrofulariacées,R
+Verbascum sinuatum,Scrofulariacées,CC
+Verbascum rotundifolium ssp. eu-rotundifolium,Scrofulariacées,AR
+Celsia ballii,Scrofulariacées,AR
+Linaria elatinoides,Scrofulariacées,C
+Linaria spuria,Scrofulariacées,CC
+Linaria origanifolia ssp. flexuosa,Scrofulariacées,R
+Linaria reflexa,Scrofulariacées,CCC
+Linaria decipiens,Scrofulariacées,R
+Linaria triphylla,Scrofulariacées,CC
+Linaria virgata ssp. algeriensis,Scrofulariacées,CC
+Linaria simplex,Scrofulariacées,AC
+Linaria heterophylla ssp. eu-heterophylla,Scrofulariacées,CC
+Linaria tristis ssp. marginata,Scrofulariacées,AC
+Antirrhinum orontinm,Scrofulariacées,AC
+Scrofularia canina,Scrofulariacées,CC
+Scrofularia arguta,Scrofulariacées,R
+Scrofularia iaevigata ssp. simplicifolia,Scrofulariacées,AC
+Scrofularia iaevigata ssp. pellucida,Scrofulariacées,R
+Scrofularia aquatica ssp. auriculata,Scrofulariacées,CC
+Odontites rigidifolia,Scrofulariacées,RR
+Odontites purpurea ssp. purpurea,Scrofulariacées,CC
+Cistanche phelipaea,Orobanchacées,C
+Cistanche violacea,Orobanchacées,AR
+Orobanche tunetana,Orobanchacées,R
+Orobanche ramosa,Orobanchacées,CC
+Orobanche purpurea,Orobanchacées,RR
+Orobanche levis,Orobanchacées,AC
+Orobanche cernua,Orobanchacées,AR
+Orobanche alba,Orobanchacées,RR
+Orobanche variegata,Orobanchacées,CC
+Orobanche reticulata,Orobanchacées,RR
+Orobanche caryophyllacea,Orobanchacées,R
+Orobanche barbata,Orobanchacées,CC
+Globularia alypum ssp. eu-alypum,Globulariacées,CC
+Globularia alypum ssp. arabica,Globulariacées,C
+Acanthus mollis ssp. platyphyllus,Acanthacées,CC
+Plantago coronopus ssp. cupani,Plantaginacées,AR
+Plantago coronopus ssp. eu-coronopus,Plantaginacées,CC
+Plantago coronopus ssp. commutata,Plantaginacées,AR
+Plantago albicans,Plantaginacées,CC
+Plantago lagopus,Plantaginacées,CC
+Plantago lanceolata ssp. eu-ianceolata,Plantaginacées,AC
+Plantago lanceolata ssp. intermedia,Plantaginacées,AR
+Plantago akkensis var. ounifensis,Plantaginacées,R
+Plantago ovata,Plantaginacées,CC
+Crucianella hirta,Rubiacées,AC
+Crucianella patula,Rubiacées,CC
+Gaillonia reboudiana,Rubiacées,AC
+Callipeltis cucullaria,Rubiacées,C
+Rubia laevis,Rubiacées,AC
+Rubia peregrina,Rubiacées,CC
+Galium pusillum ssp. austriacum,Rubiacées,RR
+Galium pusillum ssp. typicum,Rubiacées,AC
+Galium petraeum,Rubiacées,AC
+Galium verum,Rubiacées,AR
+Galium palustre var. elongatum,Rubiacées,C
+Galium tunetanum,Rubiacées,CC
+Galium numidicum,Rubiacées,RR
+Galium mollugo ssp. corrudaefolium,Rubiacées,CC
+Galium verticillatum,Rubiacées,R
+Galium murale,Rubiacées,CC
+Galium setaceum,Rubiacées,AR
+Galium parisiense ssp. divaricatum,Rubiacées,CC
+Galium parisiense ssp. eu-parisiense,Rubiacées,CC
+Galium aparine ssp. verum,Rubiacées,CC
+Galium aparine ssp. spurium,Rubiacées,AC
+Galium tricorne,Rubiacées,CC
+Galium valantia,Rubiacées,CC
+Asperula arvensis,Rubiacées,AR
+Asperula cynanchica ssp. aristata,Rubiacées,CC
+Sherardia arvensis,Rubiacées,CC
+Sambucus ebulus,Caprifoliacées,AR
+Lonicera arborea,Caprifoliacées,AR
+Kentranthus angustifolius ssp. maroccanus,Valerianacées,RR
+Kentranthus calcitrapa,Valerianacées,CC
+Fedia cornucopiae,Valerianacées,CC
+Fedia caput-bovis ssp. caput-bovis,Valerianacées,CC
+Valerianella coronata ssp. eu-coronata,Valerianacées,C
+Valerianella coronata ssp. discoidea,Valerianacées,C
+Valerianella eriocarpa ssp. truncata,Valerianacées,R
+Valerianella rimosa,Valerianacées,RR
+Valerianella carinata,Valerianacées,CC
+Valerianella pumila,Valerianacées,AC
+Valerianella fallax,Valerianacées,AC
+Valerianella morisoni ssp. microcarpa,Valerianacées,CC
+Knautia arvensis,Dipsacées,AC
+Scabiosa semipapposa,Dipsacées,CC
+Scabiosa arenaria,Dipsacées,C
+Scabiosa atropurpurea ssp. maritima,Dipsacées,CC
+Scabiosa stellata ssp. monspeliensis,Dipsacées,CC
+Scabiosa crenata,Dipsacées,AR
+Ecballium elaterium,Cucurbitacées,C
+Jasione humilis,Campanulacées,AR
+Jasione montana,Campanulacées,AC
+Specularia hybrida,Campanulacées,R
+Campanula aurasiaca,Campanulacées,RRR
+Campanula erinus,Campanulacées,CC
+Campanula dichotoma ssp. eu-dichotoma,Campanulacées,CC
+Campanula dichotoma ssp. kremeri,Campanulacées,AC
+Campanula atlantica,Campanulacées,AC
+Campanula rapunculus,Campanulacées,C
+Campanula rotundifolia ssp. macrorrhiza,Campanulacées,AR
+Bellis silvestris var. pappulosa,Synantheracées,R
+Bellis annua ssp. minuta var. minuta,Synantheracées,R
+Erigeron canadensis,Synantheracées,C
+Erigeron bonariensis,Synantheracées,C
+Conyza naudini,Synantheracées,C
+Aster squamatus,Synantheracées,C
+Aster linosyris,Synantheracées,R
+Micropus bombicinus,Synantheracées,CCC
+Micropus supinus,Synantheracées,CCC
+Evacidium discolor,Synantheracées,AR
+Filago gallica,Synantheracées,CC
+Filago spathulata,Synantheracées,CC
+Filago germanica ssp. eu-germanica,Synantheracées,CC
+Phagnalon saxatile ssp. purpurascens,Synantheracées,R
+Gnaphalium luteo-album,Synantheracées,AC
+EIichrysum iacteum var. typicum,Synantheracées,R
+EIichrysum stoechas ssp. scandens,Synantheracées,AC
+Inula crithmoides,Synantheracées,CC
+Inula montana,Synantheracées,AC
+Pulicaria dysenterica,Synantheracées,C
+Pulicaria mauritanica,Synantheracées,R
+Pulicaria sicula,Synantheracées,CC
+Pallenis spinosa ssp. cuspidata,Synantheracées,AC
+Xanthium spinosum,Synantheracées,C
+Xanthium strumarium var. typicum,Synantheracées,CCC
+Xanthium strumarium var. brasilicum,Synantheracées,CCC
+Hertia cheirifolia,Synantheracées,CC
+Doronicum atlanticum,Synantheracées,AC
+Senecio hoggariensis,Synantheracées,AC
+Senecio vulgaris,Synantheracées,CCC
+Senecio gallerandianus,Synantheracées,R
+Calendula arvensis var. parviflora,Synantheracées,C
+Santolina rosmarinifolia ssp. pectinata,Synantheracées,R
+Anthemis pedunculata ssp. tuberculata,Synantheracées,AR
+Anacyclus pyrethrum,Synantheracées,C
+Anacyclus ciavatus,Synantheracées,CC
+Achillea santolina,Synantheracées,AC
+Diotis maritima,Synantheracées,AC
+Chrysanthemum gayanum ssp. eu-gayanum var. typicum,Synantheracées,R
+Chrysanthemum reboudianum,Synantheracées,RR
+Chrysanthemum corymbosum ssp. achilleae,Synantheracées,AC
+Chrysanthemum fuscatum var. fuscata,Synantheracées,C
+Artemisia campestris ssp. eu-campestris,Synantheracées,C
+Echinops spinosus ssp. bovei,Synantheracées,CC
+CarIina involucrata ssp. corymbosa,Synantheracées,C
+AtractyIis cancellata,Synantheracées,CCC
+AtractyIis humilis ssp. caespitosa,Synantheracées,CC
+Carduns nutans ssp. eu-nutans var. typicus,Synantheracées,AC
+Carduns nutans ssp. macrocephalus,Synantheracées,RR
+Cirsium monspessulanum,Synantheracées,R
+Silybum eburneum,Synantheracées,CCC
+Crupina intermedia,Synantheracées,R
+Serratula pinnatifida,Synantheracées,AC
+Centaurea melitensis,Synantheracées,AC
+Centaurea tougourensis ssp. tougourensis,Synantheracées,R
+Centaurea omphalotricha,Synantheracées,RR
+Centaurea incana ssp. pubescens,Synantheracées,CC
+Centaurea calcitrapa,Synantheracées,CCC
+Centaurea dissecta ssp. affinis var. vesceritensis,Synantheracées,R
+Mantisalca salmantica,Synantheracées,CC
+Carthamus calvus,Synantheracées,C
+Carduncellus choulettianus,Synantheracées,R
+Carduncellus atractyloides,Synantheracées,AC
+Scolymus hispanicus,Synantheracées,CC
+Catananche lutea,Synantheracées,CC
+Catananche caespitosa,Synantheracées,AR
+Catananche montana,Synantheracées,AR
+Cichorium intybus ssp. eu-intybus,Synantheracées,CC
+Cichorium intybus ssp. pumilum,Synantheracées,CC
+Tolpis barbata ssp. umbellata,Synantheracées,CC
+Tolpis virgata,Synantheracées,CC
+Koelpinia iinearis,Synantheracées,CC
+Hedypnois cretica ssp. monspeliensis,Synantheracées,CC
+Hedypnois cretica ssp. tubiformis,Synantheracées,C
+Hypochoeris glabra,Synantheracées,CCC
+Hypochoeris radicata ssp. eu-radicata,Synantheracées,CC
+Hypochoeris achyrophorus,Synantheracées,CCC
+Leontodon saxatilis ssp. rothii,Synantheracées,CC
+Leontodon tuberosus,Synantheracées,CC
+Leontodon balansae,Synantheracées,AR
+Leontodon hispanicus ssp. helminthioides var. numidicus,Synantheracées,AR
+Picris coronopifolia ssp. saharae,Synantheracées,C
+Scorzonera pygmaea ssp. eu-pymaea,Synantheracées,R
+Scorzonera undulata ssp. alexandrina,Synantheracées,CC
+AndryaIa integrifolia,Synantheracées,CC
+Taraxacum obovatum,Synantheracées,C
+Launaea nudicaulis,Synantheracées,CC
+Sonchus tenerrimus ssp. eu-tenerrimus,Synantheracées,CC
+Sonchus asper ssp. eu-asper,Synantheracées,CC
+Sonchus oleraceus,Synantheracées,CCC
+Lactuca muralis,Synantheracées,R
+Lactuca viminea var. chondrilliflora,Synantheracées,CCC
+Reichardia picroides ssp. intermedia,Synantheracées,CC
+Crepis faureliana,Synantheracées,RR
+Crepis vesicaria ssp. eu-vesicaria,Synantheracées,C
+Hieracium pseudo-pilosella ssp. atlantis,Synantheracées,CC
+Hieracium faurelianum,Synantheracées,RR
+Hieracium peyerimhoffii,Synantheracées,RR

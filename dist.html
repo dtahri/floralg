@@ -1,0 +1,794 @@
+﻿<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Inventaire des Plantes d'Algérie</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Open Sans', sans-serif;
+            overflow: hidden;
+            height: 100vh;
+            width: 100vw;
+        }
+        #map {
+            position: absolute;
+            top: 60px;
+            bottom: 0;
+            width: 100%;
+        }
+        .header {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 60px;
+            background: linear-gradient(135deg, #2c3e50, #4ca1af);
+            color: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 15px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+            z-index: 1000;
+        }
+        .header-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            cursor: pointer;
+        }
+        .header-title:hover {
+            text-decoration: underline;
+        }
+        .search-form {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .search-form input {
+            padding: 6px 10px;
+            border: none;
+            border-radius: 4px;
+            max-width: 150px;
+        }
+        .search-form button {
+            padding: 6px 12px;
+            background: #3498db;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+        .legend {
+            padding: 12px;
+            background: rgba(255,255,255,0.9);
+            border-radius: 8px;
+            box-shadow: 0 3px 14px rgba(0,0,0,0.2);
+            line-height: 1.5;
+            color: #333;
+            font-size: 14px;
+            max-width: 200px;
+        }
+        .legend-title {
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #2c3e50;
+            font-size: 15px;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 4px;
+        }
+        .legend-scale {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+        .legend-item {
+            display: flex;
+            align-items: center;
+        }
+        .legend-color {
+            width: 20px;
+            height: 20px;
+            margin-right: 10px;
+            border-radius: 3px;
+            border: 1px solid rgba(0,0,0,0.1);
+        }
+        .legend-label {
+            flex: 1;
+        }
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            z-index: 2000;
+            overflow: auto;
+            backdrop-filter: blur(2px);
+        }
+        .modal-content {
+            background-color: white;
+            margin: 5% auto;
+            padding: 20px;
+            border-radius: 8px;
+            width: 90%;
+            max-width: 800px;
+            max-height: 80vh;
+            overflow-y: auto;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            position: relative;
+        }
+        .close {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            font-size: 24px;
+            font-weight: bold;
+            color: #7f8c8d;
+            cursor: pointer;
+        }
+        .close:hover {
+            color: #34495e;
+        }
+        .modal-title {
+            font-size: 1.4rem;
+            color: #2c3e50;
+            margin-bottom: 15px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid #ecf0f1;
+        }
+        .plant-list {
+            margin-top: 15px;
+            max-height: 300px;
+            overflow-y: auto;
+            border: 1px solid #ecf0f1;
+            border-radius: 6px;
+        }
+        .plant-item {
+            padding: 10px 15px;
+            border-bottom: 1px solid #ecf0f1;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .plant-item:nth-child(odd) {
+            background-color: #f8f9fa;
+        }
+        .scientific-name {
+            font-weight: bold;
+        }
+        .family-name {
+            font-style: italic;
+        }
+        .abundance {
+            font-style: italic;
+        }
+        
+        @media (max-width: 768px) {
+            .header-title {
+                font-size: 1.1rem;
+            }
+            .search-form input {
+                max-width: 80px;
+                padding: 5px 8px;
+            }
+            .search-form button {
+                padding: 5px 8px;
+                font-size: 13px;
+            }
+            .modal-content {
+                margin: 10px auto;
+                padding: 15px;
+                width: 95%;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .header {
+                height: 50px;
+                padding: 0 10px;
+            }
+            .header-title {
+                font-size: 1rem;
+            }
+            #map {
+                top: 50px;
+            }
+            .search-form input {
+                max-width: 70px;
+                font-size: 12px;
+            }
+            .plant-item {
+                padding: 8px 10px;
+                font-size: 13px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="header-title" onclick="window.location.href='./index.html'">FlorALG</div>
+        <div class="search-form" id="searchPanel">
+            <input type="text" id="searchSpecies" placeholder="Rechercher une espèce" onkeypress="handleSearchKeyPress(event)">
+            <button onclick="searchSpecies()">Rechercher</button>
+            <button id="backButton" onclick="resetSearch()" class="btn-warning" style="display: none;">Retour</button>
+        </div>
+    </div>
+    
+    <div id="map"></div>
+    
+    <div id="plantModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <h2 class="modal-title" id="modalTitle">Inventaire des Plantes</h2>
+            <div id="plantListContainer" class="plant-list">
+                <!-- Plant list will be loaded here -->
+            </div>
+        </div>
+    </div>
+
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+    <script>
+        // Map initialization
+        const map = L.map('map').setView([28.0339, 1.6596], 5);
+        
+        // Add base map
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributeurs'
+        }).addTo(map);
+
+        // Algeria boundaries (simplified)
+        const algeriaBounds = L.latLngBounds(
+            L.latLng(18.968147, -8.668908),
+            L.latLng(37.091385, 11.997337)
+        );
+        map.fitBounds(algeriaBounds);
+
+        // Regions data with optimized CSV loading
+        const regions = {
+            A1: { 
+                polygon: './ressources/A1.json', 
+                csv: './ssectors/A1.csv',
+                plants: [],
+                count: 0,
+                layer: null
+            },
+            A2: { 
+                polygon: './ressources/A2.json', 
+                csv: './ssectors/A2.csv',
+                plants: [],
+                count: 0,
+                layer: null
+            },
+            K1: { 
+                polygon: './ressources/K1.json', 
+                csv: './ssectors/K1.csv',
+                plants: [],
+                count: 0,
+                layer: null
+            },
+            K2: { 
+                polygon: './ressources/K2.json', 
+                csv: './ssectors/K2.csv',
+                plants: [],
+                count: 0,
+                layer: null
+            },
+
+            K3: { 
+                polygon: './ressources/K3.json', 
+                csv: './ssectors/K3.csv',
+                plants: [],
+                count: 0,
+                layer: null
+            },
+            O1_1: { 
+                polygon: './ressources/O1.json', 
+                csv: './ssectors/O1.csv',
+                plants: [],
+                count: 0,
+                layer: null
+            },
+            O1_2: { 
+                polygon: './ressources/1/O1.json', 
+                csv: './ssectors/O1.csv',
+                plants: [],
+                count: 0,
+                layer: null
+            },
+            O1_3: { 
+                polygon: './ressources/2/O1.json', 
+                csv: './ssectors/O1.csv',
+                plants: [],
+                count: 0,
+                layer: null
+            },
+            O1_4: { 
+                polygon: './ressources/3/O1.json', 
+                csv: './ssectors/O1.csv',
+                plants: [],
+                count: 0,
+                layer: null
+            },
+            O1_5: { 
+                polygon: './ressources/4/O1.json', 
+                csv: './ssectors/O1.csv',
+                plants: [],
+                count: 0,
+                layer: null
+            },
+            C1: { 
+                polygon: './ressources/C1.json', 
+                csv: './ssectors/C1.csv',
+                plants: [],
+                count: 0,
+                layer: null
+            },
+            O2: { 
+                polygon: './ressources/O2.json', 
+                csv: './ssectors/O2.csv',
+                plants: [],
+                count: 0,
+                layer: null
+            },
+            O3: { 
+                polygon: './ressources/O3.json', 
+                csv: './ssectors/O3.csv',
+                plants: [],
+                count: 0,
+                layer: null
+            },
+            H1: { 
+                polygon: './ressources/H1.json', 
+                csv: './ssectors/H1.csv',
+                plants: [],
+                count: 0,
+                layer: null
+            },
+            H2: { 
+                polygon: './ressources/H2.json', 
+                csv: './ssectors/H2.csv',
+                plants: [],
+                count: 0,
+                layer: null
+            },
+            AS1: { 
+                polygon: './ressources/AS1.json', 
+                csv: './ssectors/AS1.csv',
+                plants: [],
+                count: 0,
+                layer: null
+            },
+            AS2: { 
+                polygon: './ressources/AS2.json', 
+                csv: './ssectors/AS2.csv',
+                plants: [],
+                count: 0,
+                layer: null
+            },
+            AS3: { 
+                polygon: './ressources/AS3.json', 
+                csv: './ssectors/AS3.csv',
+                plants: [],
+                count: 0,
+                layer: null
+            },
+            Hd: { 
+                polygon: './ressources/Hd.json', 
+                csv: './ssectors/Hd.csv',
+                plants: [],
+                count: 0,
+                layer: null
+            },
+            SS1: { 
+                polygon: './ressources/SS1.json', 
+                csv: './ssectors/SS1.csv',
+                plants: [],
+                count: 0,
+                layer: null
+            },
+            SS2: { 
+                polygon: './ressources/SS2.json', 
+                csv: './ssectors/SS2.csv',
+                plants: [],
+                count: 0,
+                layer: null
+            },
+            SO: { 
+                polygon: './ressources/SO.json', 
+                csv: './ssectors/SO.csv',
+                plants: [],
+                count: 0,
+                layer: null
+            },
+            SC: { 
+                polygon: './ressources/SC.json', 
+                csv: './ssectors/SC.csv',
+                plants: [],
+                count: 0,
+                layer: null
+            },
+            SM: { 
+                polygon: './ressources/SM.json', 
+                csv: './ssectors/SM.csv',
+                plants: [],
+                count: 0,
+                layer: null
+            },
+        };
+
+        let currentRegion = null;
+        let legend = null;
+        let originalRegionsStyle = null;
+        
+        // Handle Enter key press for search
+        function handleSearchKeyPress(event) {
+            if (event.key === 'Enter') {
+                searchSpecies();
+            }
+        }
+        
+        // Custom color scale based on your requirements
+        function getColorForCount(count) {
+            if (count === 0) return 'rgba(255,255,255,0)'; // Transparent
+            if (count < 100) return '#FFFF00'; // Yellow
+            if (count < 500) return '#FFA500'; // Orange
+            if (count < 1000) return '#FF8C00'; // Orange
+            if (count < 1500) return '#FF4500'; // Darker orange
+            return '#FF0000'; // Red for 1500+
+        }
+        
+        // Create legend with custom color scale
+        function createLegend() {
+            if (legend) {
+                map.removeControl(legend);
+            }
+            
+            legend = L.control({position: 'bottomright'});
+            
+            legend.onAdd = function(map) {
+                const div = L.DomUtil.create('div', 'legend');
+                
+                div.innerHTML = `
+                    <div class="legend-title">Densité des Espèces</div>
+                    <div class="legend-scale">
+                        <div class="legend-item">
+                            <div class="legend-color" style="background:rgba(255,255,255,0)"></div>
+                            <div class="legend-label">0 (aucune)</div>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-color" style="background:#FFFF00"></div>
+                            <div class="legend-label">&lt;100</div>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-color" style="background:#FFA500"></div>
+                            <div class="legend-label">&lt;500</div>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-color" style="background:#FF8C00"></div>
+                            <div class="legend-label">&lt;1000</div>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-color" style="background:#FF4500"></div>
+                            <div class="legend-label">&lt;1500</div>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-color" style="background:#FF0000"></div>
+                            <div class="legend-label">1500+</div>
+                        </div>
+                    </div>
+                `;
+                
+                return div;
+            };
+            
+            legend.addTo(map);
+        }
+        
+    // Load CSV data for a region with special character support and complete scientific names
+    async function loadCSVData(regionId) {
+        const region = regions[regionId];
+        if (!region.csv) return;
+        
+        try {
+            const response = await fetch(region.csv);
+            if (!response.ok) throw new Error(`Erreur HTTP! statut: ${response.status}`);
+            
+            // Use text decoder with UTF-8 to handle special characters
+            const buffer = await response.arrayBuffer();
+            const decoder = new TextDecoder('utf-8');
+            const csvText = decoder.decode(buffer);
+            
+            // Handle different line endings and parse CSV
+            const lines = csvText.split(/\r?\n/);
+            const headers = lines[0].split(',').map(h => h.trim());
+            
+            // Find column indices
+            const sciNameIndex = headers.findIndex(h => 
+                h.toLowerCase().includes('scientific') || h.toLowerCase().includes('nom') || h.toLowerCase().includes('name'));
+            const familyIndex = headers.findIndex(h => 
+                h.toLowerCase().includes('family') || h.toLowerCase().includes('famille'));
+            const abundanceIndex = headers.findIndex(h => 
+                h.toLowerCase().includes('abundance') || h.toLowerCase().includes('abondance'));
+            
+            // Parse lines
+            for (let i = 1; i < lines.length; i++) {
+                if (!lines[i].trim()) continue;
+                
+                // Improved CSV parsing that handles quoted fields with commas
+                const values = [];
+                let current = '';
+                let inQuotes = false;
+                
+                for (let char of lines[i]) {
+                    if (char === '"') {
+                        inQuotes = !inQuotes;
+                    } else if (char === ',' && !inQuotes) {
+                        values.push(current);
+                        current = '';
+                    } else {
+                        current += char;
+                    }
+                }
+                values.push(current); // Add the last value
+                
+                const plant = {
+                    scientificName: (sciNameIndex >= 0 ? values[sciNameIndex] || '' : '').trim().replace(/^"|"$/g, ''),
+                    family: (familyIndex >= 0 ? values[familyIndex] || '' : '').trim().replace(/^"|"$/g, ''),
+                    abundance: (abundanceIndex >= 0 ? values[abundanceIndex] || '' : '').trim().replace(/^"|"$/g, '')
+                };
+                
+                if (plant.scientificName) {
+                    region.plants.push(plant);
+                }
+            }
+            
+            region.count = region.plants.length;
+        } catch (error) {
+            console.error(`Erreur lors du chargement du CSV pour ${regionId}:`, error);
+        }
+    }
+        
+        // Load GeoJSON and corresponding CSV data
+        async function loadGeoJSON() {
+            try {
+                showLoadingIndicator(true);
+
+                // Clear existing layers if they exist
+                for (const regionId in regions) {
+                    if (regions[regionId].layer) {
+                        map.removeLayer(regions[regionId].layer);
+                    }
+                }
+
+                // Load all polygon and CSV data in parallel
+                const loadPromises = [];
+                
+                for (const [regionId, region] of Object.entries(regions)) {
+                    // Load polygon data
+                    loadPromises.push(
+                        fetch(region.polygon)
+                            .then(res => res.json())
+                            .then(data => {
+                                if (data.features && data.features.length > 0) {
+                                    data.features[0].properties.id = regionId;
+                                    data.features[0].properties.name = `Sous-secteur ${regionId}`;
+                                    return data;
+                                }
+                                return null;
+                            })
+                            .catch(err => {
+                                console.error(`Erreur lors du chargement du polygone pour ${regionId}:`, err);
+                                return null;
+                            })
+                    );
+
+                    // Load CSV data for this region
+                    loadPromises.push(loadCSVData(regionId));
+                }
+
+                // Wait for all files to load
+                const geoDataResults = await Promise.all(loadPromises.filter((_, i) => i % 2 === 0));
+                
+                // Add regions to map
+                geoDataResults.forEach((geoData, index) => {
+                    if (!geoData) return;
+                    
+                    const regionId = Object.keys(regions)[index];
+                    const region = regions[regionId];
+                    
+                    region.layer = L.geoJSON(geoData, {
+                        style: {
+                            fillColor: getColorForCount(region.count),
+                            weight: 1,
+                            opacity: 1,
+                            color: 'black',
+                            dashArray: '3',
+                            fillOpacity: region.count > 0 ? 0.7 : 0
+                        },
+                        onEachFeature: function(feature, layer) {
+                            layer.on({
+                                click: function(e) {
+                                    currentRegion = feature.properties.id;
+                                    openModal(feature.properties.id);
+                                }
+                            });
+                            
+                            layer.bindTooltip(`${feature.properties.name}<br>taxons: ${region.count}`, {
+                                permanent: false,
+                                direction: 'auto'
+                            });
+                        }
+                    }).addTo(map);
+                });
+
+                createLegend();
+
+            } catch (error) {
+                console.error("Erreur lors du chargement des données:", error);
+                alert("Erreur lors du chargement des données de la carte. Veuillez vérifier la console pour plus de détails.");
+            } finally {
+                showLoadingIndicator(false);
+            }
+        }
+
+        // Show/hide loading indicator
+        function showLoadingIndicator(show) {
+            const loadingElement = document.getElementById('loadingIndicator') || 
+                (() => {
+                    const el = document.createElement('div');
+                    el.id = 'loadingIndicator';
+                    el.style.position = 'absolute';
+                    el.style.top = '70px';
+                    el.style.right = '10px';
+                    el.style.zIndex = '1000';
+                    el.style.padding = '8px 15px';
+                    el.style.background = 'rgba(255,255,255,0.9)';
+                    el.style.borderRadius = '4px';
+                    el.style.boxShadow = '0 0 10px rgba(0,0,0,0.2)';
+                    document.body.appendChild(el);
+                    return el;
+                })();
+            
+            if (show) {
+                loadingElement.textContent = 'Chargement des données...';
+                loadingElement.style.display = 'block';
+            } else {
+                loadingElement.style.display = 'none';
+            }
+        }
+        
+        // Search for species across all regions
+        function searchSpecies() {
+            const searchTerm = document.getElementById('searchSpecies').value.trim().toLowerCase();
+            if (!searchTerm) return;
+            
+            const matchingRegions = [];
+            
+            // Search through all regions
+            for (const regionId in regions) {
+                const plants = regions[regionId].plants;
+                const hasMatch = plants.some(plant => 
+                    plant.scientificName.toLowerCase().includes(searchTerm) || 
+                    plant.family.toLowerCase().includes(searchTerm)
+                );
+                
+                if (hasMatch) {
+                    matchingRegions.push(regionId);
+                }
+            }
+            
+            if (matchingRegions.length === 0) {
+                alert('Aucune espèce correspondante trouvée.');
+                return;
+            }
+            
+            // Highlight matching regions in green, others transparent
+            for (const regionId in regions) {
+                if (regions[regionId].layer) {
+                    regions[regionId].layer.eachLayer(layer => {
+                        if (matchingRegions.includes(regionId)) {
+                            layer.setStyle({
+                                fillColor: '#2ecc71', // Green
+                                fillOpacity: 0.7,
+                                weight: 2,
+                                color: '#27ae60'
+                            });
+                        } else {
+                            layer.setStyle({
+                                fillColor: 'rgba(255,255,255,0)',
+                                fillOpacity: 0,
+                                weight: 1,
+                                color: 'white'
+                            });
+                        }
+                    });
+                }
+            }
+            
+            // Show back button
+            document.getElementById('backButton').style.display = 'inline-block';
+        }
+        
+        // Reset search highlights
+        function resetSearch() {
+            for (const regionId in regions) {
+                if (regions[regionId].layer) {
+                    regions[regionId].layer.eachLayer(layer => {
+                        layer.setStyle({
+                            fillColor: getColorForCount(regions[regionId].count),
+                            fillOpacity: regions[regionId].count > 0 ? 0.7 : 0,
+                            weight: 1,
+                            color: 'black',
+                            dashArray: '3'
+                        });
+                    });
+                }
+            }
+            
+            // Hide back button
+            document.getElementById('backButton').style.display = 'none';
+            document.getElementById('searchSpecies').value = '';
+        }
+        
+        // Modal functions
+        function openModal(regionId) {
+            const modal = document.getElementById('plantModal');
+            const modalTitle = document.getElementById('modalTitle');
+            
+            modalTitle.textContent = `Inventaire des Plantes - ${regionId.replace('_', ' ').toUpperCase()}`;
+            updatePlantListDisplay(regionId);
+            
+            modal.style.display = 'block';
+        }
+        
+        function updatePlantListDisplay(regionId) {
+            const plantListContainer = document.getElementById('plantListContainer');
+            const plants = regions[regionId].plants;
+            
+            if (plants.length === 0) {
+                plantListContainer.innerHTML = '<div class="plant-item" style="font-style: italic; color: #7f8c8d;">Aucune plante enregistrée dans cette région pour le moment.</div>';
+            } else {
+                let html = '';
+                plants.forEach((plant) => {
+                    html += `
+                        <div class="plant-item">
+                            <span class="scientific-name">${plant.scientificName}</span>, 
+                            <span class="family-name">${plant.family}</span>, 
+                            <span class="abundance">${plant.abundance || 'N/A'}</span>
+                        </div>
+                    `;
+                });
+                plantListContainer.innerHTML = html;
+            }
+        }
+        
+        function closeModal() {
+            document.getElementById('plantModal').style.display = 'none';
+        }
+        
+        // Initialize the map
+        window.onload = function() {
+            loadGeoJSON();
+            
+            window.onclick = function(event) {
+                if (event.target == document.getElementById('plantModal')) {
+                    closeModal();
+                }
+            };
+        };
+    </script>
+</body>
+</html>

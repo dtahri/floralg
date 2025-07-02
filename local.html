@@ -1,0 +1,1255 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Carte des Zones Ecologiques d'Algérie</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #3498db;
+            --accent-color: #e74c3c;
+            --success-color: #27ae60;
+            --light-color: #ecf0f1;
+            --dark-color: #34495e;
+            --text-color: #333;
+            --text-light: #7f8c8d;
+            --domain-color: #3498db;
+        }
+        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        
+        body {
+            font-family: 'Montserrat', sans-serif;
+            overflow: hidden;
+            height: 100vh;
+            width: 100vw;
+            color: var(--text-color);
+            background-color: #f5f7fa;
+        }
+        
+        #map {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            width: 100%;
+            z-index: 1;
+        }
+        
+.header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 60px;
+    background: linear-gradient(135deg, #2c3e50, #4ca1af);
+    color: white;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 15px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+    z-index: 1000;
+}
+
+.header-title {
+    font-size: 1.3rem;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+
+.header-title:hover {
+    text-decoration: underline;
+}
+
+.nav-menu a {
+    color: white;
+    text-decoration: none;
+    margin-left: 20px;
+    font-weight: 500;
+    transition: all 0.2s;
+}
+
+.nav-menu a:hover {
+    text-decoration: underline;
+}        
+        .header-title i {
+            font-size: 1.6rem;
+            color: var(--light-color);
+        }
+        
+.control-panel {
+    position: absolute;
+    top: 70px;  /* Increased from 80px to 70px to account for smaller header */
+    right: 15px;
+    z-index: 1000;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+        
+        .control-btn {
+            background: white;
+            border: none;
+            border-radius: 8px;
+            padding: 10px 18px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.15);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 600;
+            color: var(--dark-color);
+            transition: all 0.3s ease;
+            font-size: 0.95rem;
+        }
+        
+        .control-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+        
+        .control-btn.active {
+            background: var(--secondary-color);
+            color: white;
+        }
+        
+        .control-btn.domain-btn.active {
+            background: var(--domain-color);
+        }
+        
+        .control-btn i {
+            font-size: 1.1rem;
+        }
+        
+        .point-form-container {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 1000;
+            background: white;
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+            width: 500px;
+            max-width: 90%;
+            display: none;
+            animation: slideUp 0.4s ease;
+        }
+        
+        @keyframes slideUp {
+            from { transform: translate(-50%, 20px); opacity: 0; }
+            to { transform: translate(-50%, -50%); opacity: 1; }
+        }
+        
+        .point-form-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 20px;
+            color: var(--primary-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-bottom: 8px;
+            border-bottom: 1px solid var(--light-color);
+        }
+        
+        .point-form-title i {
+            cursor: pointer;
+            color: var(--text-light);
+            transition: all 0.2s;
+        }
+        
+        .point-form-title i:hover {
+            color: var(--accent-color);
+            transform: rotate(90deg);
+        }
+        
+        .point-form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+        
+        .form-group label {
+            font-size: 0.95rem;
+            color: var(--text-light);
+            font-weight: 500;
+        }
+        
+        .form-group input, .form-group select {
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-family: inherit;
+            font-size: 0.95rem;
+            transition: all 0.2s;
+            width: 100%;
+        }
+        
+        .form-group input:focus, .form-group select:focus {
+            border-color: var(--secondary-color);
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
+        }
+        
+        .form-row {
+            display: flex;
+            gap: 15px;
+        }
+        
+        .form-row .form-group {
+            flex: 1;
+        }
+        
+        .form-actions {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 15px;
+            gap: 15px;
+        }
+        
+        .btn {
+            padding: 12px 20px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.95rem;
+        }
+        
+        .btn-primary {
+            background: var(--secondary-color);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background: #2980b9;
+            transform: translateY(-2px);
+        }
+        
+        .btn-success {
+            background: var(--success-color);
+            color: white;
+        }
+        
+        .btn-success:hover {
+            background: #219955;
+            transform: translateY(-2px);
+        }
+        
+        .btn-danger {
+            background: var(--accent-color);
+            color: white;
+        }
+        
+        .btn-danger:hover {
+            background: #c0392b;
+            transform: translateY(-2px);
+        }
+        
+        .add-point-btn {
+            background: #9b59b6;
+            color: white;
+        }
+        
+        .add-point-btn:hover {
+            background: #8e44ad;
+            transform: translateY(-2px);
+        }
+        
+        .point-list {
+            margin-top: 15px;
+            max-height: 300px;
+            overflow-y: auto;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 10px;
+            background-color: #f9f9f9;
+        }
+        
+        .point-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px;
+            border-bottom: 1px solid #eee;
+            font-size: 0.95rem;
+            transition: all 0.2s;
+        }
+        
+        .point-item:hover {
+            background-color: #f0f0f0;
+        }
+        
+        .point-item:last-child {
+            border-bottom: none;
+        }
+        
+        .point-item-info {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+            flex: 1;
+        }
+        
+        .point-item-id {
+            font-weight: 600;
+            color: var(--dark-color);
+        }
+        
+        .point-item-coords {
+            font-size: 0.85rem;
+            color: var(--text-light);
+        }
+        
+        .point-item-actions {
+            display: flex;
+            gap: 8px;
+        }
+        
+        .remove-btn {
+            background: none;
+            border: none;
+            color: var(--accent-color);
+            cursor: pointer;
+            font-weight: 600;
+            padding: 5px 10px;
+            border-radius: 4px;
+            transition: all 0.2s;
+        }
+        
+        .remove-btn:hover {
+            background-color: rgba(231, 76, 60, 0.1);
+        }
+        
+        .empty-list {
+            padding: 20px;
+            text-align: center;
+            color: var(--text-light);
+            font-style: italic;
+            font-size: 0.95rem;
+        }
+        
+        .loading-indicator {
+            position: absolute;
+            top: 80px;
+            left: 15px;
+            z-index: 1000;
+            background: white;
+            padding: 10px 20px;
+            border-radius: 20px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.15);
+            font-size: 0.95rem;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            display: none;
+        }
+        
+        .loading-indicator i {
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        
+        /* Scale Control Styles */
+        .leaflet-control-scale {
+            margin-left: 10px;
+            margin-bottom: 10px;
+            background: rgba(255,255,255,0.8);
+            padding: 5px;
+            border-radius: 4px;
+            box-shadow: 0 1px 5px rgba(0,0,0,0.2);
+            font-size: 12px;
+            line-height: 1.2;
+        }
+        
+        .leaflet-control-scale-line {
+            border: 2px solid #333;
+            border-top: none;
+            color: #333;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 2px;
+        }
+        
+        /* Color picker styles */
+        .color-picker-container {
+            position: absolute;
+            top: 80px;
+            right: 15px;
+            z-index: 1000;
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 3px 15px rgba(0,0,0,0.2);
+            display: none;
+            width: 250px;
+        }
+        
+        .color-picker-title {
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: var(--dark-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .color-picker-title i {
+            cursor: pointer;
+            color: var(--text-light);
+        }
+        
+        .color-picker-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 8px;
+        }
+        
+        .color-option {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            cursor: pointer;
+            border: 2px solid transparent;
+            transition: all 0.2s;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .color-option:hover {
+            transform: scale(1.1);
+            box-shadow: 0 3px 8px rgba(0,0,0,0.2);
+        }
+        
+        .color-option.selected {
+            border-color: #333;
+            transform: scale(1.1);
+        }
+        
+        /* Info button styles */
+        .info-btn {
+            background: none;
+            border: none;
+            color: var(--text-light);
+            cursor: pointer;
+            font-size: 0.9rem;
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            transition: all 0.2s;
+        }
+        
+        .info-btn:hover {
+            background-color: rgba(0,0,0,0.1);
+            color: var(--dark-color);
+        }
+        
+        /* Info popup styles */
+        .info-popup {
+            position: absolute;
+            top: 0;
+            right: 0;
+            z-index: 1001;
+            background: white;
+            border-radius: 8px;
+            padding: 15px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+            width: 300px;
+            max-width: 90%;
+            display: none;
+            animation: fadeIn 0.3s ease;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .info-popup-title {
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: var(--primary-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .info-popup-title i {
+            cursor: pointer;
+            color: var(--text-light);
+        }
+        
+        .info-popup-content {
+            font-size: 0.9rem;
+            line-height: 1.5;
+            color: var(--text-color);
+        }
+        
+        @media (max-width: 768px) {
+            .header {
+                height: 60px;
+                padding: 0 15px;
+            }
+            
+            .header-title {
+                font-size: 1.2rem;
+                gap: 8px;
+            }
+            
+            .control-btn {
+                padding: 10px 15px;
+            }
+            
+            .point-form-container {
+                padding: 20px;
+            }
+            
+            .form-row {
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            .color-picker-grid {
+                grid-template-columns: repeat(4, 1fr);
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .header {
+                height: 50px;
+                padding: 0 10px;
+            }
+            
+            .header-title {
+                font-size: 1rem;
+            }
+            
+            .control-panel {
+                top: 60px;
+            }
+            
+            .point-form-title {
+                font-size: 1.1rem;
+            }
+            
+            .btn {
+                padding: 10px 15px;
+            }
+            
+            .color-picker-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="header">
+<div class="header-title" onclick="window.location.href='./index.html'">FlorALG</div>
+    <div class="nav-menu">
+        <a href="local.html">Localiser</a>
+        <a href="dist.html">Distribution Q&S</a>
+    </div>
+</div>
+    
+    <div id="map"></div>
+    
+    <div class="loading-indicator" id="loadingIndicator">
+        <i class="fas fa-spinner"></i>
+        <span>Chargement des données cartographiques...</span>
+    </div>
+    
+    <div class="control-panel">
+
+        <div style="display: flex; align-items: center; gap: 5px;">
+            <button class="control-btn active domain-btn" id="toggleDomains">
+                <i class="fas fa-layer-group"></i>
+                <span>Rég. Biogéo.</span>
+            </button>
+            <button class="info-btn" id="domainsInfoBtn">
+                <i class="fas fa-info-circle"></i>
+            </button>
+        </div>
+
+        <div style="display: flex; align-items: center; gap: 5px;">
+            <button class="control-btn active" id="toggleDerstein">
+                <i class="fas fa-layer-group"></i>
+                <span>Ecorégions</span>
+            </button>
+            <button class="info-btn" id="dersteinInfoBtn">
+                <i class="fas fa-info-circle"></i>
+            </button>
+        </div>
+
+        <div style="display: flex; align-items: center; gap: 5px;">
+            <button class="control-btn active" id="toggleQS">
+                <i class="fas fa-layer-group"></i>
+                <span>Sous-secteurs de Q&S</span>
+            </button>
+            <button class="info-btn" id="qsInfoBtn">
+                <i class="fas fa-info-circle"></i>
+            </button>
+        </div>
+        <button class="control-btn add-point-btn" id="addPointsBtn">
+            <i class="fas fa-plus-circle"></i>
+            <span>Ajouter des points</span>
+        </button>
+    </div>
+    
+    <!-- Info popups -->
+    <div class="info-popup" id="qsInfoPopup">
+        <div class="info-popup-title">
+            <span>Sous-secteurs de Q&S</span>
+            <i class="fas fa-times" id="closeQsInfo"></i>
+        </div>
+        <div class="info-popup-content">
+            <p>Quézel, P. & Santa, S. 1962. Nouvelle Flore de l’Algérie et des régions désertiques méridionales, Editions du Centre National de la Recherche Scientifique. ed. Paris.</p>
+        </div>
+    </div>
+    
+    <div class="info-popup" id="dersteinInfoPopup">
+        <div class="info-popup-title">
+            <span>Ecoregions de Dinerstein <i>et al.</i></span>
+            <i class="fas fa-times" id="closeDersteinInfo"></i>
+        </div>
+        <div class="info-popup-content">
+            <p>Dinerstein, E., Olson, D., Joshi, A., Vynne, C., Burgess, N.D., Wikramanayake, E., Hahn, N., Palminteri, S., Hedao, P., Noss, R., Hansen, M., Locke, H., Ellis, E.C., Jones, B., Barber, C.V., Hayes, R., Kormos, C., Martin, V., Crist, E., Sechrest, W., Price, L., Baillie, J.E.M., Weeden, D., Suckling, K., Davis, C., Sizer, N., Moore, R., Thau, D., Birch, T., Potapov, P., Turubanova, S., Tyukavina, A., de Souza, N., Pintea, L., Brito, J.C., Llewellyn, O.A., Miller, A.G., Patzelt, A., Ghazanfar, S.A., Timberlake, J., Kl?ser, H., Shennan-Farp?n, Y., Kindt, R., Lilles?, J.-P.B., van Breugel, P., Graudal, L., Voge, M., Al-Shammari, K.F. & Saleem, M. 2017. An Ecoregion-Based Approach to Protecting Half the Terrestrial Realm. BioScience 67: 534-545. doi: 10.1093/biosci/bix014</p>
+        </div>
+    </div>
+    
+    <div class="info-popup" id="domainsInfoPopup">
+        <div class="info-popup-title">
+            <span>Régions biogéographiques</span>
+            <i class="fas fa-times" id="closeDomainsInfo"></i>
+        </div>
+        <div class="info-popup-content">
+            <p>Loidi, J. & Vynokurov, D. 2024. The biogeographical kingdoms and regions of the world. Mediterr. Bot. 45(2),e92333. https://doi.org/10.5209/mbot.92333</p>
+        </div>
+    </div>
+    
+    <div class="point-form-container" id="pointFormContainer">
+        <div class="point-form-title">
+            <span><i class="fas fa-map-marked-alt"></i> Ajouter des points</span>
+            <i class="fas fa-times" id="closePointForm"></i>
+        </div>
+        <div class="point-form" id="pointForm">
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="pointId"><i class="fas fa-hashtag"></i> ID du point</label>
+                    <input type="text" id="pointId" placeholder="Entrez un ID unique">
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="pointLat"><i class="fas fa-map-pin"></i> Latitude</label>
+                    <input type="text" id="pointLat" placeholder="ex. 36.737">
+                </div>
+                <div class="form-group">
+                    <label for="pointLng"><i class="fas fa-map-pin"></i> Longitude</label>
+                    <input type="text" id="pointLng" placeholder="ex. 3.057">
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="pointColor"><i class="fas fa-palette"></i> Couleur</label>
+                    <select id="pointColor">
+                        <option value="#e74c3c">Rouge</option>
+                        <option value="#3498db">Bleu</option>
+                        <option value="#2ecc71">Vert</option>
+                        <option value="#f39c12">Orange</option>
+                        <option value="#9b59b6">Violet</option>
+                        <option value="#1abc9c">Turquoise</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-actions">
+                <button class="btn btn-primary" id="addMoreBtn">
+                    <i class="fas fa-plus"></i> Ajouter à la liste
+                </button>
+                <button class="btn btn-success" id="locateBtn">
+                    <i class="fas fa-map-marker-alt"></i> Localiser
+                </button>
+            </div>
+            <div class="point-list" id="pointList">
+                <div class="empty-list">Aucun point ajouté pour le moment</div>
+            </div>
+            <div class="form-actions">
+                <button class="btn btn-danger" id="clearAllBtn">
+                    <i class="fas fa-trash"></i> Effacer tous les points
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
+    <script>
+        // Initialisation de la carte
+        const map = L.map('map').setView([28.0339, 1.6596], 5); // Centré sur l'Algérie
+        
+        // Ajout de la carte de base
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributeurs'
+        }).addTo(map);
+        
+        // Ajout du contrôle d'échelle
+        L.control.scale({position: 'bottomleft', imperial: false}).addTo(map);
+        
+        // Création des groupes de couches
+        const qsLayer = L.layerGroup().addTo(map);
+        const dersteinLayer = L.layerGroup().addTo(map);
+        const domainsLayer = L.layerGroup().addTo(map);
+        const pointsLayer = L.layerGroup().addTo(map);
+        
+        // Définition des couleurs pour chaque type de zone
+        const zoneColors = {
+            qs: [
+                '#FF5733', '#33FF57', '#3357FF', '#F3FF33', '#FF33F3',
+                '#33FFF3', '#8A2BE2', '#FF6347', '#7CFC00', '#9932CC',
+                '#00FA9A', '#FFD700', '#FF69B4', '#00BFFF', '#FF8C00',
+                '#98FB98', '#9370DB', '#FF1493', '#32CD32', '#BA55D3'
+            ],
+            derstein: [
+                '#1ABC9C', '#2ECC71', '#3498DB', '#9B59B6', '#34495E',
+                '#16A085', '#27AE60', '#2980B9', '#8E44AD', '#2C3E50',
+                '#F1C40F', '#E67E22', '#E74C3C', '#FF5733', '#33FF57'
+            ],
+            domains: [
+                '#E74C3C', '#ECF0F1', '#3498DB', '#2ECC71', '#F39C12',
+                '#9B59B6', '#1ABC9C', '#D35400', '#7F8C8D'
+            ]
+        };
+        
+        // Définition des fichiers GeoJSON pour chaque couche
+        const geojsonFiles = {
+            qs: [
+                { id: 'A1', file: './qets/A1.json', name: 'Sous-secteur A1' },
+                { id: 'A2', file: './qets/A2.json', name: 'Sous-secteur A2' },
+                { id: 'K1', file: './qets/K1.json', name: 'Sous-secteur K1' },
+                { id: 'K2', file: './qets/K2.json', name: 'Sous-secteur K2' },
+                { id: 'K3', file: './qets/K3.json', name: 'Sous-secteur K3' },
+                { id: 'O1', file: './qets/O1.json', name: 'Sous-secteur O1' },
+                { id: 'O2', file: './qets/O2.json', name: 'Sous-secteur O2' },
+                { id: 'O3', file: './qets/O3.json', name: 'Sous-secteur O3' },
+                { id: 'C1', file: './qets/C1.json', name: 'Sous-secteur C1' },
+                { id: 'H1', file: './qets/H1.json', name: 'Sous-secteur H1' },
+                { id: 'H2', file: './qets/H2.json', name: 'Sous-secteur H2' },
+                { id: 'AS1', file: './qets/AS1.json', name: 'Sous-secteur AS1' },
+                { id: 'AS2', file: './qets/AS2.json', name: 'Sous-secteur AS2' },
+                { id: 'AS3', file: './qets/AS3.json', name: 'Sous-secteur AS3' },
+                { id: 'Hd', file: './qets/Hd.json', name: 'Sous-secteur Hd' },
+                { id: 'SS1', file: './qets/SS1.json', name: 'Sous-secteur SS1' },
+                { id: 'SS2', file: './qets/SS2.json', name: 'Sous-secteur SS2' },
+                { id: 'SO', file: './qets/SO.json', name: 'Sous-secteur SO' },
+                { id: 'SC', file: './qets/SC.json', name: 'Sous-secteur SC' },
+                { id: 'SM', file: './qets/SM.json', name: 'Sous-secteur SM' }
+            ],
+            derstein: [
+                { id: 'D01', file: './local/diner/D01.json', name: 'Mediterranean conifer and mixed forests' },
+                { id: 'D02', file: './local/diner/D02.json', name: 'Mediterranean dry woodlands and steppe' },
+                { id: 'D03', file: './local/diner/D03.json', name: 'Mediterranean woodlands and forests' },
+                { id: 'D04', file: './local/diner/D04.json', name: 'North Saharan Xeric Steppe and Woodland' },
+                { id: 'D05', file: './local/diner/D05.json', name: 'West Saharan montane xeric woodlands' },
+                { id: 'D06', file: './local/diner/D06.json', name: 'West Sahara desert' },
+                { id: 'D07', file: './local/diner/D07.json', name: 'Mediterranean Acacia-Argania dry woodlands and succulent thickets' },
+                { id: 'D08', file: './local/diner/D08.json', name: 'South Sahara desert' },
+                { id: 'D09', file: './local/diner/D09.json', name: 'Saharan halophytics' },
+                { id: 'D10', file: './local/diner/D10.json', name: 'Sahelian Acacia savanna' },
+                { id: 'D11', file: './local/diner/D11.json', name: 'Mediterranean High Atlas juniper steppe' },
+                { id: 'D12', file: './local/diner/D12.json', name: 'East Sahara Desert' },
+                { id: 'D13', file: './local/diner/D13.json', name: 'Saharan Atlantic coastal desert' },
+                { id: 'D14', file: './local/diner/D14.json', name: 'Tibesti-Jebel Uweinat montane xeric woodlands' },
+                { id: 'D15', file: './local/diner/D15.json', name: 'Inner Niger Delta flooded savanna' }
+            ],
+            domains: [
+                { id: 'DM1', file: './local/loid/DM1.json', name: 'Mediterranean' },
+                { id: 'DM2', file: './local/loid/DM2.json', name: 'Saharo-Sindian' },
+                { id: 'DM3', file: './local/loid/DM3.json', name: 'Sudano-Zambezian' },
+                { id: 'DM4', file: './local/loid/DM4.json', name: 'Macaronesian' },
+                { id: 'DM5', file: './domains/DM5.json', name: 'Domain 5' },
+                { id: 'DM6', file: './domains/DM6.json', name: 'Domain 6' },
+                { id: 'DM7', file: './domains/DM7.json', name: 'Domain 7' },
+                { id: 'DM8', file: './domains/DM8.json', name: 'Domain 8' },
+                { id: 'DM9', file: './domains/DM9.json', name: 'Domain 9' }
+            ]
+        };
+        
+        // Stockage des couches de polygones pour le changement de couleur
+        const polygonLayers = {
+            qs: {},
+            derstein: {},
+            domains: {}
+        };
+        
+        // Gestion des points
+        const pointsList = [];
+        
+        // Afficher l'indicateur de chargement
+        function showLoading(show) {
+            const loader = document.getElementById('loadingIndicator');
+            loader.style.display = show ? 'flex' : 'none';
+        }
+        
+        // Charger les données GeoJSON
+        async function loadGeoJSON() {
+            showLoading(true);
+            
+            try {
+                // Effacer les couches existantes
+                qsLayer.clearLayers();
+                dersteinLayer.clearLayers();
+                domainsLayer.clearLayers();
+                
+                // Charger les zones Q&S
+                await loadZoneType('qs', qsLayer);
+                
+                // Charger les zones Derstein
+                await loadZoneType('derstein', dersteinLayer);
+                
+                // Charger les domaines
+                await loadZoneType('domains', domainsLayer);
+                
+            } catch (error) {
+                console.error("Erreur de chargement des données cartographiques:", error);
+                alert("Echec du chargement de certaines données cartographiques. Veuillez vérifier la console pour plus de détails.");
+            } finally {
+                showLoading(false);
+            }
+        }
+        
+        // Charger un type de zone spécifique
+        async function loadZoneType(zoneType, layerGroup) {
+            const zoneFiles = geojsonFiles[zoneType];
+            const colors = zoneColors[zoneType];
+            
+            for (let i = 0; i < zoneFiles.length; i++) {
+                const zone = zoneFiles[i];
+                const color = colors[i % colors.length];
+                
+                try {
+                    const response = await fetch(zone.file);
+                    if (!response.ok) throw new Error(`Echec du chargement de ${zone.id}`);
+                    
+                    const geoJson = await response.json();
+                    if (!geoJson || !geoJson.features) {
+                        console.warn(`GeoJSON invalide pour ${zone.id}`);
+                        continue;
+                    }
+                    
+                    const geoJsonLayer = L.geoJSON(geoJson, {
+                        style: {
+                            fillColor: color,
+                            weight: 2,
+                            opacity: 1,
+                            color: '#333',
+                            fillOpacity: 0.5
+                        },
+                        onEachFeature: function(feature, layer) {
+                            layer.bindPopup(`
+                                <b>${zone.name}</b><br>
+                                <small>Zone ID: ${zone.id}</small>
+                            `);
+                        }
+                    }).addTo(layerGroup);
+                    
+                    // Stocker la référence de la couche pour le changement de couleur
+                    polygonLayers[zoneType][zone.id] = {
+                        layer: geoJsonLayer,
+                        color: color
+                    };
+                    
+                } catch (error) {
+                    console.error(`Erreur de chargement de ${zone.id}:`, error);
+                }
+            }
+        }
+        
+        // Changer la couleur d'un polygone
+        function changePolygonColor(zoneType, zoneId, newColor) {
+            const zoneData = polygonLayers[zoneType][zoneId];
+            if (zoneData) {
+                zoneData.layer.setStyle({
+                    fillColor: newColor
+                });
+                zoneData.color = newColor;
+            }
+        }
+        
+        // Afficher le sélecteur de couleur pour les polygones
+        function showPolygonColorPicker(zoneType, zoneId) {
+            const colorPicker = document.getElementById('polygonColorPicker');
+            const colorGrid = document.getElementById('colorPickerGrid');
+            const colors = zoneColors[zoneType];
+            const currentColor = polygonLayers[zoneType][zoneId].color;
+            
+            colorGrid.innerHTML = '';
+            colors.forEach(color => {
+                const colorOption = document.createElement('div');
+                colorOption.className = 'color-option' + (color === currentColor ? ' selected' : '');
+                colorOption.style.backgroundColor = color;
+                colorOption.title = color;
+                colorOption.addEventListener('click', function() {
+                    changePolygonColor(zoneType, zoneId, color);
+                    colorPicker.style.display = 'none';
+                });
+                colorGrid.appendChild(colorOption);
+            });
+            
+            // Positionner et afficher le sélecteur de couleur
+            colorPicker.style.display = 'block';
+            colorPicker.style.top = '80px';
+            colorPicker.style.right = '15px';
+            
+            // Fermer le sélecteur de couleur lors du clic sur le bouton de fermeture
+            document.getElementById('closeColorPicker').onclick = function() {
+                colorPicker.style.display = 'none';
+            };
+        }
+        
+        // Eléments DOM
+        const toggleQSBtn = document.getElementById('toggleQS');
+        const toggleDersteinBtn = document.getElementById('toggleDerstein');
+        const toggleDomainsBtn = document.getElementById('toggleDomains');
+        const addPointsBtn = document.getElementById('addPointsBtn');
+        const pointFormContainer = document.getElementById('pointFormContainer');
+        const closePointForm = document.getElementById('closePointForm');
+        const pointIdInput = document.getElementById('pointId');
+        const pointLatInput = document.getElementById('pointLat');
+        const pointLngInput = document.getElementById('pointLng');
+        const pointColorInput = document.getElementById('pointColor');
+        const addMoreBtn = document.getElementById('addMoreBtn');
+        const locateBtn = document.getElementById('locateBtn');
+        const clearAllBtn = document.getElementById('clearAllBtn');
+        const pointList = document.getElementById('pointList');
+        const pointForm = document.getElementById('pointForm');
+        
+        // Eléments des boutons d'information
+        const qsInfoBtn = document.getElementById('qsInfoBtn');
+        const dersteinInfoBtn = document.getElementById('dersteinInfoBtn');
+        const domainsInfoBtn = document.getElementById('domainsInfoBtn');
+        const qsInfoPopup = document.getElementById('qsInfoPopup');
+        const dersteinInfoPopup = document.getElementById('dersteinInfoPopup');
+        const domainsInfoPopup = document.getElementById('domainsInfoPopup');
+        const closeQsInfo = document.getElementById('closeQsInfo');
+        const closeDersteinInfo = document.getElementById('closeDersteinInfo');
+        const closeDomainsInfo = document.getElementById('closeDomainsInfo');
+        
+        // Basculer la couche Q&S
+        toggleQSBtn.addEventListener('click', function() {
+            if (map.hasLayer(qsLayer)) {
+                qsLayer.removeFrom(map);
+                toggleQSBtn.classList.remove('active');
+            } else {
+                qsLayer.addTo(map);
+                toggleQSBtn.classList.add('active');
+            }
+        });
+        
+        // Basculer la couche Derstein
+        toggleDersteinBtn.addEventListener('click', function() {
+            if (map.hasLayer(dersteinLayer)) {
+                dersteinLayer.removeFrom(map);
+                toggleDersteinBtn.classList.remove('active');
+            } else {
+                dersteinLayer.addTo(map);
+                toggleDersteinBtn.classList.add('active');
+            }
+        });
+        
+        // Basculer la couche des domaines
+        toggleDomainsBtn.addEventListener('click', function() {
+            if (map.hasLayer(domainsLayer)) {
+                domainsLayer.removeFrom(map);
+                toggleDomainsBtn.classList.remove('active');
+            } else {
+                domainsLayer.addTo(map);
+                toggleDomainsBtn.classList.add('active');
+            }
+        });
+        
+        // Afficher le formulaire de point
+        addPointsBtn.addEventListener('click', function() {
+            pointFormContainer.style.display = 'block';
+            pointIdInput.focus();
+        });
+        
+        // Masquer le formulaire de point
+        function hidePointForm() {
+            pointFormContainer.style.display = 'none';
+        }
+        
+        closePointForm.addEventListener('click', hidePointForm);
+        
+        // Ajouter un point à la liste
+        addMoreBtn.addEventListener('click', function() {
+            const id = pointIdInput.value.trim();
+            const lat = parseFloat(pointLatInput.value.trim());
+            const lng = parseFloat(pointLngInput.value.trim());
+            const color = pointColorInput.value;
+            
+            if (!id) {
+                alert('Veuillez entrer un ID de point');
+                return;
+            }
+            
+            if (isNaN(lat)) {
+                alert('Veuillez entrer une latitude valide');
+                return;
+            }
+            
+            if (isNaN(lng)) {
+                alert('Veuillez entrer une longitude valide');
+                return;
+            }
+            
+            // Vérifier si l'ID existe déjà
+            if (pointsList.some(point => point.id === id)) {
+                alert(`Un point avec l'ID "${id}" existe déjà`);
+                return;
+            }
+            
+            pointsList.push({ id, lat, lng, color });
+            updatePointsList();
+            
+            // Effacer les entrées (sauf la couleur)
+            pointIdInput.value = '';
+            pointLatInput.value = '';
+            pointLngInput.value = '';
+            
+            // Revenir au champ ID
+            pointIdInput.focus();
+        });
+        
+        // Localiser tous les points
+        locateBtn.addEventListener('click', function() {
+            if (pointsList.length === 0) {
+                alert('Aucun point à localiser. Veuillez d\'abord ajouter des points.');
+                return;
+            }
+            
+            // Effacer les points existants
+            pointsLayer.clearLayers();
+            
+            // Ajouter de nouveaux points à la carte
+            pointsList.forEach(point => {
+                const marker = L.marker([point.lat, point.lng], {
+                    icon: L.divIcon({
+                        className: 'custom-marker',
+                        html: `
+                            <div style="
+                                background-color: ${point.color};
+                                color: white;
+                                border-radius: 50%;
+                                width: 28px;
+                                height: 28px;
+                                display: flex;
+                                justify-content: center;
+                                align-items: center;
+                                font-weight: bold;
+                                border: 2px solid white;
+                                box-shadow: 0 0 5px rgba(0,0,0,0.3);
+                            ">
+                                ${point.id}
+                            </div>
+                        `,
+                        iconSize: [28, 28]
+                    })
+                }).addTo(pointsLayer);
+                
+                marker.bindPopup(`
+                    <b>Point ${point.id}</b><br>
+                    Latitude: ${point.lat.toFixed(6)}<br>
+                    Longitude: ${point.lng.toFixed(6)}
+                `);
+            });
+            
+            // Zoom pour afficher tous les points
+            if (pointsList.length > 0) {
+                const group = new L.featureGroup(pointsLayer.getLayers());
+                map.fitBounds(group.getBounds().pad(0.2));
+            }
+            
+            // Fermer le formulaire après localisation
+            pointFormContainer.style.display = 'none';
+        });
+        
+        // Effacer tous les points
+        clearAllBtn.addEventListener('click', function() {
+            if (pointsList.length === 0) return;
+            
+            if (confirm('Etes-vous sûr de vouloir effacer tous les points ?')) {
+                pointsList.length = 0;
+                pointsLayer.clearLayers();
+                updatePointsList();
+            }
+        });
+        
+        // Mettre à jour l'affichage de la liste des points
+        function updatePointsList() {
+            pointList.innerHTML = '';
+            
+            if (pointsList.length === 0) {
+                pointList.innerHTML = '<div class="empty-list">Aucun point ajouté pour le moment</div>';
+                return;
+            }
+            
+            pointsList.forEach((point, index) => {
+                const pointItem = document.createElement('div');
+                pointItem.className = 'point-item';
+                pointItem.innerHTML = `
+                    <div class="point-item-info">
+                        <div class="point-item-id">${point.id}</div>
+                        <div class="point-item-coords">${point.lat.toFixed(6)}, ${point.lng.toFixed(6)}</div>
+                    </div>
+                    <div class="point-item-actions">
+                        <button class="remove-btn" data-index="${index}">Supprimer</button>
+                    </div>
+                `;
+                pointList.appendChild(pointItem);
+            });
+            
+            // Ajouter des écouteurs d'événements aux boutons de suppression
+            document.querySelectorAll('.remove-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const index = parseInt(this.getAttribute('data-index'));
+                    removePoint(index);
+                });
+            });
+        }
+        
+        // Supprimer un seul point
+        function removePoint(index) {
+            if (confirm(`Supprimer le point "${pointsList[index].id}" ?`)) {
+                pointsList.splice(index, 1);
+                updatePointsList();
+                updatePointsOnMap();
+            }
+        }
+        
+        // Mettre à jour tous les points sur la carte
+        function updatePointsOnMap() {
+            pointsLayer.clearLayers();
+            pointsList.forEach(point => {
+                L.marker([point.lat, point.lng], {
+                    icon: L.divIcon({
+                        className: 'custom-marker',
+                        html: `<div style="background-color: ${point.color}; color: white; border-radius: 50%; width: 28px; height: 28px; display: flex; justify-content: center; align-items: center; font-weight: bold; border: 2px solid white; box-shadow: 0 0 5px rgba(0,0,0,0.3);">${point.id}</div>`,
+                        iconSize: [28, 28]
+                    })
+                }).addTo(pointsLayer);
+            });
+        }
+        
+        // Gestionnaires des boutons d'information
+        qsInfoBtn.addEventListener('click', function(e) {
+            e.stopPropagation();
+            qsInfoPopup.style.display = 'block';
+            qsInfoPopup.style.top = (qsInfoBtn.offsetTop + qsInfoBtn.offsetHeight + 10) + 'px';
+            qsInfoPopup.style.right = '15px';
+        });
+        
+        dersteinInfoBtn.addEventListener('click', function(e) {
+            e.stopPropagation();
+            dersteinInfoPopup.style.display = 'block';
+            dersteinInfoPopup.style.top = (dersteinInfoBtn.offsetTop + dersteinInfoBtn.offsetHeight + 10) + 'px';
+            dersteinInfoPopup.style.right = '15px';
+        });
+        
+        domainsInfoBtn.addEventListener('click', function(e) {
+            e.stopPropagation();
+            domainsInfoPopup.style.display = 'block';
+            domainsInfoPopup.style.top = (domainsInfoBtn.offsetTop + domainsInfoBtn.offsetHeight + 10) + 'px';
+            domainsInfoPopup.style.right = '15px';
+        });
+        
+        closeQsInfo.addEventListener('click', function() {
+            qsInfoPopup.style.display = 'none';
+        });
+        
+        closeDersteinInfo.addEventListener('click', function() {
+            dersteinInfoPopup.style.display = 'none';
+        });
+        
+        closeDomainsInfo.addEventListener('click', function() {
+            domainsInfoPopup.style.display = 'none';
+        });
+        
+        // Fermer les popups d'information lors d'un clic à l'extérieur
+        document.addEventListener('click', function(e) {
+            if (!qsInfoPopup.contains(e.target) && e.target !== qsInfoBtn) {
+                qsInfoPopup.style.display = 'none';
+            }
+            if (!dersteinInfoPopup.contains(e.target) && e.target !== dersteinInfoBtn) {
+                dersteinInfoPopup.style.display = 'none';
+            }
+            if (!domainsInfoPopup.contains(e.target) && e.target !== domainsInfoBtn) {
+                domainsInfoPopup.style.display = 'none';
+            }
+        });
+        
+        // Initialiser la carte et les écouteurs d'événements
+        window.onload = function() {
+            loadGeoJSON();
+            
+            // Fermer la fenêtre modale lors d'un clic à l'extérieur
+            window.onclick = function(event) {
+                if (event.target === pointFormContainer) {
+                    pointFormContainer.style.display = 'none';
+                }
+            };
+            
+            // Gérer la touche Entrée dans le formulaire
+            pointForm.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    addMoreBtn.click();
+                }
+            });
+            
+            // Clic droit sur les polygones pour changer la couleur
+            map.on('contextmenu', function(e) {
+                // Vérifier si nous avons cliqué sur un polygone
+                const features = map.featureToLayer(e.latlng);
+                if (features && features.length > 0) {
+                    const feature = features[0];
+                    // Trouver à quelle couche et zone cela appartient
+                    for (const zoneType in polygonLayers) {
+                        for (const zoneId in polygonLayers[zoneType]) {
+                            if (polygonLayers[zoneType][zoneId].layer.hasLayer(feature)) {
+                                showPolygonColorPicker(zoneType, zoneId);
+                                return;
+                            }
+                        }
+                    }
+                }
+            });
+        };
+    </script>
+</body>
+</html>
