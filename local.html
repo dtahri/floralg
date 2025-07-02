@@ -583,7 +583,7 @@
     
     <div class="loading-indicator" id="loadingIndicator">
         <i class="fas fa-spinner"></i>
-        <span>Chargement des données cartographiques...</span>
+        <span>Chargement des données...</span>
     </div>
     
     <div class="control-panel">
@@ -838,7 +838,7 @@
                 
             } catch (error) {
                 console.error("Erreur de chargement des données cartographiques:", error);
-                alert("Echec du chargement de certaines données cartographiques. Veuillez vérifier la console pour plus de détails.");
+                alert("Echec du chargement de certaines données. Veuillez vérifier la console pour plus de détails.");
             } finally {
                 showLoading(false);
             }
