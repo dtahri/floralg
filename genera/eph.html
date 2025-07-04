@@ -1,0 +1,1032 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ephedra Tourn. ex L.</title>
+    <!-- Add Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+    <!-- Add Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Libre+Baskerville:wght@400;700&family=Source+Sans+Pro:wght@300;400&display=swap');
+        
+        :root {
+            --primary-green: #2E5E2A;
+            --secondary-green: #5A8C45;
+            --accent-gold: #B38E3D;
+            --light-bg: #F8F9F7;
+            --border-gray: #DEE2E6;
+            --mother-border: #8B5A2B;
+            
+            /* IUCN Colors */
+            --iucn-ex: #000000;
+            --iucn-ew: #cc33ff;
+            --iucn-cr: #ff3333;
+            --iucn-en: #ff9933;
+            --iucn-vu: #ffff33;
+            --iucn-nt: #99cc33;
+            --iucn-lc: #33cc33;
+            --iucn-dd: #cccccc;
+            --iucn-ne: #777777;
+            --iucn-end: #ff3333; /* Endemic color */
+            
+            /* Granddaughter colors */
+            --granddaughter-1: #E1F5FE;
+            --granddaughter-2: #E8F5E9;
+            --granddaughter-3: #FFF8E1;
+            --granddaughter-4: #F3E5F5;
+            --granddaughter-5: #FFEBEE;
+            --granddaughter-border-1: #4FC3F7;
+            --granddaughter-border-2: #81C784;
+            --granddaughter-border-3: #FFD54F;
+            --granddaughter-border-4: #BA68C8;
+            --granddaughter-border-5: #EF5350;
+        }
+        
+        body {
+            font-family: 'Source Sans Pro', sans-serif;
+            background-color: var(--light-bg);
+            color: #212529;
+            margin: 0;
+            padding: 40px 20px;
+            line-height: 1.6;
+        }
+
+        .header {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 60px;
+            background: linear-gradient(135deg, #2c3e50, #4ca1af);
+            color: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 15px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+            z-index: 1000;
+        }
+        .header-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            cursor: pointer;
+        }
+        .header-title:hover {
+            text-decoration: underline;
+        }
+        
+        .systematic-container {
+            max-width: 1000px;
+            margin: 0 auto;
+            position: relative;
+        }
+        
+        h1 {
+            font-family: 'Libre Baskerville', serif;
+            font-size: 2.8rem;
+            text-align: center;
+            color: var(--primary-green);
+            margin-bottom: 50px;
+            position: relative;
+            padding-bottom: 15px;
+        }
+        
+        h1::after {
+            content: "";
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 120px;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--accent-gold), transparent);
+        }
+        
+        /* Mother Box - Distinct Style */
+        .genus-card {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            border: 2px solid var(--mother-border);
+            padding: 35px;
+            margin: 0 auto 50px;
+            width: 85%;
+            position: relative;
+            transition: transform 0.3s;
+        }
+        
+        .genus-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+        }
+        
+        /* Daughter Boxes - Distinct Style */
+        .species-card {
+            background: white;
+            border-radius: 4px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            border-left: 4px solid var(--secondary-green);
+            padding: 25px;
+            margin-left: 10%;
+            margin-bottom: 30px;
+            width: 80%;
+            position: relative;
+            transition: all 0.3s;
+        }
+        
+        .species-card:hover {
+            transform: translateX(5px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+        }
+        
+        /* Granddaughter Boxes - Distinct Style */
+        .subspecies-card {
+            background: white;
+            border-radius: 4px;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+            padding: 20px;
+            margin-left: 15%;
+            margin-bottom: 20px;
+            width: 80%;
+            position: relative;
+            transition: all 0.3s;
+        }
+        
+        .subspecies-card.type-1 {
+            background-color: var(--granddaughter-1);
+            border-left: 4px solid var(--granddaughter-border-1);
+        }
+        
+        .subspecies-card.type-2 {
+            background-color: var(--granddaughter-2);
+            border-left: 4px solid var(--granddaughter-border-2);
+        }
+        
+        .subspecies-card.type-3 {
+            background-color: var(--granddaughter-3);
+            border-left: 4px solid var(--granddaughter-border-3);
+        }
+        
+        .subspecies-card.type-4 {
+            background-color: var(--granddaughter-4);
+            border-left: 4px solid var(--granddaughter-border-4);
+        }
+        
+        .subspecies-card.type-5 {
+            background-color: var(--granddaughter-5);
+            border-left: 4px solid var(--granddaughter-border-5);
+        }
+        
+        .subspecies-card:hover {
+            transform: translateX(3px);
+            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+        }
+        
+        .taxon-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+        }
+        
+        .genus-card .taxon-header {
+            border-bottom: 1px solid var(--mother-border);
+        }
+        
+        .species-card .taxon-header {
+            border-bottom: 1px dashed var(--border-gray);
+        }
+        
+        .subspecies-card .taxon-header {
+            border-bottom: 1px dotted var(--border-gray);
+        }
+        
+        .taxon-title {
+            font-family: 'Libre Baskerville', serif;
+            color: var(--primary-green);
+            margin: 0;
+        }
+        
+        .genus-card .taxon-title {
+            font-size: 1.8rem;
+        }
+        
+        .species-card .taxon-title {
+            font-size: 1.4rem;
+        }
+        
+        .subspecies-card .taxon-title {
+            font-size: 1.1rem;
+        }
+        
+        .taxon-status {
+            font-style: italic;
+            font-size: 0.9rem;
+            font-weight: 600;
+            padding: 4px 10px;
+            border-radius: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        /* IUCN Status Colors */
+        .status-lc { background-color: var(--iucn-lc); color: #000; }
+        .status-nt { background-color: var(--iucn-nt); color: #000; }
+        .status-vu { background-color: var(--iucn-vu); color: #000; }
+        .status-en { background-color: var(--iucn-en); color: #000; }
+        .status-cr { background-color: var(--iucn-cr); color: white; }
+        .status-ew { background-color: var(--iucn-ew); color: white; }
+        .status-ex { background-color: var(--iucn-ex); color: white; }
+        .status-dd { background-color: var(--iucn-dd); color: #000; }
+        .status-ne { background-color: var(--iucn-ne); color: white; }
+        .status-end { 
+            background-color: white; 
+            color: var(--iucn-end);
+            border: 1px solid var(--iucn-end);
+        }
+        
+        /* Economic Status Colors */
+        .status-econ-1 { background-color: #5E35B1; color: white; }
+        .status-econ-2 { background-color: #3949AB; color: white; }
+        
+        .taxon-node {
+            position: absolute;
+            left: -21px;
+            top: 40px;
+            width: 10px;
+            height: 10px;
+            background-color: white;
+            border: 2px solid var(--secondary-green);
+            border-radius: 50%;
+            z-index: 2;
+        }
+        
+        .taxon-node::after {
+            content: "";
+            position: absolute;
+            width: 6px;
+            height: 6px;
+            background-color: var(--secondary-green);
+            border-radius: 50%;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+        
+        .subspecies-node {
+            position: absolute;
+            left: -21px;
+            top: 30px;
+            width: 8px;
+            height: 8px;
+            background-color: white;
+            border: 2px solid var(--secondary-green);
+            border-radius: 50%;
+            z-index: 2;
+        }
+        
+        .subspecies-node::after {
+            content: "";
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background-color: var(--secondary-green);
+            border-radius: 50%;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+        
+        .view-illustration {
+            display: inline-flex;
+            align-items: center;
+            color: var(--secondary-green);
+            font-size: 0.9rem;
+            margin-top: 20px;
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+        
+        .view-illustration::before {
+            content: "\f06e";
+            font-family: "Font Awesome 6 Free";
+            font-weight: 900;
+            margin-right: 8px;
+            font-size: 0.9rem;
+        }
+        
+        .view-illustration:hover {
+            color: var(--primary-green);
+            text-decoration: underline;
+        }
+        
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.9);
+            overflow: auto;
+        }
+        
+        .modal-content-container {
+            margin: auto;
+            display: block;
+            width: 85%;
+            max-width: 800px;
+            position: relative;
+            top: 50%;
+            transform: translateY(-50%);
+            animation: fadeIn 0.3s;
+            text-align: center;
+        }
+        
+        .modal-image {
+            max-width: 100%;
+            max-height: 70vh;
+            display: block;
+            margin: 0 auto;
+        }
+        
+        .modal-caption {
+            color: white;
+            padding: 15px;
+            font-size: 1rem;
+            background-color: rgba(0, 0, 0, 0.7);
+            border-radius: 5px;
+            margin-top: 10px;
+            max-width: 80%;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        .modal-nav {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            color: white;
+            font-size: 2rem;
+            cursor: pointer;
+            padding: 15px;
+            opacity: 0.7;
+            transition: opacity 0.2s;
+            z-index: 1001;
+        }
+        
+        .modal-nav:hover {
+            opacity: 1;
+        }
+        
+        .modal-nav.prev {
+            left: 20px;
+        }
+        
+        .modal-nav.next {
+            right: 20px;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        .close {
+            position: absolute;
+            top: 30px;
+            right: 40px;
+            color: white;
+            font-size: 35px;
+            font-weight: bold;
+            cursor: pointer;
+            opacity: 0.8;
+            transition: opacity 0.2s;
+        }
+        
+        .close:hover {
+            opacity: 1;
+        }
+
+        /* Map styles */
+        .map-container {
+            margin-top: 50px;
+        }
+        
+        .map-title {
+            font-family: 'Libre Baskerville', serif;
+            font-size: 2rem;
+            text-align: center;
+            color: var(--primary-green);
+            margin-bottom: 20px;
+        }
+        
+        #distributionMap {
+            height: 500px;
+            width: 90%;
+            margin: 0 auto;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            border: 2px solid var(--mother-border);
+        }
+        
+        .map-label {
+            position: absolute;
+            background: rgba(255, 255, 255, 0.9);
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            pointer-events: none;
+            transform: translate(15px, -50%);
+            white-space: nowrap;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+            border: 1px solid rgba(0,0,0,0.1);
+        }
+        
+        /* Collapsible Species Filter Controls */
+        .species-filter {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: white;
+            border-radius: 5px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+            z-index: 1000;
+            width: 200px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+        
+        .species-filter-header {
+            padding: 10px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: var(--primary-green);
+            color: white;
+        }
+        
+        .species-filter-header h4 {
+            margin: 0;
+            font-family: 'Libre Baskerville', serif;
+            font-size: 0.9rem;
+        }
+        
+        .species-filter-header i {
+            transition: transform 0.3s;
+        }
+        
+        .species-filter-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+        }
+        
+        .species-filter.expanded .species-filter-content {
+            max-height: 400px;
+            padding: 10px;
+            overflow-y: auto;
+        }
+        
+        .species-filter.expanded .species-filter-header i {
+            transform: rotate(180deg);
+        }
+        
+        .species-filter-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 5px;
+        }
+        
+        .species-filter-item input {
+            margin-right: 8px;
+        }
+        
+        .species-filter-item label {
+            font-size: 0.85rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            width: 100%;
+        }
+        
+        .species-filter-item .status-indicator {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            margin-left: auto;
+        }
+        
+        /* Remark Box */
+        .remark-box {
+            background: linear-gradient(135deg, #f5f7fa 0%, #e4e8eb 100%);
+            border-radius: 8px;
+            padding: 30px;
+            margin: 50px auto;
+            width: 85%;
+            position: relative;
+            border-left: 5px solid var(--accent-gold);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+        }
+        
+        .remark-box::before {
+            content: "\f06a";
+            font-family: "Font Awesome 6 Free";
+            font-weight: 900;
+            position: absolute;
+            left: 15px;
+            top: 15px;
+            color: var(--accent-gold);
+            font-size: 1.5rem;
+            opacity: 0.3;
+        }
+        
+        .remark-title {
+            font-family: 'Libre Baskerville', serif;
+            color: var(--primary-green);
+            margin-top: 0;
+            margin-bottom: 15px;
+            padding-left: 30px;
+            font-size: 1.4rem;
+        }
+        
+        .remark-content {
+            padding-left: 30px;
+            position: relative;
+        }
+        
+        .remark-content p {
+            margin-bottom: 15px;
+        }
+        
+        .remark-content p:last-child {
+            margin-bottom: 0;
+        }
+        
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2rem;
+            }
+            
+            .genus-card,
+            .species-card {
+                width: 100%;
+                margin-left: 0;
+            }
+            
+            .subspecies-card {
+                margin-left: 5%;
+                width: 90%;
+            }
+            
+            .taxon-connector,
+            .taxon-node,
+            .subspecies-node {
+                display: none;
+            }
+            
+            #distributionMap {
+                width: 100%;
+                height: 400px;
+            }
+            
+            .species-filter {
+                top: 10px;
+                right: 10px;
+                width: 160px;
+            }
+            
+            .species-filter.expanded .species-filter-content {
+                max-height: 300px;
+            }
+            
+            .remark-box {
+                width: 100%;
+                padding: 20px;
+            }
+		.local-name {
+  font-style: italic;
+  font-size: 0.9em;
+  color: #666;
+  margin-top: 2px;
+}
+        }
+    </style>
+</head>
+<body>
+
+<div class="header">
+        <div class="header-title" onclick="window.location.href='../index.html'">FlorALG</div>
+            </div>
+
+    <div class="systematic-container">
+        <h1><i>Ephedra</i> Tourn. ex L.</h1>
+        
+        <div class="genus-card">
+            <div class="taxon-header">
+                <h2 class="taxon-title"><i>Ephedra</i> Tourn. ex L.</h2>
+            </div>
+            <p>Arbustes ou lianes dioïques ou monoïques. Feuilles opposées, réduites, soudées en gaine à la base. Chatons mâles axillaires, comportant 2-6 anthères sur un filet commun. Fleurs femelles solitaires ou groupées 2-5, terminales, entourées par 2-4 paires de bractées imbriquées. Faux fruit (galbule), constitué par des bractées accrescentes.</p>
+        </div>
+        
+                <div class="species-card">
+            <div class="taxon-connector"></div>
+            <div class="taxon-node"></div>
+            <div class="taxon-header">
+    		<div>
+     		 <h2 class="taxon-title"><i>Ephedra altissima</i> Desf.</h2>
+      			<div class="local-name">Méd. Eclairée Sci. Phys. 3(6): 163 (1792)</div>
+			<div class="local-name"><i>Abassi, Belbal</i></div>
+    			</div>
+<div>
+
+                </div>
+            </div>
+
+            <p>Chatons mâles ou femelles disposés en panicule ample et rameuse. Fruit rouge ou blanc à maturité. Arbuste grimpant, à rameaux vert gai.</p>
+				<span class="view-illustration" onclick="openModal('morphology', [
+            {src: './img/alt.jpg', caption: 'Ozenda (2004), p123.'}
+        ])">Illustrations</span>
+            </div>
+
+
+        <div class="species-card">
+            <div class="taxon-connector"></div>
+            <div class="taxon-node"></div>
+            <div class="taxon-header">
+    <div>
+      <h2 class="taxon-title"><i>Ephedra alata</i> Decne.</h2>
+      <div class="local-name">Ann. Sci. Nat. (Paris) 2: 239 (1824)</div>
+      <div class="local-name"><i>Alenda</i></div>
+    </div>
+  
+            </div>
+            <p>Rameaux vert-jaunâtre. Fruit mûr sec, à bractées libres, membraneuses et amplement ailées. Arbuste dressé, stolonifère, de 0,30-3 m. Chatons mâles en glomérules denses, les femelles solitaires ou groupés 2-5.</p>
+        				<span class="view-illustration" onclick="openModal('morphology', [
+            {src: './img/ea.jpg', caption: 'Ozenda (2004), p123.'}
+        ])">Illustrations</span>
+ <!-- Granddaughter boxes -->
+            <div class="subspecies-card type-1">
+                <div class="subspecies-node"></div>
+  <div class="taxon-header">
+    <div>
+      <h2 class="taxon-title"><i>Ephedra alata</i> subsp. <i>alata</i></h2>
+    </div>
+                </div>
+                <p>Anthères pédicellées. Galbules à bractées brusquement atténuées en onglet.</p>
+            </div>
+            
+            <div class="subspecies-card type-2">
+                <div class="subspecies-node"></div>
+  <div class="taxon-header">
+    <div>
+      <h2 class="taxon-title"><i>Ephedra alata</i> subsp. <i>alenda</i> (Stapf) Trab.</h2>
+      <div class="local-name">J.A.Battandier & L.C.Trabut, Fl. Algérie Tunisie: 399 (1905)</div>
+    </div>
+                </div>
+                <p>Anthères sessiles, n'individualisant pas de colonnes staminales. Galbules à bractées tronquées à la base.</p>
+            </div>
+
+            <div class="subspecies-card type-3">
+                <div class="subspecies-node"></div>
+  		<div class="taxon-header">
+    <div>
+      <h2 class="taxon-title"><i>Ephedra alata</i> subsp. <i>monjauzeana</i> Dubuis & Faurel</h2>
+      <div class="local-name">Bull. Soc. Hist. Nat. Afrique N. 48: 475 (1957)</div>
+    </div>
+		<span class="taxon-status status-end">END</span>
+                </div>
+                <p>Anthères sessiles disposées en 2 groupes de 4 sur 2 colonnes staminales. Galbule à bractées tronquées à la base.</p>
+            </div>
+
+</div>
+
+                
+        <div class="species-card">
+            <div class="taxon-connector"></div>
+            <div class="taxon-node"></div>
+            <div class="taxon-header">
+    <div>
+      <h2 class="taxon-title"><i>Ephedra nebrodensis</i> Tineo</h2>
+      <div class="local-name">G.Gussone, Fl. Sicul. Syn. 2: 638 (1844)</div>
+      <div class="local-name"><i>Dil el Maïz</i></div>
+    </div>
+
+            </div>
+            <p>Arbrisseau ne dépassant pas 1,50 m. Rameaux densément fasciculés. Plante constituant généralement un buisson plus ou moins hémisphérique. Chatons mâles à 6-8 anthères portées par une colonne très courte. Fruit mûr de 5-7 mm, généralement à une graine. Graines brunes, plus ou moins carénées sur les deux faces.</p>
+        				<span class="view-illustration" onclick="openModal('morphology', [
+            {src: './img/em.jpg', caption: 'Ozenda (2004), p123.'}
+        ])">Illustrations</span>
+	</div>
+
+        <div class="species-card">
+            <div class="taxon-connector"></div>
+            <div class="taxon-node"></div>
+            <div class="taxon-header">
+    <div>
+      <h2 class="taxon-title"><i>Ephedra fragilis</i> Desf.</h2>
+      <div class="local-name">Fl. Atlant. 2: 372 (1799)</div>
+      <div class="local-name"><i>Azrem</i></div>
+    </div>
+
+            </div>
+            <p>Arbuste atteignant plusieurs mètres, buissonnant ou grimpant. Rameaux peu denses. Chatons mâles à 2-6 anthères, portées par une colonne nettement marquée. Fruit mûr de 8-9 mm, toujours à deux graines. Graines noirâtres, non carénées sur les faces.</p>
+        </div>
+
+ 
+        
+        <!-- Distribution Map Section -->
+        <div class="map-container">
+            <h2 class="map-title">Distribution des espèces d'<i>Ephedra</i></h2>
+            <div id="distributionMap">
+                <div class="species-filter">
+                    <div class="species-filter-header" onclick="toggleFilterPanel()">
+                        <h4>Filtrer les Espèces</h4>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="species-filter-content" id="speciesFilterList"></div>
+                </div>
+            </div>
+        </div>
+        
+    
+    <div id="imageModal" class="modal">
+        <span class="close" onclick="closeModal()">&times;</span>
+        <div class="modal-nav prev" onclick="navigateModal(-1)"><i class="fas fa-chevron-left"></i></div>
+        <div class="modal-nav next" onclick="navigateModal(1)"><i class="fas fa-chevron-right"></i></div>
+        <div class="modal-content-container">
+            <img class="modal-image" id="modalImage">
+            <div class="modal-caption" id="modalCaption"></div>
+        </div>
+    </div>
+    
+    <!-- Add Leaflet JS -->
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+    <script>
+        // Modal variables
+        let currentModalImages = [];
+        let currentModalIndex = 0;
+        
+        // Map variables
+        let map;
+        let speciesGroups = {}; // To store all markers for each species
+        let speciesLabels = {}; // To store all labels for each species
+        let speciesColors = {}; // To store color for each species
+        
+        function openModal(imageName, images = []) {
+            const modal = document.getElementById('imageModal');
+            const modalImg = document.getElementById('modalImage');
+            const modalCaption = document.getElementById('modalCaption');
+            
+            currentModalImages = images;
+            currentModalIndex = 0;
+            
+            modalImg.src = currentModalImages[currentModalIndex].src;
+            modalImg.alt = `${imageName} diagram`;
+            modalCaption.textContent = currentModalImages[currentModalIndex].caption;
+            
+            modal.style.display = "block";
+            
+            modal.onclick = function(event) {
+                if (event.target === modal) {
+                    closeModal();
+                }
+            };
+        }
+        
+        function navigateModal(direction) {
+            event.stopPropagation();
+            currentModalIndex = (currentModalIndex + direction + currentModalImages.length) % currentModalImages.length;
+            const modalImg = document.getElementById('modalImage');
+            const modalCaption = document.getElementById('modalCaption');
+            
+            modalImg.src = currentModalImages[currentModalIndex].src;
+            modalCaption.textContent = currentModalImages[currentModalIndex].caption;
+        }
+        
+        function closeModal() {
+            document.getElementById('imageModal').style.display = "none";
+        }
+        
+        function toggleSpeciesVisibility(speciesId, isChecked) {
+            // Toggle all markers for this species
+            speciesGroups[speciesId].forEach(marker => {
+                marker.setStyle({
+                    opacity: isChecked ? 1 : 0,
+                    fillOpacity: isChecked ? 0.8 : 0
+                });
+            });
+            
+            // Toggle all labels for this species
+            speciesLabels[speciesId].forEach(label => {
+                label.setOpacity(isChecked ? 1 : 0);
+            });
+        }
+        
+        function toggleFilterPanel() {
+            const filter = document.querySelector('.species-filter');
+            filter.classList.toggle('expanded');
+        }
+        
+        document.addEventListener('keydown', function(event) {
+            if (event.key === "Escape") {
+                closeModal();
+            } else if (event.key === "ArrowLeft") {
+                navigateModal(-1);
+            } else if (event.key === "ArrowRight") {
+                navigateModal(1);
+            }
+        });
+        
+        document.addEventListener('DOMContentLoaded', function() {
+            const cards = document.querySelectorAll('.genus-card, .species-card, .subspecies-card');
+            
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.opacity = '1';
+                        entry.target.style.transform = 'translateY(0)';
+                    }
+                });
+            }, { threshold: 0.1 });
+            
+            cards.forEach((card, index) => {
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(20px)';
+                card.style.transition = `all 0.5s ease ${index * 0.1}s`;
+                observer.observe(card);
+            });
+
+            // Initialize the map
+            map = L.map('distributionMap').setView([28.5339, 1.6596], 5);
+            
+            // Add tile layer (OpenStreetMap)
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributeurs'
+            }).addTo(map);
+            
+            // Color palette for markers
+            const colors = [
+                '#2E5E2A', '#5A8C45', '#B38E3D', '#8B5A2B', '#4CA1AF',
+                '#2C3E50', '#8E44AD', '#E74C3C', '#3498DB', '#1ABC9C',
+                '#D35400', '#27AE60', '#F39C12', '#9B59B6', '#E91E63',
+                '#16A085', '#C0392B', '#2980B9', '#F1C40F', '#7F8C8D'
+            ];
+            
+            // Sample data points for Ferula species distribution
+            // Each species can have multiple points
+            const speciesData = [
+                { id: 'altissima', name: "E. altissima", points: [
+        { lat: 35.715555, lng: -0.614166 },
+        { lat: 35.710278, lng: -0.655833 },
+        { lat: 35.6975, lng: -0.635 },
+        { lat: 35.273118, lng: -0.773571 },
+        { lat: 24.448668, lng: 9.786987 },
+        { lat: 36.500734, lng: 1.320888 },
+        { lat: 35.69192, lng: 5.184369 },
+        { lat: 35.7333, lng: -0.7183 },
+        { lat: 35.571848, lng: 6.203594 },
+        { lat: 35.69765, lng: -0.63374 },
+        { lat: 35.251959, lng: -1.437581 },
+        { lat: 34.900281, lng: -0.277569 },
+        { lat: 35.720848, lng: -1.133469 },
+        { lat: 36.7, lng: 3.21667 },
+        { lat: 35.1936, lng: -1.598804 },
+        { lat: 35.69111, lng: -0.64167 },
+        { lat: 35.667986, lng: -0.660223 },
+        { lat: 25.623962, lng: 4.568623 },
+        { lat: 35.54806, lng: -0.21167 },
+        { lat: 35.73333, lng: -0.71944 },
+        { lat: 35.70944, lng: -0.665 },
+        { lat: 35.3735, lng: 0.1202 },
+        { lat: 35.7055, lng: -0.6588 },
+        { lat: 35.6852, lng: -0.6045 },
+        { lat: 23.48139, lng: 5.78861 },
+        { lat: 35.696944, lng: -0.633056 },
+        { lat: 35.709167, lng: -0.665278 },
+        { lat: 35.698056, lng: -0.692778 },
+        { lat: 35.32101, lng: -1.48024 },
+        { lat: 35.1488175, lng: 6.2590718 }
+                ]},
+                { id: 'alata', name: "E. alata", points: [
+        { lat: 23.98952, lng: 9.833517 },
+        { lat: 33.0862, lng: 0.5748 },
+        { lat: 33.330642, lng: 6.59175 },
+        { lat: 28.560156, lng: 9.244244 },
+        { lat: 28.724613, lng: 8.948843 },
+        { lat: 33.666667, lng: 7.083333 },
+        { lat: 30.861756, lng: -2.003332 },
+        { lat: 33.1, lng: 1.25 },
+        { lat: 34.35083, lng: 2.70528 },
+        { lat: 32.84, lng: 4.55 },
+        { lat: 32.1033, lng: 3.7708 },
+        { lat: 22.733333, lng: 5.566667 },
+        { lat: 22.816667, lng: 5.783333 },
+        { lat: 32.45111, lng: 5.80667 },
+        { lat: 33.098889, lng: 1.260556 },
+        { lat: 33.66666, lng: 7.08333 }
+                ]},
+                { id: 'nebrodensis', name: "E. nebrodensis", points: [
+        { lat: 36.487855, lng: 5.27597 },
+        { lat: 34.340037, lng: 3.080131 },
+        { lat: 34.54696, lng: 2.783085 },
+        { lat: 34.412811, lng: 3.054393 },
+        { lat: 34.545709, lng: 2.78265 },
+        { lat: 34.546691, lng: 2.806127 },
+        { lat: 36.467601, lng: 4.184393 },
+        { lat: 35.957373, lng: 4.397918 },
+        { lat: 35.279579, lng: 6.25376 }                  
+                ]},
+                { id: 'fragilis', name: "E. fragilis", points: [
+        { lat: 36.763055, lng: 3.050556 },
+        { lat: 32.666667, lng: -0.583333 },
+        { lat: 35.043889, lng: 5.591944 },
+        { lat: 34.856667, lng: 5.726667 },
+        { lat: 36.76939, lng: 5.083116 },
+        { lat: 35.2467, lng: -0.29357 },
+        { lat: 35.246544, lng: -0.294136 },
+        { lat: 35.82591, lng: 4.416483 },
+        { lat: 35.7333, lng: -0.1167 },
+        { lat: 36.7913, lng: 2.9248 },
+        { lat: 35.33333, lng: 6.68333 },
+        { lat: 35.755833, lng: -0.1275 },
+        { lat: 35.64879, lng: -0.59859 },
+        { lat: 36.8025, lng: 2.919444 },
+        { lat: 35.770833, lng: -0.116667 },
+        { lat: 35.709167, lng: -0.665278 },
+        { lat: 35.704722, lng: -0.893611 },
+        { lat: 33.8, lng: 2.883333 },
+        { lat: 35.931111, lng: 0.089167 },
+        { lat: 35.555833, lng: 6.173889 },
+        { lat: 36.91869, lng: 6.88699 },
+        { lat: 36.8188219, lng: 3.6189949 }
+                ]},
+ 
+            ];
+            
+            // Create filter controls
+            const filterList = document.getElementById('speciesFilterList');
+            
+            speciesData.forEach((species, index) => {
+                const color = colors[index % colors.length];
+                speciesColors[species.id] = color; // Store color for this species
+                
+                // Initialize arrays for this species
+                speciesGroups[species.id] = [];
+                speciesLabels[species.id] = [];
+                
+                // Add all points for this species
+                species.points.forEach(point => {
+                    // Add marker
+                    const marker = L.circleMarker([point.lat, point.lng], {
+                        radius: 10,
+                        fillColor: color,
+                        color: '#fff',
+                        weight: 1.5,
+                        opacity: 1,
+                        fillOpacity: 0.8
+                    }).addTo(map);
+                    
+                    // Add label (only show for one point per species to avoid clutter)
+                    if (species.points.indexOf(point) === 0) {
+                        const label = L.marker([point.lat, point.lng], {
+                            icon: L.divIcon({
+                                className: 'map-label',
+                                html: species.name,
+                                iconSize: null
+                            }),
+                            interactive: false
+                        }).addTo(map);
+                        speciesLabels[species.id].push(label);
+                    }
+                    
+                    speciesGroups[species.id].push(marker);
+                });
+                
+                // Add filter checkbox (only one per species)
+                const filterItem = document.createElement('div');
+                filterItem.className = 'species-filter-item';
+                filterItem.innerHTML = `
+                    <input type="checkbox" id="filter-${species.id}" checked onchange="toggleSpeciesVisibility('${species.id}', this.checked)">
+                    <label for="filter-${species.id}">
+                        ${species.name}
+                        <span class="status-indicator" style="background-color: ${color}"></span>
+                    </label>
+                `;
+                filterList.appendChild(filterItem);
+            });
+        });
+        
+        // Make functions available globally
+        window.toggleSpeciesVisibility = toggleSpeciesVisibility;
+        window.toggleFilterPanel = toggleFilterPanel;
+    </script>
+</body>
+</html>
