@@ -336,7 +336,7 @@
             overflow: auto;
         }
         
-        .modal-content {
+        .modal-content-container {
             margin: auto;
             display: block;
             width: 85%;
@@ -345,6 +345,26 @@
             top: 50%;
             transform: translateY(-50%);
             animation: fadeIn 0.3s;
+            text-align: center;
+        }
+        
+        .modal-image {
+            max-width: 100%;
+            max-height: 70vh;
+            display: block;
+            margin: 0 auto;
+        }
+        
+        .modal-caption {
+            color: white;
+            padding: 15px;
+            font-size: 1rem;
+            background-color: rgba(0, 0, 0, 0.7);
+            border-radius: 5px;
+            margin-top: 10px;
+            max-width: 80%;
+            margin-left: auto;
+            margin-right: auto;
         }
         
         .modal-nav {
@@ -603,7 +623,7 @@
 <body>
 
 <div class="header">
-        <div class="header-title" onclick="window.location.href='./index.html'">FlorALG</div>
+        <div class="header-title" onclick="window.location.href='../index.html'">FlorALG</div>
             </div>
 
     <div class="systematic-container">
@@ -631,8 +651,11 @@
             </div>
 
             <p>Capitules pauciflores en général, homogames, à fleurs toutes hermaphrodites. Réceptacle nu. Corolle insérée très obliquement sur l'ovaire. Plante dressée, suffrutescente. Tiges nombreuses, tomenteuses, de 30-50 cm. Feuilles courtes, généralement pubescentes-argentées, pinnatipartites. Capitules sessiles ou subsessiles, généralement 2-5 flores (8-12 flores dans la var. <i>Saharae</i> (Pomel) Q. et S.). Bractées externes de l'involucre orbiculaires, opaques et pubescentes; les intérieures oblongues, brillantes et glanduleuses.</p>
-            <span class="view-illustration" onclick="openModal('distribution', ['distribution1.jpg', 'distribution2.jpg'])">Illustrations</span>
-            </div>
+		<span class="view-illustration" onclick="openModal('morphology', [
+            {src: './img/d3.jpg', caption: 'Artemisia herba-alba (Fleurs)'},
+            {src: './img/2d.jpg', caption: 'Quézel et Santa (1962), T2, p991.'},
+        ])">Illustrations</span>
+        </div>
                   
         <div class="species-card">
             <div class="taxon-connector"></div>
@@ -646,7 +669,6 @@
 
             </div>
             <p>Capitules disposés en grappes unilatérales se groupant en panicule feuillée très ample et à rameaux étalés. Feuilles ponctuées et plus ou moins pubescentes, pétiolées et à pétiole non auriculé. Plante vivace de 40-70 cm, à tiges herbacées. Feuilles inférieures 2-pinnatiséquées; les supérieures 1-2 pinnatiséquées. Corolle glabre ou velue. Akènes non glanduleux.</p>
-            <span class="view-illustration" onclick="openModal('distribution', ['distribution1.jpg', 'distribution2.jpg'])">Illustrations</span>
         </div>
 
         <div class="species-card">
@@ -661,7 +683,6 @@
 
             </div>
             <p>Capitules disposés en grappes unilatérales se groupant en panicule thyrsoïde feuillée, ample et à rameaux dressés et rapprochés. Feuilles non ponctuées, blanches-soyeuses, pétiolées à pétiole auriculé. Plante de 40-100 cm ou plus, à tiges ligneuses. Feuilles inférieures 3-pinnatiséquées; les supérieures 1-2 pinnatiséquées. Corolle glabre. Akènes glanduleux.</p>
-            <span class="view-illustration" onclick="openModal('distribution', ['distribution1.jpg', 'distribution2.jpg'])">Illustrations</span>
         </div>
 
         <div class="species-card">
@@ -676,7 +697,6 @@
 
             </div>
             <p>Réceptacle glabre. Plante très odorante. Feuilles à lobes courts, larges et obtus. Inflorescences en panicules denses très ramifiées.</p>
-            <span class="view-illustration" onclick="openModal('distribution', ['distribution1.jpg', 'distribution2.jpg'])">Illustrations</span>
         </div>
         
         <div class="species-card">
@@ -691,7 +711,9 @@
 
             </div>
             <p>Capitules disposés en longues grappes terminales généralement simples. Feuilles de 1-2 cm de long. Fleurons insérés très obliquement sur l'akène, très velus au sommet (au moins sur ceux qui sont hermaphrodites). Tiges suffrutescentes à la base, de 20-40 cm (var. <i>eu-atlantica</i> M.)</p>
-            <span class="view-illustration" onclick="openModal('distribution', ['distribution1.jpg', 'distribution2.jpg'])">Illustrations</span>
+		<span class="view-illustration" onclick="openModal('morphology', [
+            {src: './img/A4.jpg', caption: 'Artemisia atlantica'}
+        ])">Illustrations</span>
         </div>
 
         <div class="species-card">
@@ -705,7 +727,6 @@
 
             </div>
             <p>Capitules solitaires à l'extrémité de rameaux axillaires grêles et longs de 3-4 cm. Feuilles de 2-4 cm de long. Fleurons presque tous insérés au sommet de l'akène, glabres.</p>
-            <span class="view-illustration" onclick="openModal('distribution', ['distribution1.jpg', 'distribution2.jpg'])">Illustrations</span>
         </div>
 
         <div class="species-card">
@@ -718,8 +739,7 @@
     </div>
                     <span class="taxon-status status-end">END</span>
             </div>
-            <p>Sous-arbrisseau odorant, à tige ligneuse, glabre, dressée, droite, très rameuse, de 80 à 90 centimètres de hauteur, aux rameaux touffus, dressés, rigides, simples, striés, légèrement pubescents, feuillés ; feuilles longuement pétiolées, jeunes couvertes d’un léger duvet grisâtre, adultes devenant glabres et vertes ; pétiole auriculé ; limbe à contour ovale : chez les feuilles inférieures bipenné, chez les supérieures pinnatiséqué ; segments linéaires, obtus ; feuilles terminales entières, linéaires. Capitules solitaires, petits, hémisphériques, longuement pédonculés, situés à l’extrémité de pédoncules dressés et rigides, émergeant de l’aisselle des feuilles, généralement au nombre de 1 (très rarement 2), accompagnés de 2 à 5 bractées linéaires ; capitules penchés, larges de 6 à 7 mm, comptant 30 à 40 fleurs, disposés en longues grappes spiciformes terminales. Écailles extérieures de l’involucre vert grisâtre, lancéolées, herbacées, à sommet scarieux ; écailles intérieures arrondies, largement scarieuses au sommet et sur les bords, verdâtres sur le dos ou complètement scarieuses. Réceptacle nu ; corolles jaunes, glabres. Graines non observées. Floraison en juillet.</p>
-            <span class="view-illustration" onclick="openModal('distribution', ['distribution1.jpg', 'distribution2.jpg'])">Illustrations</span>
+            <p>Sous-arbrisseau odorant, à tige ligneuse, glabre, dressée, droite, très rameuse, de 80 à 90 centimètres de hauteur, aux rameaux touffus, dressés, rigides, simples, striés, légèrement pubescents, feuillés ; feuilles longuement pétiolées, jeunes couvertes d’un léger duvet grisâtre, adultes devenant glabres et vertes ; pétiole auriculé ; limbe à contour ovale : chez les feuilles inférieures bipenné, chez les supérieures pinnatiséqué ; segments linéaires, obtus ; feuilles terminales entières, linéaires. Capitules solitaires, petits, hémisphériques, longuement pédonculés, situés à l’extrémité de pédoncules dressés et rigides, émergeant de l’aisselle des feuilles, généralement au nombre de 1 (très rarement 2), accompagnés de 2 à 5 bractées linéaires ; capitules penchés, larges de 6 à 7 mm, comptant 30 à 40 fleurs, disposés en longues grappes spiciformes terminales. Ecailles extérieures de l’involucre vert grisâtre, lancéolées, herbacées, à sommet scarieux ; écailles intérieures arrondies, largement scarieuses au sommet et sur les bords, verdâtres sur le dos ou complètement scarieuses. Réceptacle nu ; corolles jaunes, glabres. Graines non observées. Floraison en juillet.</p>
         </div>
 
         <div class="species-card">
@@ -734,7 +754,6 @@
   
             </div>
             <p>Fleurons du disque stériles (ovaire avorté). Plante de 30-150 cm, à rameaux constituant une panicule plus ou moins ample. Tige ligneuse à la base; striée. Feuilles glabrescentes, vert foncé; les inférieures 2-pinnatiséquées, les supérieures pinnatiséquées, les basales pétiolées et auriculées, les autres sessiles ou subsessiles, dressées ou pendantes.</p>
-            <span class="view-illustration" onclick="openModal('distribution', ['distribution1.jpg', 'distribution2.jpg'])">Illustrations</span>
         
  <!-- Granddaughter boxes -->
             <div class="subspecies-card type-1">
@@ -745,7 +764,6 @@
     </div>
                 </div>
                 <p>Tiges ascendantes, à rameaux de l'inflorescence non visqueux. Capitules de forme variable, à bractées de l'involucre non visqueuses.</p>
-		<span class="view-illustration" onclick="openModal('morphology', ['morphology1.jpg', 'morphology2.jpg', 'morphology3.jpg'])">Illustrations</span>
             </div>
             
             <div class="subspecies-card type-2">
@@ -756,7 +774,6 @@
     </div>
                 </div>
                 <p>Tiges dressées dès la base, plus nettement frutescentes inférieurement, à rameaux de l'inflorescence visqueux. Capitules allongés ou ellipsoïdaux, à bractées involucrales visqueuses.</p>
-		<span class="view-illustration" onclick="openModal('morphology', ['morphology1.jpg', 'morphology2.jpg', 'morphology3.jpg'])">Illustrations</span>
             </div>
 
 
@@ -773,7 +790,6 @@
 <span class="taxon-status status-end">END</span>
             </div>
             <p></p>
-            <span class="view-illustration" onclick="openModal('distribution', ['distribution1.jpg', 'distribution2.jpg'])">Illustrations</span>
         </div>
 
 
@@ -789,7 +805,9 @@
 
             </div>
             <p>Corolles rougeâtres, non glanduleuses. Feuilles toutes à lobes étroits, linéaires et entiers. Racines traçantes. Plantes à odeur aromatique.</p>
-            <span class="view-illustration" onclick="openModal('distribution', ['distribution1.jpg', 'distribution2.jpg'])">Illustrations</span>
+		<span class="view-illustration" onclick="openModal('morphology', [
+            {src: './img/2bdaa.jpg', caption: 'Quézel et Santa (1962), T2, p991.'}
+        ])">Illustrations</span>
         </div>
         
         <div class="species-card">
@@ -803,7 +821,6 @@
 
             </div>
             <p>Corolles jaunâtres, glanduleuses. Feuilles inférieures et moyennes à lobes ovales, incisés-dentés. Plante cespiteuse, légèrement odorante, à grosse tige striée, anguleuse et rameuse. Feuilles blanches-tomenteuses en dessous et glabres ou légèrement soyeuses en dessus. Capitules en grappes constituant une panicule pyramidale.</p>
-            <span class="view-illustration" onclick="openModal('distribution', ['distribution1.jpg', 'distribution2.jpg'])">Illustrations</span>
         </div>
         
         <!-- Distribution Map Section -->
@@ -825,7 +842,10 @@
         <span class="close" onclick="closeModal()">&times;</span>
         <div class="modal-nav prev" onclick="navigateModal(-1)"><i class="fas fa-chevron-left"></i></div>
         <div class="modal-nav next" onclick="navigateModal(1)"><i class="fas fa-chevron-right"></i></div>
-        <img class="modal-content" id="modalImage">
+        <div class="modal-content-container">
+            <img class="modal-image" id="modalImage">
+            <div class="modal-caption" id="modalCaption"></div>
+        </div>
     </div>
     
     <!-- Add Leaflet JS -->
@@ -844,12 +864,14 @@
         function openModal(imageName, images = []) {
             const modal = document.getElementById('imageModal');
             const modalImg = document.getElementById('modalImage');
+            const modalCaption = document.getElementById('modalCaption');
             
-            currentModalImages = images.length ? images : [`./images/${imageName}.jpg`];
+            currentModalImages = images;
             currentModalIndex = 0;
             
-            modalImg.src = currentModalImages[currentModalIndex];
+            modalImg.src = currentModalImages[currentModalIndex].src;
             modalImg.alt = `${imageName} diagram`;
+            modalCaption.textContent = currentModalImages[currentModalIndex].caption;
             
             modal.style.display = "block";
             
@@ -863,7 +885,11 @@
         function navigateModal(direction) {
             event.stopPropagation();
             currentModalIndex = (currentModalIndex + direction + currentModalImages.length) % currentModalImages.length;
-            document.getElementById('modalImage').src = currentModalImages[currentModalIndex];
+            const modalImg = document.getElementById('modalImage');
+            const modalCaption = document.getElementById('modalCaption');
+            
+            modalImg.src = currentModalImages[currentModalIndex].src;
+            modalCaption.textContent = currentModalImages[currentModalIndex].caption;
         }
         
         function closeModal() {
