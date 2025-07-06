@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Localiser vos sites</title>
+    <title>Carte des Zones Ecologiques d'Algérie</title>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -572,10 +572,10 @@
 </head>
 <body>
 <div class="header">
-<div class="header-title" onclick="window.location.href='./index.html'">PlantAlgerica</div>
+<div class="header-title" onclick="window.location.href='./index.html'">FlorALG</div>
     <div class="nav-menu">
         <a href="local.html">Localiser</a>
-        <a href="dist.html">Distribution de Q&S</a>
+        <a href="dist.html">Distribution Q&S</a>
     </div>
 </div>
     
@@ -609,6 +609,16 @@
         </div>
 
         <div style="display: flex; align-items: center; gap: 5px;">
+            <button class="control-btn active" id="toggleNewLayer">
+                <i class="fas fa-layer-group"></i>
+                <span>Secteurs de Maire</span>
+            </button>
+            <button class="info-btn" id="newLayerInfoBtn">
+                <i class="fas fa-info-circle"></i>
+            </button>
+        </div>
+
+        <div style="display: flex; align-items: center; gap: 5px;">
             <button class="control-btn active" id="toggleQS">
                 <i class="fas fa-layer-group"></i>
                 <span>Sous-secteurs de Q&S</span>
@@ -617,6 +627,9 @@
                 <i class="fas fa-info-circle"></i>
             </button>
         </div>
+        
+
+        
         <button class="control-btn add-point-btn" id="addPointsBtn">
             <i class="fas fa-plus-circle"></i>
             <span>Ajouter des points</span>
@@ -630,7 +643,7 @@
             <i class="fas fa-times" id="closeQsInfo"></i>
         </div>
         <div class="info-popup-content">
-            <p>Quézel, P. & Santa, S. 1962. Nouvelle Flore de lAlgérie et des régions désertiques méridionales, Editions du Centre National de la Recherche Scientifique. ed. Paris.</p>
+            <p>Quézel, P. & Santa, S. 1962. Nouvelle Flore de l?Algérie et des régions désertiques méridionales, Editions du Centre National de la Recherche Scientifique. ed. Paris.</p>
         </div>
     </div>
     
@@ -651,6 +664,16 @@
         </div>
         <div class="info-popup-content">
             <p>Loidi, J. & Vynokurov, D. 2024. The biogeographical kingdoms and regions of the world. Mediterr. Bot. 45(2),e92333. https://doi.org/10.5209/mbot.92333</p>
+        </div>
+    </div>
+    
+    <div class="info-popup" id="newLayerInfoPopup">
+        <div class="info-popup-title">
+            <span>Secteurs de Maire</span>
+            <i class="fas fa-times" id="closeNewLayerInfo"></i>
+        </div>
+        <div class="info-popup-content">
+            <p>Bernard, Augustin; De Flotte de Roquevaire, R. : Atlas d'Algérie et de Tunisie : I - Carte géologique, II. Carte hypsométrique - IV . Carte de la végétation, Gouvernement général de l'Algérie, Direction de l'Agriculture, du commerce et de la colonisation, Service cartographique, Alger-Paris, Edition Jules Carbonel, Éditions Émile Larose, 1923-24-25.</p>
         </div>
     </div>
     
@@ -726,6 +749,7 @@
         const qsLayer = L.layerGroup().addTo(map);
         const dersteinLayer = L.layerGroup().addTo(map);
         const domainsLayer = L.layerGroup().addTo(map);
+        const newLayer = L.layerGroup().addTo(map); // New layer group
         const pointsLayer = L.layerGroup().addTo(map);
         
         // Définition des couleurs pour chaque type de zone
@@ -744,6 +768,10 @@
             domains: [
                 '#E74C3C', '#ECF0F1', '#3498DB', '#2ECC71', '#F39C12',
                 '#9B59B6', '#1ABC9C', '#D35400', '#7F8C8D'
+            ],
+            newLayer: [ // 8 colors for the new layer
+                '#FF5733', '#33FF57', '#3357FF', '#F3FF33', 
+                '#FF33F3', '#33FFF3', '#8A2BE2', '#FF6347'
             ]
         };
         
@@ -798,6 +826,16 @@
                 { id: 'DM7', file: './domains/DM7.json', name: 'Domain 7' },
                 { id: 'DM8', file: './domains/DM8.json', name: 'Domain 8' },
                 { id: 'DM9', file: './domains/DM9.json', name: 'Domain 9' }
+            ],
+            newLayer: [ // Add your JSON files for the new layer here
+                { id: 'NL1', file: './local/mair/NL1.json', name: 'Secteur Algérois' },
+                { id: 'NL2', file: './local/mair/NL2.json', name: 'Secteur Numidien' },
+                { id: 'NL3', file: './local/mair/NL3.json', name: 'Secteur Oranais' },
+                { id: 'NL4', file: './local/mair/NL4.json', name: 'Secteur du Tell Méridional' },
+                { id: 'NL5', file: './local/mair/NL5.json', name: 'Secteur des plateaux Constantinois' },
+                { id: 'NL6', file: './local/mair/NL6.json', name: 'Secteur des hauts plateaux Orano Algérois' },
+                { id: 'NL7', file: './local/mair/NL7.json', name: 'Secteur de l Atlas Saharien' },
+                { id: 'NL8', file: './local/mair/NL8.json', name: 'Secteur Sud Constantinois' }
             ]
         };
         
@@ -805,7 +843,8 @@
         const polygonLayers = {
             qs: {},
             derstein: {},
-            domains: {}
+            domains: {},
+            newLayer: {} // Storage for new layer polygons
         };
         
         // Gestion des points
@@ -826,6 +865,7 @@
                 qsLayer.clearLayers();
                 dersteinLayer.clearLayers();
                 domainsLayer.clearLayers();
+                newLayer.clearLayers(); // Clear new layer
                 
                 // Charger les zones Q&S
                 await loadZoneType('qs', qsLayer);
@@ -836,9 +876,12 @@
                 // Charger les domaines
                 await loadZoneType('domains', domainsLayer);
                 
+                // Charger la nouvelle couche
+                await loadZoneType('newLayer', newLayer);
+                
             } catch (error) {
                 console.error("Erreur de chargement des données cartographiques:", error);
-                alert("Echec du chargement de certaines données. Veuillez vérifier la console pour plus de détails.");
+                alert("Echec du chargement de certaines données cartographiques. Veuillez vérifier la console pour plus de détails.");
             } finally {
                 showLoading(false);
             }
@@ -937,6 +980,7 @@
         const toggleQSBtn = document.getElementById('toggleQS');
         const toggleDersteinBtn = document.getElementById('toggleDerstein');
         const toggleDomainsBtn = document.getElementById('toggleDomains');
+        const toggleNewLayerBtn = document.getElementById('toggleNewLayer'); // New layer toggle button
         const addPointsBtn = document.getElementById('addPointsBtn');
         const pointFormContainer = document.getElementById('pointFormContainer');
         const closePointForm = document.getElementById('closePointForm');
@@ -954,12 +998,15 @@
         const qsInfoBtn = document.getElementById('qsInfoBtn');
         const dersteinInfoBtn = document.getElementById('dersteinInfoBtn');
         const domainsInfoBtn = document.getElementById('domainsInfoBtn');
+        const newLayerInfoBtn = document.getElementById('newLayerInfoBtn'); // New layer info button
         const qsInfoPopup = document.getElementById('qsInfoPopup');
         const dersteinInfoPopup = document.getElementById('dersteinInfoPopup');
         const domainsInfoPopup = document.getElementById('domainsInfoPopup');
+        const newLayerInfoPopup = document.getElementById('newLayerInfoPopup'); // New layer info popup
         const closeQsInfo = document.getElementById('closeQsInfo');
         const closeDersteinInfo = document.getElementById('closeDersteinInfo');
         const closeDomainsInfo = document.getElementById('closeDomainsInfo');
+        const closeNewLayerInfo = document.getElementById('closeNewLayerInfo'); // New layer info close button
         
         // Basculer la couche Q&S
         toggleQSBtn.addEventListener('click', function() {
@@ -991,6 +1038,17 @@
             } else {
                 domainsLayer.addTo(map);
                 toggleDomainsBtn.classList.add('active');
+            }
+        });
+        
+        // Basculer la nouvelle couche
+        toggleNewLayerBtn.addEventListener('click', function() {
+            if (map.hasLayer(newLayer)) {
+                newLayer.removeFrom(map);
+                toggleNewLayerBtn.classList.remove('active');
+            } else {
+                newLayer.addTo(map);
+                toggleNewLayerBtn.classList.add('active');
             }
         });
         
@@ -1189,6 +1247,13 @@
             domainsInfoPopup.style.right = '15px';
         });
         
+        newLayerInfoBtn.addEventListener('click', function(e) {
+            e.stopPropagation();
+            newLayerInfoPopup.style.display = 'block';
+            newLayerInfoPopup.style.top = (newLayerInfoBtn.offsetTop + newLayerInfoBtn.offsetHeight + 10) + 'px';
+            newLayerInfoPopup.style.right = '15px';
+        });
+        
         closeQsInfo.addEventListener('click', function() {
             qsInfoPopup.style.display = 'none';
         });
@@ -1201,6 +1266,10 @@
             domainsInfoPopup.style.display = 'none';
         });
         
+        closeNewLayerInfo.addEventListener('click', function() {
+            newLayerInfoPopup.style.display = 'none';
+        });
+        
         // Fermer les popups d'information lors d'un clic à l'extérieur
         document.addEventListener('click', function(e) {
             if (!qsInfoPopup.contains(e.target) && e.target !== qsInfoBtn) {
@@ -1211,6 +1280,9 @@
             }
             if (!domainsInfoPopup.contains(e.target) && e.target !== domainsInfoBtn) {
                 domainsInfoPopup.style.display = 'none';
+            }
+            if (!newLayerInfoPopup.contains(e.target) && e.target !== newLayerInfoBtn) {
+                newLayerInfoPopup.style.display = 'none';
             }
         });
         
