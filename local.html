@@ -617,6 +617,16 @@
                 <i class="fas fa-info-circle"></i>
             </button>
         </div>
+        
+        <div style="display: flex; align-items: center; gap: 5px;">
+            <button class="control-btn active" id="toggleSecteurs">
+                <i class="fas fa-layer-group"></i>
+                <span>Secteurs de Q&S</span>
+            </button>
+            <button class="info-btn" id="secteursInfoBtn">
+                <i class="fas fa-info-circle"></i>
+            </button>
+        </div>
 
         <div style="display: flex; align-items: center; gap: 5px;">
             <button class="control-btn active" id="toggleQS">
@@ -673,7 +683,17 @@
             <i class="fas fa-times" id="closeNewLayerInfo"></i>
         </div>
         <div class="info-popup-content">
-            <p>Bernard, Augustin; De Flotte de Roquevaire, R. : Atlas d'Algérie et de Tunisie : I - Carte géologique, II. Carte hypsométrique - IV . Carte de la végétation, Gouvernement général de l'Algérie, Direction de l'Agriculture, du commerce et de la colonisation, Service cartographique, Alger-Paris, Edition Jules Carbonel, Éditions Émile Larose, 1923-24-25.</p>
+            <p>Bernard, Augustin; De Flotte de Roquevaire, R. : Atlas d'Algérie et de Tunisie : I - Carte géologique, II. Carte hypsométrique - IV . Carte de la végétation, Gouvernement général de l'Algérie, Direction de l'Agriculture, du commerce et de la colonisation, Service cartographique, Alger-Paris, Edition Jules Carbonel, Editions Emile Larose, 1923-24-25.</p>
+        </div>
+    </div>
+    
+    <div class="info-popup" id="secteursInfoPopup">
+        <div class="info-popup-title">
+            <span>Secteurs de Q&S</span>
+            <i class="fas fa-times" id="closeSecteursInfo"></i>
+        </div>
+        <div class="info-popup-content">
+            <p>Quézel, P. & Santa, S. 1962. Nouvelle Flore de l?Algérie et des régions désertiques méridionales, Editions du Centre National de la Recherche Scientifique. ed. Paris.</p>
         </div>
     </div>
     
@@ -749,7 +769,8 @@
         const qsLayer = L.layerGroup().addTo(map);
         const dersteinLayer = L.layerGroup().addTo(map);
         const domainsLayer = L.layerGroup().addTo(map);
-        const newLayer = L.layerGroup().addTo(map); // New layer group
+        const newLayer = L.layerGroup().addTo(map);
+        const secteursLayer = L.layerGroup().addTo(map); // New secteurs layer group
         const pointsLayer = L.layerGroup().addTo(map);
         
         // Définition des couleurs pour chaque type de zone
@@ -772,6 +793,10 @@
             newLayer: [ // 8 colors for the new layer
                 '#FF5733', '#33FF57', '#3357FF', '#F3FF33', 
                 '#FF33F3', '#33FFF3', '#8A2BE2', '#FF6347'
+            ],
+            secteurs: [ // 10 colors for secteurs layer
+                '#FF5733', '#33FF57', '#3357FF', '#F3FF33', '#FF33F3',
+                '#33FFF3', '#8A2BE2', '#FF6347', '#7CFC00', '#9932CC'
             ]
         };
         
@@ -798,6 +823,28 @@
                 { id: 'SO', file: './qets/SO.json', name: 'Sous-secteur SO' },
                 { id: 'SC', file: './qets/SC.json', name: 'Sous-secteur SC' },
                 { id: 'SM', file: './qets/SM.json', name: 'Sous-secteur SM' }
+            ],
+            secteurs: [ // Add your JSON files for secteurs here
+                { id: 'S1', file: './local/qetsan/S1.json', name: 'Secteur Kabyle et Numidien' },
+                { id: 'S2', file: './local/qetsan/S2.json', name: 'Secteur algérois' },
+                { id: 'S3', file: './local/qetsan/S3.json', name: 'Secteur du Tell constantinois' },
+                { id: 'S4', file: './local/qetsan/S4.json', name: 'Secteur oranais' },
+                { id: 'S5', file: './local/qetsan/S5.json', name: 'Secteur des Hauts-Plateaux' },
+                { id: 'S6', file: './local/qetsan/S6.json', name: 'Secteur de l Atlas Saharien' },
+                { id: 'S7', file: './local/qetsan/S7.json', name: 'Secteur du Sahara Septentrional' },
+                { id: 'S8', file: '../local/qetsan/S8.json', name: 'Secteur du Sahara Central' },
+                { id: 'S9', file: './local/qetsan/S9.json', name: 'Secteur du Sahara Occidental' },
+                { id: 'S10', file: './local/qetsan/S10.json', name: 'Secteur du Sahara Méridional' }
+            ],
+            newLayer: [ // Add your JSON files for the new layer here
+                { id: 'NL1', file: './local/mair/NL1.json', name: 'Secteur Algérois' },
+                { id: 'NL2', file: './local/mair/NL2.json', name: 'Secteur Numidien' },
+                { id: 'NL3', file: './local/mair/NL3.json', name: 'Secteur Oranais' },
+                { id: 'NL4', file: './local/mair/NL4.json', name: 'Secteur du Tell Méridional' },
+                { id: 'NL5', file: './local/mair/NL5.json', name: 'Secteur des plateaux Constantinois' },
+                { id: 'NL6', file: './local/mair/NL6.json', name: 'Secteur des hauts plateaux Orano Algérois' },
+                { id: 'NL7', file: './local/mair/NL7.json', name: 'Secteur de l Atlas Saharien' },
+                { id: 'NL8', file: './local/mair/NL8.json', name: 'Secteur Sud Constantinois' }
             ],
             derstein: [
                 { id: 'D01', file: './local/diner/D01.json', name: 'Mediterranean conifer and mixed forests' },
@@ -826,17 +873,8 @@
                 { id: 'DM7', file: './domains/DM7.json', name: 'Domain 7' },
                 { id: 'DM8', file: './domains/DM8.json', name: 'Domain 8' },
                 { id: 'DM9', file: './domains/DM9.json', name: 'Domain 9' }
-            ],
-            newLayer: [ // Add your JSON files for the new layer here
-                { id: 'NL1', file: './local/mair/NL1.json', name: 'Secteur Algérois' },
-                { id: 'NL2', file: './local/mair/NL2.json', name: 'Secteur Numidien' },
-                { id: 'NL3', file: './local/mair/NL3.json', name: 'Secteur Oranais' },
-                { id: 'NL4', file: './local/mair/NL4.json', name: 'Secteur du Tell Méridional' },
-                { id: 'NL5', file: './local/mair/NL5.json', name: 'Secteur des plateaux Constantinois' },
-                { id: 'NL6', file: './local/mair/NL6.json', name: 'Secteur des hauts plateaux Orano Algérois' },
-                { id: 'NL7', file: './local/mair/NL7.json', name: 'Secteur de l Atlas Saharien' },
-                { id: 'NL8', file: './local/mair/NL8.json', name: 'Secteur Sud Constantinois' }
             ]
+
         };
         
         // Stockage des couches de polygones pour le changement de couleur
@@ -844,7 +882,8 @@
             qs: {},
             derstein: {},
             domains: {},
-            newLayer: {} // Storage for new layer polygons
+            newLayer: {},
+            secteurs: {} // Storage for secteurs polygons
         };
         
         // Gestion des points
@@ -865,7 +904,8 @@
                 qsLayer.clearLayers();
                 dersteinLayer.clearLayers();
                 domainsLayer.clearLayers();
-                newLayer.clearLayers(); // Clear new layer
+                newLayer.clearLayers();
+                secteursLayer.clearLayers(); // Clear secteurs layer
                 
                 // Charger les zones Q&S
                 await loadZoneType('qs', qsLayer);
@@ -878,6 +918,9 @@
                 
                 // Charger la nouvelle couche
                 await loadZoneType('newLayer', newLayer);
+                
+                // Charger la couche secteurs
+                await loadZoneType('secteurs', secteursLayer);
                 
             } catch (error) {
                 console.error("Erreur de chargement des données cartographiques:", error);
@@ -980,7 +1023,8 @@
         const toggleQSBtn = document.getElementById('toggleQS');
         const toggleDersteinBtn = document.getElementById('toggleDerstein');
         const toggleDomainsBtn = document.getElementById('toggleDomains');
-        const toggleNewLayerBtn = document.getElementById('toggleNewLayer'); // New layer toggle button
+        const toggleNewLayerBtn = document.getElementById('toggleNewLayer');
+        const toggleSecteursBtn = document.getElementById('toggleSecteurs'); // Secteurs toggle button
         const addPointsBtn = document.getElementById('addPointsBtn');
         const pointFormContainer = document.getElementById('pointFormContainer');
         const closePointForm = document.getElementById('closePointForm');
@@ -998,15 +1042,18 @@
         const qsInfoBtn = document.getElementById('qsInfoBtn');
         const dersteinInfoBtn = document.getElementById('dersteinInfoBtn');
         const domainsInfoBtn = document.getElementById('domainsInfoBtn');
-        const newLayerInfoBtn = document.getElementById('newLayerInfoBtn'); // New layer info button
+        const newLayerInfoBtn = document.getElementById('newLayerInfoBtn');
+        const secteursInfoBtn = document.getElementById('secteursInfoBtn'); // Secteurs info button
         const qsInfoPopup = document.getElementById('qsInfoPopup');
         const dersteinInfoPopup = document.getElementById('dersteinInfoPopup');
         const domainsInfoPopup = document.getElementById('domainsInfoPopup');
-        const newLayerInfoPopup = document.getElementById('newLayerInfoPopup'); // New layer info popup
+        const newLayerInfoPopup = document.getElementById('newLayerInfoPopup');
+        const secteursInfoPopup = document.getElementById('secteursInfoPopup'); // Secteurs info popup
         const closeQsInfo = document.getElementById('closeQsInfo');
         const closeDersteinInfo = document.getElementById('closeDersteinInfo');
         const closeDomainsInfo = document.getElementById('closeDomainsInfo');
-        const closeNewLayerInfo = document.getElementById('closeNewLayerInfo'); // New layer info close button
+        const closeNewLayerInfo = document.getElementById('closeNewLayerInfo');
+        const closeSecteursInfo = document.getElementById('closeSecteursInfo'); // Secteurs info close button
         
         // Basculer la couche Q&S
         toggleQSBtn.addEventListener('click', function() {
@@ -1049,6 +1096,17 @@
             } else {
                 newLayer.addTo(map);
                 toggleNewLayerBtn.classList.add('active');
+            }
+        });
+        
+        // Basculer la couche secteurs
+        toggleSecteursBtn.addEventListener('click', function() {
+            if (map.hasLayer(secteursLayer)) {
+                secteursLayer.removeFrom(map);
+                toggleSecteursBtn.classList.remove('active');
+            } else {
+                secteursLayer.addTo(map);
+                toggleSecteursBtn.classList.add('active');
             }
         });
         
@@ -1254,6 +1312,13 @@
             newLayerInfoPopup.style.right = '15px';
         });
         
+        secteursInfoBtn.addEventListener('click', function(e) {
+            e.stopPropagation();
+            secteursInfoPopup.style.display = 'block';
+            secteursInfoPopup.style.top = (secteursInfoBtn.offsetTop + secteursInfoBtn.offsetHeight + 10) + 'px';
+            secteursInfoPopup.style.right = '15px';
+        });
+        
         closeQsInfo.addEventListener('click', function() {
             qsInfoPopup.style.display = 'none';
         });
@@ -1270,6 +1335,10 @@
             newLayerInfoPopup.style.display = 'none';
         });
         
+        closeSecteursInfo.addEventListener('click', function() {
+            secteursInfoPopup.style.display = 'none';
+        });
+        
         // Fermer les popups d'information lors d'un clic à l'extérieur
         document.addEventListener('click', function(e) {
             if (!qsInfoPopup.contains(e.target) && e.target !== qsInfoBtn) {
@@ -1283,6 +1352,9 @@
             }
             if (!newLayerInfoPopup.contains(e.target) && e.target !== newLayerInfoBtn) {
                 newLayerInfoPopup.style.display = 'none';
+            }
+            if (!secteursInfoPopup.contains(e.target) && e.target !== secteursInfoBtn) {
+                secteursInfoPopup.style.display = 'none';
             }
         });
         
