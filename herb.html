@@ -1,0 +1,1381 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PlantAlgeric - Carte de Distribution des Espèces</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+        }
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 60px;
+            background: linear-gradient(135deg, #2c3e50, #4ca1af);
+            color: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 15px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+            z-index: 1000;
+        }
+        .header-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            cursor: pointer;
+        }
+        .header-title:hover {
+            text-decoration: underline;
+        }
+        .nav-menu {
+            display: flex;
+            gap: 15px;
+        }
+        .nav-menu a {
+            color: white;
+            text-decoration: none;
+            font-size: 0.9rem;
+            padding: 5px 10px;
+            border-radius: 4px;
+            transition: background 0.3s;
+        }
+        .nav-menu a:hover {
+            background: rgba(255,255,255,0.2);
+        }
+        #map {
+            position: absolute;
+            top: 60px;
+            bottom: 80px;
+            width: 100%;
+        }
+        #timeSliderContainer {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 80px;
+            background: white;
+            padding: 10px;
+            box-shadow: 0 -2px 10px rgba(0,0,0,0.2);
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+        }
+        .timeline-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 5px;
+            font-size: 12px;
+        }
+        #timeline {
+            flex-grow: 1;
+            position: relative;
+            overflow: hidden;
+        }
+        #timelineTrack {
+            height: 30px;
+            width: 100%;
+            position: relative;
+            background: #f5f5f5;
+            border-radius: 3px;
+        }
+        .timeline-period {
+            position: absolute;
+            height: 100%;
+            background: rgba(0, 150, 0, 0.2);
+            border-left: 2px solid #009600;
+            border-right: 2px solid #009600;
+            cursor: move;
+        }
+        .timeline-handle {
+            position: absolute;
+            width: 10px;
+            height: 40px;
+            background: #009600;
+            top: -5px;
+            cursor: ew-resize;
+            border-radius: 2px;
+        }
+        .timeline-marker {
+            position: absolute;
+            bottom: 0;
+            width: 1px;
+            height: 15px;
+            background: #666;
+        }
+        .timeline-year {
+            position: absolute;
+            font-weight: bold;
+            font-size: 12px;
+            transform: translateX(-50%);
+            bottom: 32px;
+        }
+        .family-filter, .collector-filter {
+            position: fixed;
+            top: 70px;
+            right: 10px;
+            z-index: 1002;
+            background: white;
+            padding: 8px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.2);
+            width: 220px;
+            font-size: 12px;
+        }
+        .collector-filter {
+            position: fixed;
+            top: 150px;
+            right: 10px;
+            z-index: 1001;
+        }
+        .filter-header {
+            cursor: pointer;
+            padding: 3px;
+            font-weight: bold;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        /* Scrollable filter list styles */
+        .filter-list {
+            margin-top: 8px;
+            overflow-y: hidden;
+            max-height: 0;
+            transition: max-height 0.3s ease;
+            scrollbar-width: thin;
+            scrollbar-color: #ccc #f5f5f5;
+        }
+        .filter-list.active {
+            overflow-y: auto;
+            max-height: 250px; /* Shows about 10 items */
+        }
+        /* Custom scrollbar for WebKit browsers */
+        .filter-list::-webkit-scrollbar {
+            width: 6px;
+        }
+        .filter-list::-webkit-scrollbar-track {
+            background: #f5f5f5;
+            border-radius: 3px;
+        }
+        .filter-list::-webkit-scrollbar-thumb {
+            background-color: #ccc;
+            border-radius: 3px;
+        }
+        .filter-item {
+            margin: 3px 0;
+            display: flex;
+            align-items: center;
+            font-size: 11px;
+            padding: 4px 2px;
+        }
+        .filter-item input {
+            margin-right: 6px;
+        }
+        /* Image Preview Modal */
+        #imageModal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.9);
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
+        }
+        #modalContent {
+            position: relative;
+            max-width: 90%;
+            max-height: 90%;
+            width: 90%;
+            height: 90%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        #modalImage {
+            max-width: 100%;
+            max-height: calc(100% - 40px);
+            display: block;
+            margin: 0 auto;
+            object-fit: contain;
+        }
+        #closeModal {
+            color: white;
+            font-size: 30px;
+            font-weight: bold;
+            cursor: pointer;
+            background: rgba(0,0,0,0.5);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border: 2px solid white;
+            margin-bottom: 10px;
+        }
+        #closeModal:hover {
+            background: rgba(255,255,255,0.3);
+        }
+        .custom-popup .leaflet-popup-content {
+            width: auto !important;
+            max-width: 250px !important;
+            font-size: 12px;
+        }
+        .species-name {
+            font-weight: bold;
+            color: #006600;
+            margin-bottom: 3px;
+            font-size: 1em;
+        }
+        .popup-field {
+            margin: 2px 0;
+        }
+        .popup-label {
+            font-weight: bold;
+        }
+        .preview-link {
+            color: #0066cc;
+            cursor: pointer;
+            text-decoration: underline;
+            font-size: 11px;
+        }
+        .filter-controls {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 5px;
+        }
+        .filter-btn {
+            padding: 3px 8px;
+            background: #f0f0f0;
+            border: 1px solid #ccc;
+            border-radius: 2px;
+            cursor: pointer;
+            font-size: 10px;
+        }
+        .filter-btn:hover {
+            background: #e0e0e0;
+        }
+        .point-marker {
+            fill: #3388ff;
+            stroke: #fff;
+            stroke-width: 1.5;
+            fill-opacity: 0.8;
+        }
+        .point-marker.highlighted {
+            fill: #ff0000;
+            stroke: #fff;
+            stroke-width: 2;
+            fill-opacity: 1;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .header-title {
+                font-size: 1.1rem;
+            }
+            .nav-menu {
+                gap: 8px;
+            }
+            .nav-menu a {
+                font-size: 0.8rem;
+                padding: 3px 6px;
+            }
+            .family-filter, .collector-filter {
+                width: 180px;
+                right: 5px;
+                font-size: 11px;
+            }
+            .collector-filter {
+                top: 140px;
+            }
+            #timeSliderContainer {
+                height: 70px;
+                padding: 8px;
+            }
+            #map {
+                top: 60px;
+                bottom: 70px;
+            }
+            .filter-list.active {
+                max-height: 200px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .header {
+                height: 50px;
+                padding: 0 10px;
+            }
+            .header-title {
+                font-size: 1rem;
+            }
+            .nav-menu {
+                gap: 5px;
+            }
+            .nav-menu a {
+                font-size: 0.7rem;
+                padding: 2px 4px;
+            }
+            .family-filter, .collector-filter {
+                width: 150px;
+                font-size: 10px;
+                padding: 5px;
+            }
+            .collector-filter {
+                top: 130px;
+            }
+            #timeSliderContainer {
+                height: 60px;
+                padding: 5px;
+            }
+            #map {
+                top: 50px;
+                bottom: 60px;
+            }
+            .filter-btn {
+                padding: 2px 5px;
+                font-size: 9px;
+            }
+            .filter-list.active {
+                max-height: 150px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="header-title" onclick="window.location.href='./index.html'">PlantAlgeric</div>
+        <div class="nav-menu">
+            <a href="local.html">Localiser</a>
+            <a href="dist.html">Distribution Q&S</a>
+        </div>
+    </div>
+    
+    <div id="map"></div>
+    
+    <div id="timeSliderContainer">
+        <div class="timeline-header">
+            <div id="dateRangeDisplay">Période : <span id="currentMinDate"></span> à <span id="currentMaxDate"></span></div>
+            <div class="filter-controls">
+                <button id="selectAllFilters" class="filter-btn">Tous</button>
+                <button id="deselectAllFilters" class="filter-btn">Aucun</button>
+                <button id="applyFilters" class="filter-btn">Appliquer</button>
+            </div>
+        </div>
+        <div id="timeline">
+            <div id="timelineTrack"></div>
+        </div>
+    </div>
+    
+    <div class="family-filter">
+        <div class="filter-header">
+            <span>Filtrer par Famille</span>
+            <i class="fas fa-chevron-down"></i>
+        </div>
+        <div class="filter-list" id="familyList"></div>
+    </div>
+
+    <div class="collector-filter">
+        <div class="filter-header">
+            <span>Filtrer par Collecteur</span>
+            <i class="fas fa-chevron-down"></i>
+        </div>
+        <div class="filter-list" id="collectorList"></div>
+    </div>
+
+    <!-- Image Preview Modal -->
+    <div id="imageModal">
+        <div id="modalContent">
+            <span id="closeModal">&times;</span>
+            <img id="modalImage" src="" alt="Aperçu de l'espèce">
+        </div>
+    </div>
+
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/1.4.1/leaflet.markercluster.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/1.4.1/MarkerCluster.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/1.4.1/MarkerCluster.Default.css" />
+    
+    <script>
+        // Sample data - replace with your actual data
+        const speciesData = [
+            {
+                lat: 23.251461,
+                lng: 5.108316,
+                speciesName: "Anacyclus dissimilis var. australis",
+                date: "1928-3-4",
+                family: "Asteraceae",
+                collector: "R. Maire",
+                source: "MNHN-P-P00084003",
+                preview: "http://mediaphoto.mnhn.fr/media/144233478477141zn8NxufH72QLEu"
+            },
+            {
+                lat: 36.808368,
+                lng: 2.973396,
+                speciesName: "Filago mareotica",
+                date: "1860",
+                family: "Asteraceae",
+                collector: "A.N. Pomel",
+                source: "MNHN-P-P00084018",
+                preview: "http://mediaphoto.mnhn.fr/media/1442334956063Tvdr6dzjKDe2WY9E"
+            },
+            {
+                lat: 34.116934,
+                lng: 2.117889,
+                speciesName: "Filago exigua",
+                date: "1860-6-6",
+                family: "Asteraceae",
+                collector: "A.N. Pomel",
+                source: "MNHN-P-P00084020",
+                preview: "http://mediaphoto.mnhn.fr/media/1442334950123r3Swk26oM0jEe2aP"
+            },
+            {
+                lat: 36.111954,
+                lng: 0.276683,
+                speciesName: "Senecio pinguiculus",
+                date: "1861-6",
+                family: "Asteraceae",
+                collector: "A.N. Pomel",
+                source: "MNHN-P-P00084029",
+                preview: "http://mediaphoto.mnhn.fr/media/1442334981511WorW9ydJASBZqkvc"
+            },
+            {
+                lat: 35.678570,
+                lng: -0.399316,
+                speciesName: "Senecio leucanthemifolius",
+                date: "1861",
+                family: "Asteraceae",
+                collector: "A.N. Pomel",
+                source: "MNHN-P-P00084031",
+                preview: "http://mediaphoto.mnhn.fr/media/1442334966060JOI3LEv3cDpdvG9U"
+            },
+            {
+                lat: 34.469671,
+                lng: 2.172682,
+                speciesName: "Calendula aegyptiaca",
+                date: "1861",
+                family: "Asteraceae",
+                collector: "A.N. Pomel",
+                source: "MNHN-P-P00084056",
+                preview: "http://mediaphoto.mnhn.fr/media/1442335072119kYYkDrXoeGzOViUU"
+            },
+            {
+                lat: 32.292414,
+                lng: 3.606448,
+                speciesName: "Calendula aegyptiaca",
+                date: "1861",
+                family: "Asteraceae",
+                collector: "A.N. Pomel",
+                source: "MNHN-P-P00084057",
+                preview: "http://mediaphoto.mnhn.fr/media/1442335068681CpYXJ042Nvm22ojp"
+            },
+            {
+                lat: 32.262941,
+                lng: 3.639466,
+                speciesName: "Evax argentea",
+                date: "1861-4",
+                family: "Asteraceae",
+                collector: "A.N. Pomel",
+                source: "MNHN-P-P00084036",
+                preview: "http://mediaphoto.mnhn.fr/media/14423349078876xmKD2MqqkS9o6CJ"
+            },
+            {
+                lat: 35.608327,
+                lng: 0.069319,
+                speciesName: "Filago exigua",
+                date: "1861",
+                family: "Asteraceae",
+                collector: "A.N. Pomel",
+                source: "MNHN-P-P00084063",
+                preview: "http://mediaphoto.mnhn.fr/media/1442359682552FdXE9odofUuU2FnL"
+            },
+            {
+                lat: 35.05954488,
+                lng: 1.94029864,
+                speciesName: "Kentrophyllum lanatum",
+                date: "1860-6-18",
+                family: "Asteraceae",
+                collector: "A.N. Pomel",
+                source: "MNHN-P-P00084067",
+                preview: "http://mediaphoto.mnhn.fr/media/1442368807942XV64i2GEmWvuphxY"
+            },
+            {
+                lat: 35.34527033,
+                lng: 1.27717074,
+                speciesName: "Carthamus calvus",
+                date: "1860-6-22",
+                family: "Asteraceae",
+                collector: "A.N. Pomel",
+                source: "MNHN-P-P00084068",
+                preview: "http://mediaphoto.mnhn.fr/media/1442359707969iQ8FuD0vzf7haFrZ"
+            },
+            {
+                lat: 34.47765853,
+                lng: 2.18856390,
+                speciesName: "Serratula flavescens",
+                date: "1860-6-10",
+                family: "Asteraceae",
+                collector: "A.N. Pomel",
+                source: "MNHN-P-P00084075",
+                preview: "http://mediaphoto.mnhn.fr/media/1442359796674ZVcOndfe3excfCRS"
+            },
+            {
+                lat: 34.59750632,
+                lng: -1.77469969,
+                speciesName: "Carthamus carthamoides",
+                date: "1855-7-15",
+                family: "Asteraceae",
+                collector: "A.N. Pomel",
+                source: "MNHN-P-P00084085",
+                preview: "http://mediaphoto.mnhn.fr/media/1442359806780cw2kqL9xrDUTSzTw"
+            },
+            {
+                lat: 34.59329356,
+                lng: -1.77024722,
+                speciesName: "Filago pomelii",
+                date: "1855",
+                family: "Asteraceae",
+                collector: "A.N. Pomel",
+                source: "MNHN-P-P00084144",
+                preview: "http://mediaphoto.mnhn.fr/media/1442359830562xFaMdryQ6OJhSedP"
+            },
+            {
+                lat: 33.92710820,
+                lng: 2.15719859,
+                speciesName: "Helichrysum scandens",
+                date: "1860-6-10",
+                family: "Asteraceae",
+                collector: "A.N. Pomel",
+                source: "MNHN-P-P00084147",
+                preview: "http://mediaphoto.mnhn.fr/media/1442359867657NanW7OpPjvjUcQOE"
+            },
+            {
+                lat: 33.92847913,
+                lng: 2.15234915,
+                speciesName: "Pallenis spinosa",
+                date: "1860-6-10",
+                family: "Asteraceae",
+                collector: "A.N. Pomel",
+                source: "MNHN-P-P00084152",
+                preview: "http://mediaphoto.mnhn.fr/media/1442359878931YpGQvFw5y2WbZeX8"
+            },
+            {
+                lat: 34.03322995,
+                lng: 1.90337399,
+                speciesName: "Filago spathulata",
+                date: "1860-5-29",
+                family: "Asteraceae",
+                collector: "A.N. Pomel",
+                source: "MNHN-P-P00084150",
+                preview: "http://mediaphoto.mnhn.fr/media/1442359885104AurhTBVVm94kQwVH"
+            },
+            {
+                lat: 34.862786,
+                lng: -1.782656,
+                speciesName: "Carthamus calvus",
+                date: "1855-6",
+                family: "Asteraceae",
+                collector: "A.N. Pomel",
+                source: "MNHN-P-P00084065",
+                preview: "http://mediaphoto.mnhn.fr/media/1442359717504NcPE5u9pCtV0jG4q"
+            },
+            {
+                lat: 36.268855,
+                lng: 0.855627,
+                speciesName: "Filago spathulata",
+                date: "1860",
+                family: "Asteraceae",
+                collector: "A.N. Pomel",
+                source: "MNHN-P-P00084140",
+                preview: "http://mediaphoto.mnhn.fr/media/1442359841108Hs86TEQ68SsDg1BH"
+            },
+            {
+                lat: 32.29909044,
+                lng: 3.58110646,
+                speciesName: "Filago spathulata",
+                date: "1862-3-31",
+                family: "Asteraceae",
+                collector: "A.N. Pomel",
+                source: "MNHN-P-P00084151",
+                preview: "http://mediaphoto.mnhn.fr/media/1442359881444omEZ12VYVH22nXVO"
+            },
+            {
+                lat: 35.94135735,
+                lng: 0.10251849,
+                speciesName: "Mecomischus pedunculatus",
+                date: "1861",
+                family: "Asteraceae",
+                collector: "A.N. Pomel",
+                source: "MNHN-P-P00084157",
+                preview: "http://mediaphoto.mnhn.fr/media/1442359904304fPTe654V2KlsXI6I"
+            },
+            {
+                lat: 35.66049046,
+                lng: -0.58317850,
+                speciesName: "Mantisalca duriaei",
+                date: "1861",
+                family: "Asteraceae",
+                collector: "A.N. Pomel",
+                source: "MNHN-P-P00084160",
+                preview: "http://mediaphoto.mnhn.fr/media/1442359957475JDsn1lyzqOqnpVpZ"
+            },
+            {
+                lat: 36.24656250,
+                lng: 2.30243511,
+                speciesName: "Tragopogon porrifolius",
+                date: "1860",
+                family: "Asteraceae",
+                collector: "A.N. Pomel",
+                source: "MNHN-P-P00084176",
+                preview: "http://mediaphoto.mnhn.fr/media/1442359916713t5FX0nkNB7WyJvFX"
+            },
+            {
+                lat: 36.32955926,
+                lng: 2.21057543,
+                speciesName: "Scorzonera coronopifolia",
+                date: "1860",
+                family: "Asteraceae",
+                collector: "A.N. Pomel",
+                source: "MNHN-P-P00084187",
+                preview: "http://mediaphoto.mnhn.fr/media/1442360012098MOHeLOsgva0ev4x1"
+            },
+            {
+                lat: 34.59488812,
+                lng: -1.77412179,
+                speciesName: "Scorzonera laciniata",
+                date: "1860",
+                family: "Asteraceae",
+                collector: "A.N. Pomel",
+                source: "MNHN-P-P00084188",
+                preview: "http://mediaphoto.mnhn.fr/media/14423600095070nxgk2mVr1FVp7pE"
+            },
+            {
+                lat: 35.12383535,
+                lng: 1.93897262,
+                speciesName: "Carduncellus plumosus",
+                date: "1861",
+                family: "Asteraceae",
+                collector: "A.N. Pomel",
+                source: "MNHN-P-P00084199",
+                preview: "http://mediaphoto.mnhn.fr/media/1442368856343iPnNNp7bIJAJuLdB"
+            },
+            {
+                lat: 35.71451629,
+                lng: 0.54863738,
+                speciesName: "Cichorium pumilum",
+                date: "1866-9",
+                family: "Asteraceae",
+                collector: "A.N. Pomel",
+                source: "MNHN-P-P00084207",
+                preview: "http://mediaphoto.mnhn.fr/media/1442368884991J0beXrGudL7toU8L"
+            },
+            {
+                lat: 36.265391,
+                lng: 0.854938,
+                speciesName: "Cichorium intybus",
+                date: "1866",
+                family: "Asteraceae",
+                collector: "A.N. Pomel",
+                source: "MNHN-P-P00084208",
+                preview: "http://mediaphoto.mnhn.fr/media/1442368888534YlHQ432FIjhotqVB"
+            },
+            {
+                lat: 34.52397837,
+                lng: 1.77428059,
+                speciesName: "Crepis arenaria",
+                date: "1860-5-27",
+                family: "Asteraceae",
+                collector: "A.N. Pomel",
+                source: "MNHN-P-P00084235",
+                preview: "http://mediaphoto.mnhn.fr/media/14423689775434dBOgqWgO2aNZHfz"
+            },
+            {
+                lat: 35.72668085,
+                lng: -1.12828602,
+                speciesName: "Andryala maroccana",
+                date: "1920-4-20",
+                family: "Asteraceae",
+                collector: "F. Doumergue",
+                source: "MNHN-P-P00084245",
+                preview: "http://mediaphoto.mnhn.fr/media/1442445571968kyaMAPDQ0y5t6hu1"
+            },
+            {
+                lat: 36.35246757,
+                lng: 2.35560796,
+                speciesName: "Helminthotheca echioides",
+                date: "1856-7",
+                family: "Asteraceae",
+                collector: "A.N. Pomel",
+                source: "MNHN-P-P00084219",
+                preview: "http://mediaphoto.mnhn.fr/media/1442368932172RjzfpY05Kf5geqHt"
+            },
+            {
+                lat: 32.94667777,
+                lng: -0.71927731,
+                speciesName: "Pyrethrum gayanum",
+                date: "1856-5-3",
+                family: "Asteraceae",
+                collector: "E. Cosson",
+                source: "MNHN-P-P00486687",
+                preview: "http://mediaphoto.mnhn.fr/media/1442440561920xLxMZwhZnR5wXoCy"
+            },
+            {
+                lat: 34.59357619,
+                lng: -1.77334116,
+                speciesName: "Mauranthemum decipiens",
+                date: "1861",
+                family: "Asteraceae",
+                collector: "A.N. Pomel",
+                source: "MNHN-P-P00486679",
+                preview: "http://mediaphoto.mnhn.fr/media/1442440552724206yUxRAlf1KSofB"
+            },
+            {
+                lat: 35.72266166,
+                lng: -1.13274336,
+                speciesName: "Anthemis chrysantha",
+                date: "1934-5-3",
+                family: "Asteraceae",
+                collector: "A. Faure",
+                source: "MNHN-P-P00093426",
+                preview: "http://mediaphoto.mnhn.fr/media/1442334717367a6XJxi8R82KaYrA4"
+            },
+            {
+                lat: 36.607897,
+                lng: 3.452411,
+                speciesName: "Mauranthemum paludosum",
+                date: "1885-3",
+                family: "Asteraceae",
+                collector: "A. Letourneux",
+                source: "MNHN-P-P00486675",
+                preview: "http://mediaphoto.mnhn.fr/media/1442441477626uwipunScWAGCPA2v"
+            },
+            {
+                lat: 32.39166067,
+                lng: 3.51704009,
+                speciesName: "Volutaria sinaica",
+                date: "1858-5-14",
+                family: "Asteraceae",
+                collector: "E. Cosson",
+                source: "MNHN-P-P00486665",
+                preview: "http://mediaphoto.mnhn.fr/media/1442441472691a5m0NpGfZdhnOdbR"
+            },
+            {
+                lat: 30.57111535,
+                lng: 2.93485185,
+                speciesName: "Volutaria saharae",
+                date: "1904-3-22",
+                family: "Asteraceae",
+                collector: "L. Chevallier",
+                source: "MNHN-P-P00486663",
+                preview: "http://mediaphoto.mnhn.fr/media/14424405334639axW2Yt2eSPvxwCI"
+            },
+            {
+                lat: 34.76896011,
+                lng: 5.79026720,
+                speciesName: "Atractylis carduus",
+                date: "1852-6-4",
+                family: "Asteraceae",
+                collector: "P. Jamin",
+                source: "MNHN-P-P00093477",
+                preview: "http://mediaphoto.mnhn.fr/media/1442359727617xJUcQjghLSNnoeXc"
+            },
+            {
+                lat: 36.57374934,
+                lng: 5.77458437,
+                speciesName: "Anthemis punctata",
+                date: "1881",
+                family: "Asteraceae",
+                collector: "J.A. Battandier",
+                source: "MNHN-P-P00093424",
+                preview: "http://mediaphoto.mnhn.fr/media/14423348111959aW7puLD5FgGnN5h"
+            },
+            {
+                lat: 36.57355978,
+                lng: 5.77743824,
+                speciesName: "Anthemis cretica",
+                date: "1881",
+                family: "Asteraceae",
+                collector: "J.A. Battandier",
+                source: "MNHN-P-P00093442",
+                preview: "http://mediaphoto.mnhn.fr/media/1442334743241guyDnzl4Z1wiUgde"
+            },
+            {
+                lat: 35.74536029,
+                lng: -0.57880606,
+                speciesName: "Anthemis chrysantha",
+                date: "1842-6-14",
+                family: "Asteraceae",
+                collector: "M.C. Durieu",
+                source: "MNHN-P-P00093417",
+                preview: "http://mediaphoto.mnhn.fr/media/1441345482165mFFvnJlcRlkZNnFL"
+            },
+            {
+                lat: 35.73905297,
+                lng: -0.70426365,
+                speciesName: "Anthemis boveana",
+                date: "1842-6-17",
+                family: "Asteraceae",
+                collector: "M.C. Durieu",
+                source: "MNHN-P-P00093419",
+                preview: "http://mediaphoto.mnhn.fr/media/1441345482183CXvYm3mHduD2YI62"
+            },
+            {
+                lat: 35.91228605,
+                lng: 0.08152633,
+                speciesName: "Hedypnois polymorpha",
+                date: "1861-5",
+                family: "Asteraceae",
+                collector: "A.N. Pomel",
+                source: "MNHN-P-P00084216",
+                preview: "http://mediaphoto.mnhn.fr/media/14423689164414pHJf8sl7mt795q3"
+            },
+            {
+                lat: 36.96781173,
+                lng: 7.78592394,
+                speciesName: "Hyoseris radiata",
+                date: "1874-5-3",
+                family: "Asteraceae",
+                collector: "A.N. Pomel",
+                source: "MNHN-P-P00084210",
+                preview: "http://mediaphoto.mnhn.fr/media/1442368894613DpgmYpsgLK7rplFN"
+            },
+            {
+                lat: 36.33203385,
+                lng: 6.59782163,
+                speciesName: "Carduncellus pectinatus",
+                date: "1855-7",
+                family: "Asteraceae",
+                collector: "S. Choulette",
+                source: "MNHN-P-P00084205",
+                preview: "http://mediaphoto.mnhn.fr/media/1442368874742KWtTrW1rBBwiBdUy"
+            },
+            {
+                lat: 36.64402561,
+                lng: 5.23875732,
+                speciesName: "Reichardia tingitana",
+                date: "1914-6-3",
+                family: "Asteraceae",
+                collector: "R. Maire",
+                source: "MNHN-P-P00084185",
+                preview: "http://mediaphoto.mnhn.fr/media/1442360017250utnL16QMFx6Jc1vC"
+            },
+            {lat: 36.619676, lng: 3.478616, speciesName: "Calendula fulgida", date: "1871", family: "Asteraceae", collector: "J.A. Battandier", source: "MNHN-P-P00084054", preview: "http://mediaphoto.mnhn.fr/media/14423350772378UUosr9wY7HbvFBp"},
+            {lat: 33.39240226, lng: -0.81163114, speciesName: "Rhodanthemum maresii", date: "1856-5-1", family: "Asteraceae", collector: "L. Kralik", source: "MNHN-P-P00486689", preview: "http://mediaphoto.mnhn.fr/media/1442440566683O60FE6oWeZyaD3dV"},
+        {lat: 30.61993391, lng: 2.93196017, speciesName: "Atractylis mernephthae", date: "1902-4-21", family: "Asteraceae", collector: "L. Chevallier", source: "MNHN-P-P00418390", preview: "http://mediaphoto.mnhn.fr/media/1442358745134lGnAjvz19xvxoP8N"},
+         {lat: 34.88176015, lng: 5.73961867, speciesName: "Anvillea garcinii", date: "1853-3-25", family: "Asteraceae", collector: "B. Balansa", source: "MNHN-P-P00390824", preview: "http://mediaphoto.mnhn.fr/media/1442334584210XsqGiCeTJ9rv0Uov"},               
+         {lat: 30.54355482, lng: 2.88576208, speciesName: "Anvillea garcinii", date: "1902-4-17", family: "Asteraceae", collector: "L. Chevallier", source: "MNHN-P-P00390827", preview: "http://mediaphoto.mnhn.fr/media/1442334593958HtjyZwUnVY1uE83l"},
+         {lat: 35.72485177, lng: 5.32178675, speciesName: "Mauranthemum reboudianum", date: "1873-6", family: "Asteraceae", collector: "V.C. Reboud", source: "MNHN-P-P02088594", preview: "http://mediaphoto.mnhn.fr/media/1444951120608PROIA3zxATznVBgh"},
+         {lat: 32.49443159, lng: -0.80189362, speciesName: "Carduncellus duvauxii", date: "1888-6", family: "Asteraceae", collector: "J.A. Battandier", source: "MNHN-P-P02474042", preview: "http://mediaphoto.mnhn.fr/media/1446881118154W919TutsP4611OgX"},
+         {lat: 36.73691198, lng: 3.02158944, speciesName: "Andryala x dichroa", date: "1936-6-6", family: "Asteraceae", collector: "R. Maire", source: "MNHN-P-P04124214", preview: "http://mediaphoto.mnhn.fr/media/1446553149303Q31eiLIZO7q4kUb6"},
+         {lat: 35.87578660, lng: 0.21425534, speciesName: "Andryala floccosa", date: "1861-5", family: "Asteraceae", collector: "A.N. Pomel", source: "MNHN-P-P04119456", preview: "http://mediaphoto.mnhn.fr/media/1446614888195bOYOiJy05ozf18yI"},
+         {lat: 35.57268382, lng: -0.58078984, speciesName: "Mantisalca salmantica", date: "1861", family: "Asteraceae", collector: "A.N. Pomel", source: "MNHN-P-P00084159", preview: "http://mediaphoto.mnhn.fr/media/1442359959498U3PVK7QF3NgMGskN"},
+         {lat: 35.68224978, lng: -0.39569596, speciesName: "Scorzoneroides salzmannii", date: "1861", family: "Asteraceae", collector: "A.N. Pomel", source: "MNHN-P-P00084166", preview: "http://mediaphoto.mnhn.fr/media/1442359939010VMCrBXNcbOaBZ52B"},
+         {lat: 33.09022699, lng: 1.24687877, speciesName: "Scorzoneroides salzmannii", date: "1923", family: "Asteraceae", collector: "A.N. Pomel", source: "MNHN-P-P00084167", preview: "http://mediaphoto.mnhn.fr/media/14423599368322fBRvC3sxtk0061y"},
+         {lat: 36.23009263, lng: 2.19218594, speciesName: "Scorzoneroides salzmannii", date: "1860", family: "Asteraceae", collector: "A.N. Pomel", source: "MNHN-P-P00084170", preview: "http://mediaphoto.mnhn.fr/media/1442359931913iFndBTRLGZCf9erV"},
+         {lat: 32.29018579, lng: 3.58791420, speciesName: "Reichardia tingitana", date: "1862-4-4", family: "Asteraceae", collector: "A.N. Pomel", source: "MNHN-P-P00084178", preview: "http://mediaphoto.mnhn.fr/media/1442368811336yHZI0B39nU5e3dEY"},
+         {lat: 35.55607702, lng: -0.23831566, speciesName: "Reichardia tingitana", date: "1852", family: "Asteraceae", collector: "A.N. Pomel", source: "MNHN-P-P00084179", preview: "http://mediaphoto.mnhn.fr/media/1442368814462Vlz2ceqQhZeIgrst"},
+         {lat: 36.31533873, lng: 2.22961421, speciesName: "Reichardia picroides", date: "1856-6", family: "Asteraceae", collector: "A.N. Pomel", source: "MNHN-P-P00084184", preview: "http://mediaphoto.mnhn.fr/media/1442360020894wmHEAM0H8s6GOcu0"},
+         {lat: 36.116205, lng: 0.663991, speciesName: "Helminthotheca glomerata", date: "1861-6", family: "Asteraceae", collector: "A.N. Pomel", source: "MNHN-P-P00084217", preview: "http://mediaphoto.mnhn.fr/media/1442368921799L0yItplviu4KuMzK"},
+         {lat: 36.109805, lng: 0.672162, speciesName: "Helminthotheca aculeata", date: "1861-6", family: "Asteraceae", collector: "A.N. Pomel", source: "MNHN-P-P00084218", preview: "http://mediaphoto.mnhn.fr/media/1442368926983mVT6uYlQ1tJDv3KS"},
+         {lat: 33.10285716, lng: 1.27835500, speciesName: "Picris asplenioides", date: "1862-4-13", family: "Asteraceae", collector: "A.N. Pomel", source: "MNHN-P-P00084221", preview: "http://mediaphoto.mnhn.fr/media/1442368942105XW0NkXeymxRP6Kdx"},
+         {lat: 36.33895214, lng: 2.22612518, speciesName: "Anthemis pedunculata", date: "1861", family: "Asteraceae", collector: "A.N. Pomel", source: "MNHN-P-P00093436", preview: "http://mediaphoto.mnhn.fr/media/1441343239306pS2KDOm7Ccts1aN5"},
+         {lat: 35.33839361, lng: 6.93975669, speciesName: "Santolina rosmarinifolia", date: "1938-6-23", family: "Asteraceae", collector: "R. Maire", source: "MNHN-P-P00084016", preview: "http://mediaphoto.mnhn.fr/media/1442334963134ajiDWota8M13Fb8k"},
+         {lat: 35.35435577, lng: 6.94010001, speciesName: "Scorzonera pygmaea", date: "1874-7-18", family: "Asteraceae", collector: "A.N. Pomel", source: "MNHN-P-P00084174", preview: "http://mediaphoto.mnhn.fr/media/1442359926571pTRkc38Tx6dh8v0u"},
+         {lat: 33.07988200, lng: 0.56523894, speciesName: "Evax argentea", date: "1862", family: "Asteraceae", collector: "A.N. Pomel", source: "MNHN-P-P00084033", preview: "http://mediaphoto.mnhn.fr/media/1442334922612j62jejtPW7avxqtg"},
+         {lat: 35.92480275, lng: 0.07216697, speciesName: "Evax linearifolia", date: "1860", family: "Asteraceae", collector: "A.N. Pomel", source: "MNHN-P-P00084037", preview: "http://mediaphoto.mnhn.fr/media/1442334929578cQuzaSItkXdz6KgM"},
+         {lat: 35.67841594, lng: -0.58282951, speciesName: "Evax mucronata", date: "1860", family: "Asteraceae", collector: "A.N. Pomel", source: "MNHN-P-P00084039", preview: "http://mediaphoto.mnhn.fr/media/1442334935852lEif13jCnWHVoZTE"},
+         {lat: 33.14534974, lng: 1.31004014, speciesName: "Carduus gaetulus", date: "1861", family: "Asteraceae", collector: "A.N. Pomel", source: "MNHN-P-P00084045", preview: "http://mediaphoto.mnhn.fr/media/14423350289132SkWRfaMLsPT0rJT"},
+         {lat: 35.83644794, lng: -0.34277725, speciesName: "Calendula suffruticosa", date: "1917-6", family: "Asteraceae", collector: "J.A. Battandier", source: "MNHN-P-P00084052", preview: "http://mediaphoto.mnhn.fr/media/1442335082599TPC0Xy8mjffM0QSy"},
+         {lat: 35.74976457, lng: -0.57036524, speciesName: "Calendula balansae", date: "1939-7-2", family: "Asteraceae", collector: "A. Faure", source: "MNHN-P-P00084053", preview: "http://mediaphoto.mnhn.fr/media/14423350794846YxSarlUkIij54uD"},
+         {lat: 35.67582296, lng: -0.39801721, speciesName: "Calendula arvensis", date: "1860", family: "Asteraceae", collector: "A.N. Pomel", source: "MNHN-P-P00084058", preview: "http://mediaphoto.mnhn.fr/media/1442335066494u157WCqMqGrWsML5"},
+         {lat: 32.25634523, lng: 3.71575243, speciesName: "Rhanterium intermedium", date: "1862-3-30", family: "Asteraceae", collector: "A.N. Pomel", source: "MNHN-P-P00084059", preview: "http://mediaphoto.mnhn.fr/media/1442359691538WeTy9pnm38ueX05f"},
+         {lat: 36.31327631, lng: 1.86292536, speciesName: "Cirsium kirbense", date: "1874", family: "Asteraceae", collector: "A.N. Pomel", source: "MNHN-P-P00084071", preview: "http://mediaphoto.mnhn.fr/media/1442359694770QnTj72Qn642o71aM"},
+         {lat: 34.60080043, lng: -1.77192495, speciesName: "Cirsium monspessulanum", date: "1933-5-24", family: "Asteraceae", collector: "R. Maire", source: "MNHN-P-P00084072", preview: "http://mediaphoto.mnhn.fr/media/1442359701316Ib1ngAEvUefTsDth"},
+         {lat: 34.92437779, lng: 1.59998224, speciesName: "Atractylis caerulea", date: "1918", family: "Asteraceae", collector: "L.C. Trabut", source: "MNHN-P-P00084081", preview: "http://mediaphoto.mnhn.fr/media/14423598254511hdNHPgMhVyhbSpd"},
+         {lat: 35.70650094, lng: -0.66295141, speciesName: "Carthamus battandieri", date: "1908-5-31", family: "Asteraceae", collector: "A. Faure", source: "MNHN-P-P00084083", preview: "http://mediaphoto.mnhn.fr/media/1442359819604Zmx1JdfNvgPAnnWx"},
+         {lat: 35.71120528, lng: -0.66174978, speciesName: "Carthamus doumerguei", date: "1907-6-6", family: "Asteraceae", collector: "A. Faure", source: "MNHN-P-P00084084", preview: "http://mediaphoto.mnhn.fr/media/1442359816040KuFxWZK9087dGUru"},
+         {lat: 24.04418903, lng: 4.56385368, speciesName: "Phagnalon garamantum", date: "1928-4-3", family: "Asteraceae", collector: "R. Maire", source: "MNHN-P-P00084145", preview: "http://mediaphoto.mnhn.fr/media/1442359828477OGYW5DR5KiCvH5RW"},
+         {lat: 36.43458503, lng: 4.11671503, speciesName: "Helichrysum scandens", date: "1930-6-8", family: "Asteraceae", collector: "R. Maire", source: "MNHN-P-P00084146", preview: "http://mediaphoto.mnhn.fr/media/14423598709704xdQg659quMT9ffc"},
+         {lat: 34.684217, lng: -0.613706, speciesName: "Centaurea phaeolepis", date: "1928-6-28", family: "Asteraceae", collector: "A. Faure", source: "MNHN-P-P00084164", preview: "http://mediaphoto.mnhn.fr/media/1442359951213vBxJKujdfV8VYRho"},
+         {lat: 36.32657887, lng: 2.19814165, speciesName: "Taraxacum inaequilobum", date: "1856-11", family: "Asteraceae", collector: "A.N. Pomel", source: "MNHN-P-P00084169", preview: "http://mediaphoto.mnhn.fr/media/14423599346384YbMIpkuAKsP3uAC"},
+         {lat: 35.72174063, lng: -1.13126328, speciesName: "Sonchus tenerrimus", date: "1934-5-3", family: "Asteraceae", collector: "R. Maire", source: "MNHN-P-P00084180", preview: "http://mediaphoto.mnhn.fr/media/1446615563959DWilHlJnrWOn4PCc"},
+         {lat: 35.34957750, lng: 6.93599760, speciesName: "Crepis faureliana", date: "1938-6-23", family: "Asteraceae", collector: "R. Maire", source: "MNHN-P-P00512006", preview: "http://mediaphoto.mnhn.fr/media/1441340725106D4CwN91V3UgTMF8M"},
+         {lat: 36.72379058, lng: 3.13981545, speciesName: "Coleostephus sp.", date: "1854-7-10", family: "Asteraceae", collector: "E. Cosson", source: "MNHN-P-P00486684", preview: "http://mediaphoto.mnhn.fr/media/1441372664394wN1LsIK8W0fFmiGh"},
+         {lat: 35.36471199, lng: 1.28510697, speciesName: "Centaurea impura", date: "1940-7-15", family: "Asteraceae", collector: "A. Faure", source: "MNHN-P-P00084193", preview: "http://mediaphoto.mnhn.fr/media/1442368838902NLLIkBonCNbNekbu"},
+         {lat: 34.24747260, lng: -1.24844439, speciesName: "Carduncellus reboudianus", date: "1886", family: "Asteraceae", collector: "J.A. Battandier", source: "MNHN-P-P00084203", preview: "http://mediaphoto.mnhn.fr/media/1442368869350Ocp5mFwzC0eznWZt"},
+         {lat: 32.481391, lng: -0.876458, speciesName: "Carduncellus caespitosus", date: "1886", family: "Asteraceae", collector: "J.A. Battandier", source: "MNHN-P-P00084204", preview: "http://mediaphoto.mnhn.fr/media/144236887208399onQ0N2kQRohN8j"},
+         {lat: 30.73274702, lng: -1.30953965, speciesName: "Catananche arenaria", date: "1938-4-7", family: "Asteraceae", collector: "R. Volkonsky", source: "MNHN-P-P00084209", preview: "http://mediaphoto.mnhn.fr/media/1442368891611g9LR8FZ3jKSyu3Kt"},
+         {lat: 31.939563, lng: -1.946095, speciesName: "Carduncellus pomelianus", date: "1886", family: "Asteraceae", collector: "J.A. Battandier", source: "MNHN-P-P00084211", preview: "http://mediaphoto.mnhn.fr/media/1442368897758mGh01OCp27TFokO4"},
+         {lat: 36.51051934, lng: 1.32168593, speciesName: "Hyoseris radiata", date: "1861", family: "Asteraceae", collector: "A.N. Pomel", source: "MNHN-P-P00084212", preview: "http://mediaphoto.mnhn.fr/media/1442368901137CND2NhkboaygZ9Sd"},
+         {lat: 35.56093086, lng: 5.86701223, speciesName: "Hieracium faurelianum", date: "1937-6-26", family: "Asteraceae", collector: "L. Faurel", source: "MNHN-P-P00084225", preview: "http://mediaphoto.mnhn.fr/media/1442369650914yhgYPJADWbAr7GGh"},
+         {lat: 35.23061924, lng: 5.86267778, speciesName: "Hieracium peyerimhoffii", date: "1920-6-30", family: "Asteraceae", collector: "R. Maire", source: "MNHN-P-P00084226", preview: "http://mediaphoto.mnhn.fr/media/14423696550790c42GbuklZYieccS"},
+         {lat: 36.23901634, lng: 4.40419982, speciesName: "Crepis amplexifolia", date: "1886", family: "Asteraceae", collector: "J.A. Battandier", source: "MNHN-P-P00084234", preview: "http://mediaphoto.mnhn.fr/media/1442368972780NhnbSgenHVfJA3XX"},
+         {lat: 35.36761972, lng: 6.95430099, speciesName: "Crepis faureliana", date: "1938-6-23", family: "Asteraceae", collector: "R. Maire", source: "MNHN-P-P00084236", preview: "http://mediaphoto.mnhn.fr/media/14423689825777ZGxAhyHbjU9hV3E"},
+  
+
+
+
+
+
+
+	{
+                lat: 35.593570,
+                lng: 0.043686,
+                speciesName: "Filago robusta",
+                date: "1860",
+                family: "Asteraceae",
+                collector: "A.N. Pomel",
+                source: "MNHN-P-P00084021",
+                preview: "http://mediaphoto.mnhn.fr/media/1442334961170Fo74oOmXaeX2ntWc"
+            }
+        ];
+
+        // Initialize the map
+        const map = L.map('map').setView([28.0339, 1.6596], 5);
+        
+        // Add base tile layer
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributeurs'
+        }).addTo(map);
+        
+        // Create marker cluster group for points
+        const markers = L.markerClusterGroup({
+            spiderfyOnMaxZoom: true,
+            showCoverageOnHover: false,
+            zoomToBoundsOnClick: true,
+            maxClusterRadius: 5,
+            iconCreateFunction: function(cluster) {
+                return L.divIcon({
+                    html: '<div><span>' + cluster.getChildCount() + '</span></div>',
+                    className: 'marker-cluster',
+                    iconSize: L.point(30, 30)
+                });
+            }
+        });
+        
+        // Add markers to cluster group
+        let allMarkers = [];
+        let allDates = [];
+        let minDate, maxDate;
+        
+        // Function to create point marker
+        function createPointMarker(lat, lng, data) {
+            const point = L.circleMarker([lat, lng], {
+                radius: 5,
+                fillColor: "#3388ff",
+                color: "#fff",
+                weight: 1.5,
+                opacity: 1,
+                fillOpacity: 0.8,
+                className: 'point-marker'
+            });
+            
+            point.bindPopup(createPopupContent(data));
+            point.data = data; // Store original data with point
+            
+            // Add hover effects
+            point.on('mouseover', function() {
+                this.setStyle({
+                    fillColor: "#ff0000",
+                    weight: 2
+                });
+            });
+            
+            point.on('mouseout', function() {
+                this.setStyle({
+                    fillColor: "#3388ff",
+                    weight: 1.5
+                });
+            });
+            
+            return point;
+        }
+        
+        // Function to create popup content
+        function createPopupContent(data) {
+            return `
+                <div class="custom-popup">
+                    <div class="species-name">${data.speciesName}</div>
+                    <div class="popup-field"><span class="popup-label">Date :</span> ${data.date}</div>
+                    <div class="popup-field"><span class="popup-label">Famille :</span> ${data.family}</div>
+                    <div class="popup-field"><span class="popup-label">Collecteur :</span> ${data.collector}</div>
+                    <div class="popup-field"><span class="popup-label">Source :</span> ${data.source}</div>
+                    <div class="popup-field">
+                        <span class="popup-label">Aperçu :</span> 
+                        <span class="preview-link" onclick="window.showImagePreview('${data.preview}')">Voir l'image</span>
+                    </div>
+                </div>
+            `;
+        }
+        
+        // Function to show image preview in modal
+        window.showImagePreview = function(imageUrl) {
+            const modal = document.getElementById('imageModal');
+            const modalImg = document.getElementById('modalImage');
+            modalImg.src = imageUrl;
+            modal.style.display = 'flex';
+        };
+        
+        // Close modal when clicking X
+        document.getElementById('closeModal').addEventListener('click', function() {
+            document.getElementById('imageModal').style.display = 'none';
+        });
+        
+        // Close modal when clicking outside image
+        document.getElementById('imageModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                this.style.display = 'none';
+            }
+        });
+        
+        // Process data and create markers
+        function processData(data) {
+            // Clear previous data
+            allMarkers = [];
+            allDates = [];
+            markers.clearLayers();
+            
+            // Create points and collect dates
+            data.forEach(item => {
+                const point = createPointMarker(item.lat, item.lng, item);
+                allMarkers.push(point);
+                allDates.push(new Date(item.date).getTime());
+            });
+            
+            // Calculate date range
+            minDate = Math.min(...allDates);
+            maxDate = Math.max(...allDates);
+            
+            // Add all markers to cluster group
+            markers.addLayers(allMarkers);
+            map.addLayer(markers);
+            
+            // Initialize filters
+            initFamilyFilter(data);
+            initCollectorFilter(data);
+            
+            // Initialize timeline
+            initTimeline(data);
+        }
+        
+        // Initialize family filter with event listeners
+        function initFamilyFilter(data) {
+            const familyList = document.getElementById('familyList');
+            familyList.innerHTML = '';
+            
+            const families = [...new Set(data.map(item => item.family))].sort();
+            
+            families.forEach(family => {
+                const div = document.createElement('div');
+                div.className = 'filter-item';
+                div.innerHTML = `
+                    <input type="checkbox" id="family-${family}" class="filter-checkbox family-checkbox" checked data-family="${family}">
+                    <label for="family-${family}">${family}</label>
+                `;
+                familyList.appendChild(div);
+                
+                // Add event listener to each checkbox
+                div.querySelector('.family-checkbox').addEventListener('change', function() {
+                    applyFilters();
+                });
+            });
+            
+            // Toggle filter visibility with scrollable list
+            document.querySelector('.family-filter .filter-header').addEventListener('click', function() {
+                const list = this.parentElement.querySelector('.filter-list');
+                const icon = this.querySelector('i');
+                
+                list.classList.toggle('active');
+                if (list.classList.contains('active')) {
+                    icon.className = 'fas fa-chevron-up';
+                } else {
+                    icon.className = 'fas fa-chevron-down';
+                }
+            });
+        }
+        
+        // Initialize collector filter with event listeners
+        function initCollectorFilter(data) {
+            const collectorList = document.getElementById('collectorList');
+            collectorList.innerHTML = '';
+            
+            const collectors = [...new Set(data.map(item => item.collector))].sort();
+            
+            collectors.forEach(collector => {
+                const div = document.createElement('div');
+                div.className = 'filter-item';
+                div.innerHTML = `
+                    <input type="checkbox" id="collector-${collector}" class="filter-checkbox collector-checkbox" checked data-collector="${collector}">
+                    <label for="collector-${collector}">${collector}</label>
+                `;
+                collectorList.appendChild(div);
+                
+                // Add event listener to each checkbox
+                div.querySelector('.collector-checkbox').addEventListener('change', function() {
+                    applyFilters();
+                });
+            });
+            
+            // Toggle filter visibility with scrollable list
+            document.querySelector('.collector-filter .filter-header').addEventListener('click', function() {
+                const list = this.parentElement.querySelector('.filter-list');
+                const icon = this.querySelector('i');
+                
+                list.classList.toggle('active');
+                if (list.classList.contains('active')) {
+                    icon.className = 'fas fa-chevron-up';
+                } else {
+                    icon.className = 'fas fa-chevron-down';
+                }
+            });
+        }
+        
+        // Enhanced select all filters
+        document.getElementById('selectAllFilters').addEventListener('click', function() {
+            document.querySelectorAll('.filter-checkbox').forEach(checkbox => {
+                checkbox.checked = true;
+            });
+            applyFilters();
+        });
+        
+        // Enhanced deselect all filters
+        document.getElementById('deselectAllFilters').addEventListener('click', function() {
+            document.querySelectorAll('.filter-checkbox').forEach(checkbox => {
+                checkbox.checked = false;
+            });
+            applyFilters();
+        });
+        
+        // Initialize timeline
+        function initTimeline(data) {
+            const timelineTrack = document.getElementById('timelineTrack');
+            timelineTrack.innerHTML = '';
+            
+            // Format dates for display (year only)
+            const formatYear = date => moment(date).format('YYYY');
+            
+            // Set initial date range display
+            document.getElementById('currentMinDate').textContent = formatYear(minDate);
+            document.getElementById('currentMaxDate').textContent = formatYear(maxDate);
+            
+            // Calculate total time span in milliseconds
+            const totalTimeSpan = maxDate - minDate;
+            
+            // Set track width to 100% (no scrolling)
+            timelineTrack.style.width = '100%';
+            
+            // Add year markers
+            const startYear = new Date(minDate).getFullYear();
+            const endYear = new Date(maxDate).getFullYear();
+            
+            for (let year = startYear; year <= endYear; year++) {
+                const yearDate = new Date(year, 6, 1).getTime(); // Middle of year
+                if (yearDate >= minDate && yearDate <= maxDate) {
+                    const yearPos = ((yearDate - minDate) / totalTimeSpan) * 100;
+                    const yearMarker = document.createElement('div');
+                    yearMarker.className = 'timeline-year';
+                    yearMarker.style.left = `${yearPos}%`;
+                    yearMarker.textContent = year;
+                    timelineTrack.appendChild(yearMarker);
+                }
+            }
+            
+            // Create selection period
+            const period = document.createElement('div');
+            period.className = 'timeline-period';
+            period.id = 'timelinePeriod';
+            period.style.left = '0%';
+            period.style.width = '100%';
+            timelineTrack.appendChild(period);
+            
+            // Create handles
+            const leftHandle = document.createElement('div');
+            leftHandle.className = 'timeline-handle';
+            leftHandle.id = 'leftHandle';
+            leftHandle.style.left = '0%';
+            period.appendChild(leftHandle);
+            
+            const rightHandle = document.createElement('div');
+            rightHandle.className = 'timeline-handle';
+            rightHandle.id = 'rightHandle';
+            rightHandle.style.left = '100%';
+            period.appendChild(rightHandle);
+            
+            // Make draggable
+            let isDragging = false;
+            let activeHandle = null;
+            let startX = 0;
+            let startLeft = 0;
+            let startRight = 0;
+            
+            function startDrag(e) {
+                isDragging = true;
+                activeHandle = e.target;
+                startX = e.clientX || e.touches[0].clientX;
+                startLeft = parseFloat(period.style.left);
+                startRight = parseFloat(period.style.width);
+                e.preventDefault();
+            }
+            
+            function handleDrag(e) {
+                if (!isDragging) return;
+                
+                const x = e.clientX || e.touches[0].clientX;
+                const deltaX = x - startX;
+                const timelineRect = timelineTrack.getBoundingClientRect();
+                const maxWidth = timelineRect.width;
+                const percentageDelta = (deltaX / maxWidth) * 100;
+                
+                if (activeHandle === leftHandle) {
+                    const newLeft = Math.max(0, Math.min(startLeft + percentageDelta, startLeft + startRight - 5));
+                    period.style.left = `${newLeft}%`;
+                    period.style.width = `${startRight - (newLeft - startLeft)}%`;
+                } else if (activeHandle === rightHandle) {
+                    const newWidth = Math.max(5, Math.min(startRight + percentageDelta, 100 - startLeft));
+                    period.style.width = `${newWidth}%`;
+                } else if (activeHandle === period) {
+                    const newLeft = Math.max(0, Math.min(startLeft + percentageDelta, 100 - startRight));
+                    period.style.left = `${newLeft}%`;
+                }
+                
+                updateDateRange();
+                applyFilters();
+            }
+            
+            function endDrag() {
+                isDragging = false;
+                activeHandle = null;
+            }
+            
+            leftHandle.addEventListener('mousedown', startDrag);
+            rightHandle.addEventListener('mousedown', startDrag);
+            period.addEventListener('mousedown', startDrag);
+            
+            document.addEventListener('mousemove', handleDrag);
+            document.addEventListener('mouseup', endDrag);
+            
+            // Touch support
+            leftHandle.addEventListener('touchstart', startDrag);
+            rightHandle.addEventListener('touchstart', startDrag);
+            period.addEventListener('touchstart', startDrag);
+            
+            document.addEventListener('touchmove', handleDrag);
+            document.addEventListener('touchend', endDrag);
+        }
+        
+        // Update date range display
+        function updateDateRange() {
+            const period = document.getElementById('timelinePeriod');
+            const left = parseFloat(period.style.left);
+            const width = parseFloat(period.style.width);
+            
+            const startDate = new Date(minDate + (left / 100) * (maxDate - minDate));
+            const endDate = new Date(minDate + ((left + width) / 100) * (maxDate - minDate));
+            
+            document.getElementById('currentMinDate').textContent = moment(startDate).format('YYYY');
+            document.getElementById('currentMaxDate').textContent = moment(endDate).format('YYYY');
+        }
+        
+        // Enhanced applyFilters function
+        function applyFilters() {
+            // Get selected families (handle case when no families are selected)
+            const familyCheckboxes = document.querySelectorAll('.family-filter .filter-checkbox');
+            const selectedFamilies = [];
+            let anyFamilySelected = false;
+            
+            familyCheckboxes.forEach(checkbox => {
+                if (checkbox.checked) {
+                    selectedFamilies.push(checkbox.getAttribute('data-family'));
+                    anyFamilySelected = true;
+                }
+            });
+            
+            // Get selected collectors (handle case when no collectors are selected)
+            const collectorCheckboxes = document.querySelectorAll('.collector-filter .filter-checkbox');
+            const selectedCollectors = [];
+            let anyCollectorSelected = false;
+            
+            collectorCheckboxes.forEach(checkbox => {
+                if (checkbox.checked) {
+                    selectedCollectors.push(checkbox.getAttribute('data-collector'));
+                    anyCollectorSelected = true;
+                }
+            });
+            
+            // Get date range from timeline
+            const period = document.getElementById('timelinePeriod');
+            const left = parseFloat(period.style.left) || 0;
+            const width = parseFloat(period.style.width) || 100;
+            
+            const minFilterDate = minDate + (left / 100) * (maxDate - minDate);
+            const maxFilterDate = minDate + ((left + width) / 100) * (maxDate - minDate);
+            
+            // Filter markers with all conditions
+            const filteredMarkers = allMarkers.filter(marker => {
+                const markerDate = new Date(marker.data.date).getTime();
+                
+                // Date filter
+                const dateMatch = markerDate >= minFilterDate && markerDate <= maxFilterDate;
+                if (!dateMatch) return false;
+                
+                // Family filter (if any families are selected)
+                if (anyFamilySelected && !selectedFamilies.includes(marker.data.family)) {
+                    return false;
+                }
+                
+                // Collector filter (if any collectors are selected)
+                if (anyCollectorSelected && !selectedCollectors.includes(marker.data.collector)) {
+                    return false;
+                }
+                
+                return true;
+            });
+            
+            // Update markers on map
+            markers.clearLayers();
+            if (filteredMarkers.length > 0) {
+                markers.addLayers(filteredMarkers);
+                
+                // Only zoom to bounds if there are markers to show
+                const group = new L.featureGroup(filteredMarkers);
+                map.fitBounds(group.getBounds(), { padding: [50, 50] });
+            }
+            
+            // Update UI to show active filters count
+            updateFilterCounts();
+        }
+        
+        // Helper function to show active filter counts
+        function updateFilterCounts() {
+            const familyCount = document.querySelectorAll('.family-filter .filter-checkbox:checked').length;
+            const collectorCount = document.querySelectorAll('.collector-filter .filter-checkbox:checked').length;
+            
+            document.querySelector('.family-filter .filter-header span').textContent = 
+                `Filtrer par Famille (${familyCount})`;
+            document.querySelector('.collector-filter .filter-header span').textContent = 
+                `Filtrer par Collecteur (${collectorCount})`;
+        }
+        
+        // Apply filters button
+        document.getElementById('applyFilters').addEventListener('click', applyFilters);
+
+        // Initialize with sample data
+        processData(speciesData);
+    </script>
+</body>
+</html>
