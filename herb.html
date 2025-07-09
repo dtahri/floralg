@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PlantAlgeric - Carte de Distribution des Espèces</title>
+    <title>Herbiers</title>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     <style>
@@ -358,10 +358,10 @@
 </head>
 <body>
     <div class="header">
-        <div class="header-title" onclick="window.location.href='./index.html'">PlantAlgeric</div>
+        <div class="header-title" onclick="window.location.href='./index.html'">PlantAlgerica</div>
         <div class="nav-menu">
             <a href="local.html">Localiser</a>
-            <a href="dist.html">Distribution Q&S</a>
+            <a href="dist.html">Distribution de Q&S</a>
         </div>
     </div>
     
@@ -369,7 +369,7 @@
     
     <div id="timeSliderContainer">
         <div class="timeline-header">
-            <div id="dateRangeDisplay">Période : <span id="currentMinDate"></span> à <span id="currentMaxDate"></span></div>
+            <div id="dateRangeDisplay">PÃ©riode : <span id="currentMinDate"></span> Ã  <span id="currentMaxDate"></span></div>
             <div class="filter-controls">
                 <button id="selectAllFilters" class="filter-btn">Tous</button>
                 <button id="deselectAllFilters" class="filter-btn">Aucun</button>
@@ -401,7 +401,7 @@
     <div id="imageModal">
         <div id="modalContent">
             <span id="closeModal">&times;</span>
-            <img id="modalImage" src="" alt="Aperçu de l'espèce">
+            <img id="modalImage" src="" alt="AperÃ§u de l'espÃ¨ce">
         </div>
     </div>
 
@@ -1016,7 +1016,7 @@
                     <div class="popup-field"><span class="popup-label">Collecteur :</span> ${data.collector}</div>
                     <div class="popup-field"><span class="popup-label">Source :</span> ${data.source}</div>
                     <div class="popup-field">
-                        <span class="popup-label">Aperçu :</span> 
+                        <span class="popup-label">AperÃ§u :</span> 
                         <span class="preview-link" onclick="window.showImagePreview('${data.preview}')">Voir l'image</span>
                     </div>
                 </div>
